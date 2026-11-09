@@ -18,8 +18,20 @@ Next.js + Tailwind (Vercel) · Python pipeline · Supabase Postgres (RLS) · Gem
 db/schema.sql                 Postgres schema + row level security
 scripts/seed_network.py       builds the synthetic network (deterministic)
 scripts/check_network.py      checks the network overlaps the portfolio
+scripts/probe_sources.py      Day-1 check: which data sources work from your machine
+pipeline/classify.py          rule-based announcement classifier (no LLM)
+pipeline/alerts.py            volume-spike and price-move alert maths
+pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
+tests/                        unit tests
 data/network/                 generated synthetic_network.json
 docs/                         architecture, interaction model, decisions
+```
+
+## Day-1 data probe (run on your own machine)
+```bash
+pip install -r requirements.txt
+python scripts/probe_sources.py        # tests Yahoo, NSE, screener.in for all 17 tickers
+python -m pytest -q tests              # classifier + alert logic
 ```
 
 ## Try the network generator
@@ -34,5 +46,6 @@ All network data is **synthetic**. People are invented. Real company names appea
 ## Status
 - [x] Architecture, interaction model
 - [x] Schema, synthetic network
-- [ ] Data pipelines (prices, filings, documents)
+- [x] Classifier and alert logic (unit tested)
+- [ ] Live data check (probe), then filings and document fetchers
 - [ ] Push, Pull, Call Sheet UI
