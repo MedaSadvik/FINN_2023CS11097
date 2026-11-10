@@ -113,7 +113,7 @@ def test_falls_back_when_model_overloaded(monkeypatch, tmp_path):
 
     assert llm.generate_json("primary", "s", "p", call=call) == {"ok": True}
     assert llm.LAST_MODEL == "fb2"
-    assert seen == ["primary"] * 3 + ["fb1", "fb2"]  # 3 tries, closed model skipped at once
+    assert seen == ["primary", "fb1", "fb2"]  # hang and closed model both skipped without retries
     # second call: served from cache, no model is contacted, audit model still known
     seen.clear()
     assert llm.generate_json("primary", "s", "p", call=call) == {"ok": True}
@@ -126,3 +126,19 @@ def test_all_models_failing_raises(monkeypatch, tmp_path):
     monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1")
     with pytest.raises(RuntimeError, match="all models failed"):
         llm.generate_json("a", "s", "p", call=lambda *x: (_ for _ in ()).throw(RuntimeError("503 UNAVAILABLE")))
+
+
+def test_busy_model_is_retried_before_fallback(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1")
+    seen = []
+
+    def call(model, system, prompt):
+        seen.append(model)
+        if model == "primary":
+            raise RuntimeError("503 UNAVAILABLE high demand")
+        return "[]"
+
+    assert llm.generate_json("primary", "s", "p", call=call) == []
+    assert seen == ["primary"] * 3 + ["fb1"]  # 503 = busy: 3 tries, then fall back
