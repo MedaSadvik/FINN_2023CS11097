@@ -181,7 +181,9 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
 
 
 if __name__ == "__main__":  # smoke test: python -m pipeline.llm
-    for m in [flash_model()] + [f for f in fallback_models() if f != flash_model()]:
+    models = [flash_model()] + [f for f in fallback_models() if f != flash_model()]
+    print(f"provider={provider()}  models to test: {models}")  # so silence can never be ambiguous
+    for m in models:
         t0 = time.time()
         try:
             out = _default_call(m, "Answer in JSON.", 'Return {"ok": true}')
