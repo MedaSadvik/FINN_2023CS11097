@@ -73,7 +73,7 @@ def test_future_period_is_pending_with_year_to_date():
     (growth(None), "no verified number"),
     (growth(30, horizon="unspecified"), "no fiscal period"),
     (growth(30, scope="OSAT"), "segment claim"),
-    ({"metric": "capex", "basis": "absolute_crore", "low": 300, "horizon": "FY27", "scope": "company"}, "not computable"),
+    ({"metric": "capex", "basis": "absolute_crore", "low": 300, "horizon": "FY26", "scope": "company"}, "not computable"),
 ])
 def test_unclear_cases(claim, why):
     r = evaluate(claim, QUARTERS)
@@ -83,3 +83,18 @@ def test_unclear_cases(claim, why):
 def test_missing_prior_year_is_not_a_guess():
     q = year(26, 120)  # no FY25 quarters to compare against
     assert evaluate(growth(20), q)["outcome"] == "unclear"
+
+
+def test_kaynes_real_fy26_revenue_miss():
+    # Real: FY26 quarterly revenue 673 + 906 + 804 + 1243 = 3626 vs "at least INR 4,000 crore".
+    q = {"Q1FY26": {"revenue": 673.0}, "Q2FY26": {"revenue": 906.0}, "Q3FY26": {"revenue": 804.0},
+         "Q4FY26": {"revenue": 1243.0}}
+    c = {"metric": "revenue_target", "basis": "absolute_crore", "low": 4000, "high": None, "horizon": "FY26", "scope": "company"}
+    r = evaluate(c, q)
+    assert r["outcome"] == "missed" and r["actual"] == 3626.0  # 9% short: more than the 5% allowance
+
+
+def test_far_future_promise_is_pending_not_unclear():
+    c = {"metric": "revenue_target", "basis": "other", "low": 1, "horizon": "FY28", "scope": "company"}
+    r = evaluate(c, QUARTERS)
+    assert r["outcome"] == "pending" and "due FY28" in r["delivered_text"]

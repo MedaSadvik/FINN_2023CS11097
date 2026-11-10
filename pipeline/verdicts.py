@@ -9,7 +9,9 @@ and checkable. Claims it cannot check by maths (capex, segment targets, "2x the 
 
 Judging rule, written down so it is not a black box:
   delivered  actual is at or above the LOW end of the promised range
-  partly     actual is just under the low end: within 10% (growth, rupees) or 1 point (margins)
+  partly     actual is just under the low end: within 10% of it for growth rates, 5% for rupee
+             amounts, or 1 point for margins
+  (pending also covers promises for a year that has not started: "due FY28")
   missed     further below than that
   pending    the promised period has not fully ended; we show the year-to-date number instead
 """
@@ -67,16 +69,25 @@ def _measure(claim: dict, quarters: dict, labels: list):
     return None
 
 
+def latest_reported_fy(quarters: dict):
+    done = [int(k[-2:]) for k, v in quarters.items() if v.get("revenue") is not None]
+    return max(done) if done else None
+
+
 def evaluate(claim: dict, quarters: dict) -> dict:
     out = {"outcome": "unclear", "delivered_text": None, "tier": "computed"}
     low, high = claim.get("low"), claim.get("high")
+    h = parse_horizon(claim.get("horizon"))
+    latest = latest_reported_fy(quarters)
+    if h and latest and h["fy"] > latest:  # promise about a year that has not started
+        out.update(outcome="pending", delivered_text=f"due {claim.get('horizon')}; reported so far through FY{latest}")
+        return out
     if low is None:
         out["reason"] = "no verified number to check against"
         return out
     if claim.get("scope") not in (None, "company", "unspecified", "consolidated"):
         out["reason"] = f"segment claim ({claim.get('scope')}): needs a later-transcript check"
         return out
-    h = parse_horizon(claim.get("horizon"))
     if h is None:
         out["reason"] = "no fiscal period stated"
         return out
@@ -94,7 +105,7 @@ def evaluate(claim: dict, quarters: dict) -> dict:
                    delivered_text=f"so far {have[0]}-{have[-1]}: {ytd[0]:.1f}{ytd[1]} vs {guided}{ytd[1]} guided")
         return out
     actual, unit = got
-    tol = 1.0 if claim.get("basis") == "margin_pct" else abs(low) * 0.10
+    tol = {"margin_pct": 1.0, "absolute_crore": abs(low) * 0.05}.get(claim.get("basis"), abs(low) * 0.10)
     out.update(outcome=judge(actual, low, high, tol), actual=round(actual, 1), computed_from=labels,
                delivered_text=f"{actual:.1f}{unit} vs {guided}{unit} guided ({labels[0]}-{labels[-1]})")
     if high is not None and actual > high and out["outcome"] == "delivered":

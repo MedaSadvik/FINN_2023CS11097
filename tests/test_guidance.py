@@ -150,12 +150,14 @@ def make_pages(n):
 
 def test_chunk_pages_cover_everything_with_overlap():
     pages = make_pages(20)
-    chunks = guidance.chunk_pages(pages)
+    chunks = guidance.chunk_pages(pages, size=8)
     assert len(chunks) == 3
     assert [p["page"] for p in chunks[0]][0] == 1 and chunks[-1][-1]["page"] == 20
     assert {p["page"] for c in chunks for p in c} == set(range(1, 21))
     assert chunks[0][-1]["page"] == chunks[1][0]["page"]  # one page of overlap
     assert len(guidance.chunk_pages(make_pages(10))) == 1  # short documents stay whole
+    two = guidance.chunk_pages(make_pages(20))             # default size 10: two even halves, not 10+10+tiny
+    assert [len(c) for c in two] == [10, 11] and two[0][-1]["page"] == two[1][0]["page"]
 
 
 def test_check_numbers():
@@ -170,18 +172,69 @@ def test_check_numbers():
 def test_extract_guidance_chunks_and_dedupes(monkeypatch, tmp_path):
     monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
     pages = make_pages(20)
-    pages[7]["text"] = "We expect revenue growth of 30-35% in FY27 given the order book and capacity ramp."
+    pages[9]["text"] = "We expect revenue growth of 30-35% in FY27 given the order book and capacity ramp."
     calls = []
 
     def fake(model, system, prompt):
         calls.append(prompt)
-        if "[PAGE 8]" in prompt:  # page 8 sits in the overlap of chunks 1 and 2
-            return json.dumps({"claims": [{"page": 8, "quote": "We expect revenue growth of 30-35% in FY27 given the order book",
+        if "[PAGE 10]" in prompt:  # page 10 sits in the overlap of chunks 1 and 2
+            return json.dumps({"claims": [{"page": 10, "quote": "We expect revenue growth of 30-35% in FY27 given the order book",
                                            "metric": "revenue_growth", "target": "t", "basis": "yoy_growth_pct",
                                            "low": 30, "high": 35, "horizon": "FY27", "scope": "company"}]})
         return '{"claims": []}'
 
     r = guidance.extract_guidance(pages, call=fake)
-    assert len(calls) == 3
+    assert len(calls) == 2
     assert len(r["claims"]) == 1 and not r["dropped"]  # seen twice, kept once, no noise in dropped
     assert r["claims"][0]["numbers"] == "verified"
+
+
+def test_merge_same_promise_keeps_first_and_attaches_evidence():
+    a = {"page": 5, "quote": "q1", "metric": "revenue_target", "target": "FY26 revenue of at least INR4,000 crore",
+         "low": 4000, "high": None, "horizon": "FY26", "scope": "company"}
+    b = {**a, "page": 9, "quote": "q2", "target": "FY26 revenue of minimum 4000 crore"}   # same promise, other words
+    c = {**a, "page": 11, "quote": "q3", "low": 1500, "target": "OSAT 1,500", "scope": "OSAT"}  # different promise
+    merged = guidance.merge_same_promise([a, b, c])
+    assert len(merged) == 2 and merged[0]["also_quoted"] == [{"page": 9, "quote": "q2"}]
+    x = {"page": 1, "quote": "x1", "metric": "revenue_growth", "target": "doubling the market growth", "low": None,
+         "high": None, "horizon": "FY27", "scope": "company"}
+    y = {**x, "page": 2, "quote": "x2", "target": "double the market growth"}
+    z = {**x, "page": 3, "quote": "x3", "target": "rail margin stays strong"}
+    assert len(guidance.merge_same_promise([x, y, z])) == 2
+
+
+def test_fiscal_context_resolves_this_year():
+    assert "FY27" in guidance.fiscal_context("May 2026") and "next year' means FY28" in guidance.fiscal_context("May 2026")
+    assert "'this year' and 'current year' mean FY26" in guidance.fiscal_context("Feb 2026")
+    assert guidance.fiscal_context(None) == "" and guidance.fiscal_context("soon") == ""
+
+
+def test_daily_quota_skips_model_without_waiting(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: (_ for _ in ()).throw(AssertionError("must not wait")))
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1")
+    seen = []
+
+    def call(model, system, prompt):
+        seen.append(model)
+        if model == "primary":
+            raise RuntimeError("429 RESOURCE_EXHAUSTED quota metric GenerateRequestsPerDayPerProjectPerModel")
+        return "{}"
+
+    assert llm.generate_json("primary", "s", "p", call=call) == {} and seen == ["primary", "fb1"]
+
+
+def test_rate_limit_waits_as_long_as_google_says(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    waits = []
+    monkeypatch.setattr(llm.time, "sleep", waits.append)
+    n = {"i": 0}
+
+    def call(model, system, prompt):
+        n["i"] += 1
+        if n["i"] == 1:
+            raise RuntimeError("429 RESOURCE_EXHAUSTED {'retryDelay': '34s'}")
+        return "{}"
+
+    llm.generate_json("m", "s", "p", call=call)
+    assert waits == [36]

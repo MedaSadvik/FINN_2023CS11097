@@ -41,7 +41,7 @@ def build(ticker: str, n_calls: int = 4) -> list:
         except Exception as e:  # one bad link must not stop the rest
             print(f"   SKIPPED: {type(e).__name__}: {str(e)[:100]}")
             continue
-        result = guidance.run(ticker, period, doc)
+        result = guidance.run(ticker, period, doc, call_label=t.get("label"))
         print(f"   {len(doc['pages'])} pages -> {len(result['claims'])} verified claims "
               f"({len(result['dropped'])} dropped), model {result['model']}")
         time.sleep(1)

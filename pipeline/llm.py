@@ -82,7 +82,7 @@ LAST_MODEL = None  # which model produced the most recent answer (for audit colu
 
 
 def fallback_models() -> list:
-    raw = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.5-flash-lite,gemini-3.7-flash")
+    raw = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.7-flash")
     return [m.strip() for m in raw.split(",") if m.strip()]
 
 
@@ -121,7 +121,14 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
                 if attempt == retries:
                     print(f"[llm] {m} still failing ({msg[:50]}...); trying next model", file=sys.stderr, flush=True)
                     break
-                wait = 10 * 2 ** attempt  # 10s, 20s
+                if "429" in msg or "RESOURCE_EXHAUSTED" in msg:
+                    if re.search(r"PerDay|per day", msg, re.I):  # daily quota gone: waiting is pointless
+                        print(f"[llm] {m} daily quota used up; trying next model", file=sys.stderr, flush=True)
+                        break
+                    hint = re.search(r"retryDelay['\"]?:\s*['\"]?(\d+)", msg)  # Google says how long to wait
+                    wait = min(int(hint.group(1)) + 2, 90) if hint else 30 * (attempt + 1)
+                else:
+                    wait = 10 * 2 ** attempt  # busy server: 10s, 20s
                 print(f"[llm] {m} busy ({msg[:50]}...). Retry {attempt + 1}/{retries} in {wait}s",
                       file=sys.stderr, flush=True)
                 time.sleep(wait)
@@ -141,4 +148,5 @@ if __name__ == "__main__":  # smoke test: python -m pipeline.llm
             out = _gemini_call(m, "Answer in JSON.", 'Return {"ok": true}')
             print(f"OK    {m:22s} {time.time() - t0:5.1f}s  {out.strip()[:30]!r}")
         except Exception as e:
-            print(f"FAIL  {m:22s} {time.time() - t0:5.1f}s  {str(e)[:90]!r}")
+            print(f"FAIL  {m:22s} {time.time() - t0:5.1f}s")
+            print("      full error:", str(e)[:700])

@@ -3,7 +3,7 @@
     python -m pipeline.guidance KAYNES Q1FY27
 
 Reads data/cache/text/<TICKER>_<PERIOD>.json (from pipeline.fetch_pdf). The transcript is cut
-into overlapping ~8-page chunks (same total tokens, better recall than one huge prompt), each
+into overlapping ~10-page chunks (same total tokens, better recall than one huge prompt), each
 chunk goes to Gemini Flash, and every answer is VERIFIED against the page text:
   - the quote must really appear on the cited page (else the claim is dropped);
   - any number the model puts in low/high must appear as a number inside the quote
@@ -18,9 +18,9 @@ from pathlib import Path
 from pipeline import llm
 
 ROOT = Path(__file__).resolve().parent.parent / "data" / "cache"
-VERSION = "guidance-v3"  # bump when the prompt changes, so old cache entries are not reused
+VERSION = "guidance-v4"  # bump when the prompt changes, so old cache entries are not reused
 MIN_QUOTE_CHARS = 25     # shorter quotes match by accident
-CHUNK_PAGES, CHUNK_OVERLAP = 8, 1
+CHUNK_PAGES, CHUNK_OVERLAP = 10, 1
 METRICS = ["revenue_growth", "ebitda_growth", "profit_growth", "ebitda_margin", "revenue_target",
            "capex", "order_book", "other_numeric"]
 BASES = ["yoy_growth_pct", "margin_pct", "absolute_crore", "other"]
@@ -52,21 +52,34 @@ Skip vague optimism with no number. Skip past results.
 Return JSON only: {{"claims": [ ... ]}}. If nothing qualifies, return {{"claims": []}}."""
 
 
-def build_prompt(pages: list) -> str:
-    return "\n\n".join(f"[PAGE {p['page']}]\n{p['text'].strip()}" for p in pages)
+MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+
+def fiscal_context(call_label) -> str:
+    """'May 2026' -> text telling the model what 'this year' means. Indian FY runs April-March."""
+    m = re.match(r"([A-Za-z]{3})\w*\s+(\d{4})", call_label or "")
+    if not m or m.group(1).lower() not in MONTHS:
+        return ""
+    month, year = MONTHS.index(m.group(1).lower()) + 1, int(m.group(2))
+    cur = year + 1 if month >= 4 else year
+    return (f"CONTEXT: this call was held in {call_label}. The fiscal year runs April to March. On that date "
+            f"'this year' and 'current year' mean FY{cur % 100:02d}, 'next year' means FY{(cur + 1) % 100:02d}, "
+            f"'last year' means FY{(cur - 1) % 100:02d}. Use this only to fill `horizon`.\n\n")
+
+
+def build_prompt(pages: list, call_label=None) -> str:
+    body = "\n\n".join(f"[PAGE {p['page']}]\n{p['text'].strip()}" for p in pages)
+    return fiscal_context(call_label) + body
 
 
 def chunk_pages(pages: list, size: int = CHUNK_PAGES, overlap: int = CHUNK_OVERLAP) -> list:
-    """Overlapping windows of pages; short documents stay in one piece."""
+    """Split into the fewest roughly-equal windows of at most ~`size` pages, 1 page of overlap.
+    Fewer calls matter: free-tier quotas are the real bottleneck."""
     if len(pages) <= size + 2:
         return [pages]
-    chunks, start = [], 0
-    while start < len(pages):
-        chunks.append(pages[start:start + size])
-        if start + size >= len(pages):
-            break
-        start += size - overlap
-    return chunks
+    k = -(-len(pages) // size)           # ceil
+    step = -(-len(pages) // k)
+    return [pages[max(0, i * step - (overlap if i else 0)):(i + 1) * step] for i in range(k)]
 
 
 def squash(s: str) -> str:
@@ -116,25 +129,45 @@ def check_numbers(claim: dict) -> dict:
     return claim
 
 
-def extract_guidance(pages: list, call=None) -> dict:
+def merge_same_promise(claims: list) -> list:
+    """One promise is often stated several times in a call. Keep the first, attach the others'
+    quotes as extra evidence. Same numbers+metric+scope+period = same promise; with no numbers,
+    near-identical wording is required."""
+    from difflib import SequenceMatcher
+    kept = []
+    for c in claims:
+        twin = next((k for k in kept if k["metric"] == c["metric"] and k.get("scope") == c.get("scope")
+                     and k.get("low") == c.get("low") and k.get("high") == c.get("high")
+                     and (k.get("horizon") == c.get("horizon") if c.get("low") is not None else True)
+                     and (c.get("low") is not None
+                          or SequenceMatcher(None, k["target"].lower(), c["target"].lower()).ratio() >= 0.75)), None)
+        if twin:
+            twin.setdefault("also_quoted", []).append({"page": c["page"], "quote": c["quote"]})
+        else:
+            kept.append(c)
+    return kept
+
+
+def extract_guidance(pages: list, call=None, call_label=None) -> dict:
     kwargs = {"call": call} if call else {}
     raw, seen = [], set()
     for chunk in chunk_pages(pages):
-        data = llm.generate_json(llm.flash_model(), SYSTEM, build_prompt(chunk), VERSION, **kwargs)
+        data = llm.generate_json(llm.flash_model(), SYSTEM, build_prompt(chunk, call_label), VERSION, **kwargs)
         for c in (data.get("claims", []) if isinstance(data, dict) else data):
             key = squash(c.get("quote") or "")
             if key not in seen:  # overlap pages can yield the same claim twice
                 seen.add(key)
                 raw.append(c)
     kept, dropped = verify_claims(raw, pages)
-    kept = [check_numbers(c) for c in kept]
+    kept = merge_same_promise([check_numbers(c) for c in kept])
     return {"claims": kept, "dropped": dropped, "model": llm.LAST_MODEL or llm.flash_model(),
             "prompt_version": VERSION}
 
 
-def run(ticker: str, period: str, doc: dict) -> dict:
-    """Extract guidance for one transcript and save it. `doc` is the dict from pipeline.fetch_pdf."""
-    result = extract_guidance(doc["pages"])
+def run(ticker: str, period: str, doc: dict, call_label=None) -> dict:
+    """Extract guidance for one transcript and save it. `doc` is the dict from pipeline.fetch_pdf;
+    `call_label` is the month the call was held, e.g. "May 2026" (from screener)."""
+    result = extract_guidance(doc["pages"], call_label=call_label)
     result.update(ticker=ticker, period=period, source_sha256=doc["sha256"], source_url=doc.get("url"))
     out = ROOT / "guidance" / f"{ticker}_{period}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
