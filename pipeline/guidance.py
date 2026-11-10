@@ -80,7 +80,8 @@ def extract_guidance(pages: list, call=None) -> dict:
     data = llm.generate_json(llm.flash_model(), SYSTEM, build_prompt(pages), VERSION, **kwargs)
     claims = data.get("claims", []) if isinstance(data, dict) else data
     kept, dropped = verify_claims(claims, pages)
-    return {"claims": kept, "dropped": dropped, "model": llm.flash_model(), "prompt_version": VERSION}
+    return {"claims": kept, "dropped": dropped, "model": llm.LAST_MODEL or llm.flash_model(),
+            "prompt_version": VERSION}
 
 
 def main(ticker: str, period: str):

@@ -75,34 +75,66 @@ def _gemini_call(model: str, system: str, prompt: str) -> str:
     return resp.text
 
 
+TRANSIENT = ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "504", "DEADLINE_EXCEEDED")
+GONE = ("no longer available", "NOT_FOUND")  # this model will never answer: skip it, do not retry
+LAST_MODEL = None  # which model produced the most recent answer (for audit columns)
+
+
+def fallback_models() -> list:
+    raw = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash")
+    return [m.strip() for m in raw.split(",") if m.strip()]
+
+
 def generate_json(model: str, system: str, prompt: str, version: str = "v1",
-                  call=_gemini_call, retries: int = 4):
-    """Return parsed JSON from the model. Cached on disk; retried on rate limits."""
+                  call=_gemini_call, retries: int = 2):
+    """Return parsed JSON from the model. Cached on disk.
+
+    If `model` is overloaded (503/504), rate-limited (429) or closed (404), retry briefly, then
+    fall through GEMINI_FALLBACK_MODELS. Real bugs (bad key, bad request) are raised at once.
+    The cache is keyed by the REQUESTED model, so a later run is instant whichever model answered.
+    """
+    global LAST_MODEL
     key = cache_key(model, system, prompt, version)
     path = CACHE / f"{key}.json"
     if path.exists():
-        return json.loads(path.read_text())
-    t0 = time.time()
-    print(f"[llm] {model}: sending {len(prompt):,} characters (waits up to 3 min)...", file=sys.stderr, flush=True)
-    for attempt in range(retries + 1):
-        try:
-            data = extract_json(call(model, system, prompt))
-            break
-        except Exception as e:
-            transient = any(s in str(e) for s in ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE"))
-            if attempt == retries or not transient:
-                raise
-            wait = 10 * 2 ** attempt  # free tier: back off 10s, 20s, 40s, 80s
-            print(f"[llm] busy or rate-limited ({str(e)[:60]}...). Retry {attempt + 1}/{retries} in {wait}s",
-                  file=sys.stderr, flush=True)
-            time.sleep(wait)
-    print(f"[llm] done in {time.time() - t0:.0f}s", file=sys.stderr, flush=True)
-    CACHE.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data))
-    return data
+        cached = json.loads(path.read_text())
+        LAST_MODEL = cached["model"]
+        return cached["data"]
+    t0, last_err = time.time(), None
+    for m in [model] + [f for f in fallback_models() if f != model]:
+        print(f"[llm] {m}: sending {len(prompt):,} characters (waits up to 3 min)...", file=sys.stderr, flush=True)
+        for attempt in range(retries + 1):
+            try:
+                data = extract_json(call(m, system, prompt))
+            except Exception as e:
+                msg = str(e)
+                last_err = e
+                if any(g in msg for g in GONE):
+                    print(f"[llm] {m} is closed to this key; trying next model", file=sys.stderr, flush=True)
+                    break
+                if not any(t in msg for t in TRANSIENT):
+                    raise
+                if attempt == retries:
+                    print(f"[llm] {m} still failing ({msg[:50]}...); trying next model", file=sys.stderr, flush=True)
+                    break
+                wait = 10 * 2 ** attempt  # 10s, 20s
+                print(f"[llm] {m} busy ({msg[:50]}...). Retry {attempt + 1}/{retries} in {wait}s",
+                      file=sys.stderr, flush=True)
+                time.sleep(wait)
+            else:
+                LAST_MODEL = m
+                print(f"[llm] {m} answered in {time.time() - t0:.0f}s", file=sys.stderr, flush=True)
+                CACHE.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps({"model": m, "data": data}))
+                return data
+    raise RuntimeError(f"all models failed; last error: {last_err}") from last_err
 
 
 if __name__ == "__main__":  # smoke test: python -m pipeline.llm
-    t0 = time.time()
-    print(_gemini_call(flash_model(), "Answer in JSON.", 'Return {"ok": true}'))
-    print(f"model {flash_model()} answered in {time.time() - t0:.1f}s")
+    for m in [flash_model()] + [f for f in fallback_models() if f != flash_model()]:
+        t0 = time.time()
+        try:
+            out = _gemini_call(m, "Answer in JSON.", 'Return {"ok": true}')
+            print(f"OK    {m:22s} {time.time() - t0:5.1f}s  {out.strip()[:30]!r}")
+        except Exception as e:
+            print(f"FAIL  {m:22s} {time.time() - t0:5.1f}s  {str(e)[:90]!r}")

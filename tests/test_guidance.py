@@ -95,3 +95,34 @@ def test_real_errors_not_retried(monkeypatch, tmp_path):
     monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
     with pytest.raises(ValueError):
         llm.generate_json("m", "s", "p", call=lambda *a: (_ for _ in ()).throw(ValueError("bad key")))
+
+
+def test_falls_back_when_model_overloaded(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1,fb2")
+    seen = []
+
+    def call(model, system, prompt):
+        seen.append(model)
+        if model == "primary":
+            raise RuntimeError("504 DEADLINE_EXCEEDED")
+        if model == "fb1":
+            raise RuntimeError("404 NOT_FOUND no longer available to new users")
+        return '{"ok": true}'
+
+    assert llm.generate_json("primary", "s", "p", call=call) == {"ok": True}
+    assert llm.LAST_MODEL == "fb2"
+    assert seen == ["primary"] * 3 + ["fb1", "fb2"]  # 3 tries, closed model skipped at once
+    # second call: served from cache, no model is contacted, audit model still known
+    seen.clear()
+    assert llm.generate_json("primary", "s", "p", call=call) == {"ok": True}
+    assert seen == [] and llm.LAST_MODEL == "fb2"
+
+
+def test_all_models_failing_raises(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1")
+    with pytest.raises(RuntimeError, match="all models failed"):
+        llm.generate_json("a", "s", "p", call=lambda *x: (_ for _ in ()).throw(RuntimeError("503 UNAVAILABLE")))
