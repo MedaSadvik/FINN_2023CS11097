@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import sys
 import time
 from pathlib import Path
 
@@ -65,7 +66,8 @@ def extract_json(text: str):
 def _gemini_call(model: str, system: str, prompt: str) -> str:
     from google import genai
     from google.genai import types
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"],
+                          http_options=types.HttpOptions(timeout=180_000))  # ms; never hang silently
     resp = client.models.generate_content(
         model=model, contents=prompt,
         config=types.GenerateContentConfig(system_instruction=system, temperature=0,
@@ -80,6 +82,8 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
     path = CACHE / f"{key}.json"
     if path.exists():
         return json.loads(path.read_text())
+    t0 = time.time()
+    print(f"[llm] {model}: sending {len(prompt):,} characters (waits up to 3 min)...", file=sys.stderr, flush=True)
     for attempt in range(retries + 1):
         try:
             data = extract_json(call(model, system, prompt))
@@ -88,7 +92,17 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
             transient = any(s in str(e) for s in ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE"))
             if attempt == retries or not transient:
                 raise
-            time.sleep(10 * 2 ** attempt)  # free tier: back off 10s, 20s, 40s, 80s
+            wait = 10 * 2 ** attempt  # free tier: back off 10s, 20s, 40s, 80s
+            print(f"[llm] busy or rate-limited ({str(e)[:60]}...). Retry {attempt + 1}/{retries} in {wait}s",
+                  file=sys.stderr, flush=True)
+            time.sleep(wait)
+    print(f"[llm] done in {time.time() - t0:.0f}s", file=sys.stderr, flush=True)
     CACHE.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data))
     return data
+
+
+if __name__ == "__main__":  # smoke test: python -m pipeline.llm
+    t0 = time.time()
+    print(_gemini_call(flash_model(), "Answer in JSON.", 'Return {"ok": true}'))
+    print(f"model {flash_model()} answered in {time.time() - t0:.1f}s")
