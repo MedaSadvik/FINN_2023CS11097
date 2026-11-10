@@ -5,9 +5,11 @@ so a re-run costs nothing; (2) free-tier rate limits get retried with backoff;
 (3) tests can pass a fake `call` and never touch the network.
 
 Models are read from the environment because Google renames them often:
-    GEMINI_FLASH_MODEL   cheap, bulk extraction        (default gemini-2.5-flash)
-    GEMINI_PRO_MODEL     reasoning, run offline only   (default gemini-2.5-pro)
-Run `python scripts/list_models.py` to see what your key can use.
+    GEMINI_FLASH_MODEL   cheap, bulk extraction        (default gemini-3.8-flash)
+    GEMINI_PRO_MODEL     reasoning, run offline only   (default gemini-3.8-flash)
+Being LISTED is not the same as being USABLE: gemini-2.5-flash is listed but closed to new
+users (404). Run `python scripts/list_models.py` to test which models really answer.
+No Pro-tier model is usable on the free key yet, so "pro" falls back to the newest flash.
 """
 import hashlib
 import json
@@ -34,11 +36,11 @@ load_env()
 
 
 def flash_model() -> str:
-    return os.getenv("GEMINI_FLASH_MODEL", "gemini-2.5-flash")
+    return os.getenv("GEMINI_FLASH_MODEL", "gemini-3.8-flash")
 
 
 def pro_model() -> str:
-    return os.getenv("GEMINI_PRO_MODEL", "gemini-2.5-pro")
+    return os.getenv("GEMINI_PRO_MODEL", "gemini-3.8-flash")
 
 
 def cache_key(model: str, system: str, prompt: str, version: str) -> str:
