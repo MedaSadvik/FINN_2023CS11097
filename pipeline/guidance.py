@@ -161,7 +161,7 @@ def extract_guidance(pages: list, call=None, call_label=None) -> dict:
     kept, dropped = verify_claims(raw, pages)
     kept = merge_same_promise([check_numbers(c) for c in kept])
     return {"claims": kept, "dropped": dropped, "model": llm.LAST_MODEL or llm.flash_model(),
-            "prompt_version": VERSION}
+            "prompt_version": VERSION, "provider": llm.provider()}
 
 
 def run(ticker: str, period: str, doc: dict, call_label=None) -> dict:
@@ -169,7 +169,7 @@ def run(ticker: str, period: str, doc: dict, call_label=None) -> dict:
     `call_label` is the month the call was held, e.g. "May 2026" (from screener)."""
     result = extract_guidance(doc["pages"], call_label=call_label)
     result.update(ticker=ticker, period=period, source_sha256=doc["sha256"], source_url=doc.get("url"))
-    out = ROOT / "guidance" / f"{ticker}_{period}.json"
+    out = ROOT / llm.derived("guidance") / f"{ticker}_{period}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=1))
     return result

@@ -20,7 +20,15 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CACHE = ROOT / "data" / "cache" / "llm"
+
+
+def derived(name: str) -> str:
+    """Folder name for MODEL-MADE output. Dev-provider runs write to '<name>_dev' so they can never
+    overwrite or mix with the Gemini data we ship. Raw downloads (pdf, text, docs) are shared."""
+    return name if os.getenv("LLM_PROVIDER", "gemini").lower() == "gemini" else f"{name}_dev"
+
+
+CACHE = ROOT / "data" / "cache" / derived("llm")
 
 
 def load_env(path=ROOT / ".env"):

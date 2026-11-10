@@ -20,6 +20,8 @@ import re
 import sys
 from pathlib import Path
 
+from pipeline import llm
+
 ROOT = Path(__file__).resolve().parent.parent / "data" / "cache"
 GROWTH_FIELD = {"revenue_growth": "revenue", "ebitda_growth": "ebitda", "profit_growth": "pat"}
 
@@ -116,7 +118,7 @@ def evaluate(claim: dict, quarters: dict) -> dict:
 def evaluate_ticker(ticker: str) -> list:
     quarters = json.loads((ROOT / "quarters" / f"{ticker}.json").read_text())
     rows = []
-    for path in sorted((ROOT / "guidance").glob(f"{ticker}_*.json")):
+    for path in sorted((ROOT / llm.derived("guidance")).glob(f"{ticker}_*.json")):
         g = json.loads(path.read_text())
         for c in g["claims"]:
             rows.append({"made_in": g["period"], "claim": c, **evaluate(c, quarters)})
@@ -125,7 +127,7 @@ def evaluate_ticker(ticker: str) -> list:
 
 def main(ticker: str):
     rows = evaluate_ticker(ticker)
-    out = ROOT / "verdicts" / f"{ticker}.json"
+    out = ROOT / llm.derived("verdicts") / f"{ticker}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rows, indent=1))
     print(f"{ticker}: {len(rows)} promises checked")

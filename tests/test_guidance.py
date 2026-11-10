@@ -269,3 +269,10 @@ def test_openai_compat_provider(monkeypatch, tmp_path):
     assert sent["url"] == "https://example.test/v1/chat/completions" and sent["auth"] == "Bearer k"
     assert sent["body"]["model"] == "glm-test" and sent["body"]["messages"][0]["role"] == "system"
     assert llm.LAST_MODEL == "glm-test"
+
+
+def test_dev_provider_output_never_touches_shipped_folders(monkeypatch):
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    assert llm.derived("guidance") == "guidance" and llm.derived("verdicts") == "verdicts"
+    monkeypatch.setenv("LLM_PROVIDER", "openai_compat")
+    assert llm.derived("guidance") == "guidance_dev" and llm.derived("llm") == "llm_dev"
