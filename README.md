@@ -22,6 +22,8 @@ scripts/probe_sources.py      Day-1 check: which data sources work from your mac
 pipeline/classify.py          rule-based announcement classifier (no LLM)
 pipeline/alerts.py            volume-spike and price-move alert maths
 pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
+pipeline/fetch_filings.py     NSE announcements -> classified rows (shape verified by probe)
+pipeline/fetch_docs.py        screener.in annual report + transcript links
 tests/                        unit tests
 data/network/                 generated synthetic_network.json
 docs/                         architecture, interaction model, decisions
@@ -47,5 +49,7 @@ All network data is **synthetic**. People are invented. Real company names appea
 - [x] Architecture, interaction model
 - [x] Schema, synthetic network
 - [x] Classifier and alert logic (unit tested)
-- [ ] Live data check (probe), then filings and document fetchers
+- [x] Live probe: NSE and screener.in work from a home connection
+- [ ] Filings + docs fetchers run live (written, tests pass)
+- [ ] PDF download, text extraction, LLM steps
 - [ ] Push, Pull, Call Sheet UI

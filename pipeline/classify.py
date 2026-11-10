@@ -23,7 +23,7 @@ RULES = [
     ("management_change", r"resign|cessation|appointment of|re-?appointment|change in (management|directorate)|"
                           r"retire|\bceo\b|\bcfo\b|managing director|whole.?time director|key managerial|"
                           r"senior management"),
-    ("earnings_call", r"transcript|earnings? call|conference call|con\.? call|audio recording|call recording"),
+    ("earnings_call", r"transcript|earnings? call|conference call|audio recording|call recording"),
     ("investor_meetings", r"investor meet|analyst meet|institutional investor|investor conference|"
                           r"one.on.one|\bconference\b"),
     ("postal_ballot", r"postal ballot"),
@@ -61,10 +61,29 @@ PRIORITY = {
 }
 
 
-def classify(subject: str) -> tuple[str, int]:
-    """Return (category, priority) for an announcement subject line."""
-    text = subject or ""
+# NSE's "desc" field is often a vague bucket ("Outcome of Board Meeting", "Updates",
+# "Analysts/Institutional Investor Meet/Con. Call Updates"). Only for those do we
+# read the longer attachment text; otherwise routine paperwork that mentions
+# "subsidiary" in passing would be misread as M&A.
+VAGUE = re.compile(r"outcome of board meeting|general updates?|^updates?$|"
+                   r"^(announcement|disclosure) under regulation 30[^-]*$|analysts/institutional|"
+                   r"^press release$|^others?$|^intimation$", re.I)
+GENERIC = {"unclassified", "press_release", "investor_meetings"}
+
+
+def _base(text: str) -> str:
     for category, rx in COMPILED:
         if rx.search(text):
-            return category, PRIORITY[category]
-    return "unclassified", PRIORITY["unclassified"]
+            return category
+    return "unclassified"
+
+
+def classify(subject: str, detail: str = "") -> tuple[str, int]:
+    """Return (category, priority). `subject` = headline, `detail` = attachment text (optional)."""
+    subject = subject or ""
+    category = _base(subject)
+    if detail and category in GENERIC and VAGUE.search(subject.strip()):
+        from_detail = _base(detail)
+        if from_detail != "unclassified" and PRIORITY[from_detail] >= PRIORITY[category]:
+            category = from_detail
+    return category, PRIORITY[category]

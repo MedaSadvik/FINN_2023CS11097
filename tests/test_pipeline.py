@@ -20,7 +20,7 @@ CASES = [
     ("Appointment of Company Secretary and Compliance Officer", "unclassified"),
     ("Announcement under Regulation 30 (LODR)-Earnings Call Transcript", "earnings_call"),
     ("Intimation of Conference", "investor_meetings"),
-    ("Analysts/Institutional Investor Meet/Con. Call Updates", "earnings_call"),
+    ("Analysts/Institutional Investor Meet/Con. Call Updates", "investor_meetings"),
     ("ESG Rating", "unclassified"),
     ("Allotment of 286819 Shares under ESOP", "unclassified"),
     ("Credit Rating reaffirmed by CRISIL", "credit_rating"),
@@ -46,6 +46,23 @@ CASES = [
 @pytest.mark.parametrize("subject,expected", CASES)
 def test_classify(subject, expected):
     assert classify(subject)[0] == expected, subject
+
+
+DETAIL_CASES = [
+    ("Outcome of Board Meeting", "Board approved the unaudited financial results for the quarter", "results"),
+    ("Analysts/Institutional Investor Meet/Con. Call Updates", "Transcript of Q2 earnings call", "earnings_call"),
+    ("Analysts/Institutional Investor Meet/Con. Call Updates", "Investor meet at Sanand plant", "investor_meetings"),
+    ("Updates", "Company wins order worth Rs 400 crore", "press_release"),
+    # not vague: the detail must NOT be used, or routine certificates turn into M&A
+    ("Certificate under SEBI (Depositories and Participants) Regulations, 2018",
+     "confirming the company acquired a subsidiary", "unclassified"),
+    ("Trading Window", "closure of trading window; results due", "unclassified"),
+]
+
+
+@pytest.mark.parametrize("subject,detail,expected", DETAIL_CASES)
+def test_classify_with_detail(subject, detail, expected):
+    assert classify(subject, detail)[0] == expected
 
 
 def test_priority_ordering():
