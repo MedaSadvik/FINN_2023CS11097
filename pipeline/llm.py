@@ -36,11 +36,21 @@ def load_env(path=ROOT / ".env"):
 load_env()
 
 
+def provider() -> str:
+    """'gemini' (default, used for everything we ship) or 'openai_compat' (dev testing only, e.g. Hyde's
+    GLM/Kimi models). Set LLM_PROVIDER=openai_compat plus OPENAI_BASE_URL, OPENAI_API_KEY, OPENAI_MODEL."""
+    return os.getenv("LLM_PROVIDER", "gemini").lower()
+
+
 def flash_model() -> str:
+    if provider() != "gemini":
+        return os.environ["OPENAI_MODEL"]
     return os.getenv("GEMINI_FLASH_MODEL", "gemini-3.5-flash")
 
 
 def pro_model() -> str:
+    if provider() != "gemini":
+        return os.environ["OPENAI_MODEL"]
     return os.getenv("GEMINI_PRO_MODEL", "gemini-3.5-flash")
 
 
@@ -50,7 +60,7 @@ def cache_key(model: str, system: str, prompt: str, version: str) -> str:
 
 def extract_json(text: str):
     """Parse model output as JSON, tolerating ```json fences and chatter around it."""
-    t = text.strip()
+    t = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()  # reasoning models show their thinking
     t = re.sub(r"^```(?:json)?\s*|\s*```$", "", t)
     try:
         return json.loads(t)
@@ -75,6 +85,24 @@ def _gemini_call(model: str, system: str, prompt: str) -> str:
     return resp.text
 
 
+def _openai_compat_call(model: str, system: str, prompt: str) -> str:
+    """Any server that speaks the OpenAI chat-completions format (most hosted GLM/Kimi/Qwen do)."""
+    import requests
+    base = os.environ["OPENAI_BASE_URL"].rstrip("/")
+    r = requests.post(f"{base}/chat/completions", timeout=180,
+                      headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"},
+                      json={"model": model, "temperature": 0,
+                            "messages": [{"role": "system", "content": system},
+                                         {"role": "user", "content": prompt}]})
+    if r.status_code != 200:
+        raise RuntimeError(f"{r.status_code} {r.text[:400]}")
+    return r.json()["choices"][0]["message"]["content"]
+
+
+def _default_call(model: str, system: str, prompt: str) -> str:
+    return (_gemini_call if provider() == "gemini" else _openai_compat_call)(model, system, prompt)
+
+
 TRANSIENT = ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE")  # busy: wait and retry the same model
 HANG = ("504", "DEADLINE_EXCEEDED", "timed out", "Timeout")      # model not answering: retrying wastes minutes
 GONE = ("no longer available", "NOT_FOUND")  # this model will never answer: skip it, do not retry
@@ -82,12 +110,14 @@ LAST_MODEL = None  # which model produced the most recent answer (for audit colu
 
 
 def fallback_models() -> list:
+    if provider() != "gemini":
+        return []  # one dev model, no silent switching
     raw = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.6-flash,gemini-3.7-flash")
     return [m.strip() for m in raw.split(",") if m.strip()]
 
 
 def generate_json(model: str, system: str, prompt: str, version: str = "v1",
-                  call=_gemini_call, retries: int = 2):
+                  call=None, retries: int = 2):
     """Return parsed JSON from the model. Cached on disk.
 
     If `model` is busy (503) or rate-limited (429), retry briefly. If it hangs (504/timeout) or is
@@ -95,6 +125,7 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
     The cache is keyed by the REQUESTED model, so a later run is instant whichever model answered.
     """
     global LAST_MODEL
+    call = call or _default_call
     key = cache_key(model, system, prompt, version)
     path = CACHE / f"{key}.json"
     if path.exists():
@@ -145,7 +176,7 @@ if __name__ == "__main__":  # smoke test: python -m pipeline.llm
     for m in [flash_model()] + [f for f in fallback_models() if f != flash_model()]:
         t0 = time.time()
         try:
-            out = _gemini_call(m, "Answer in JSON.", 'Return {"ok": true}')
+            out = _default_call(m, "Answer in JSON.", 'Return {"ok": true}')
             print(f"OK    {m:22s} {time.time() - t0:5.1f}s  {out.strip()[:30]!r}")
         except Exception as e:
             print(f"FAIL  {m:22s} {time.time() - t0:5.1f}s")

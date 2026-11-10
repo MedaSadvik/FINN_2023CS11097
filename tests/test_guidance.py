@@ -238,3 +238,34 @@ def test_rate_limit_waits_as_long_as_google_says(monkeypatch, tmp_path):
 
     llm.generate_json("m", "s", "p", call=call)
     assert waits == [36]
+
+
+def test_think_tags_are_stripped():
+    assert llm.extract_json('<think>maybe {"x": 1} or not</think>{"claims": []}') == {"claims": []}
+
+
+def test_openai_compat_provider(monkeypatch, tmp_path):
+    import requests
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setenv("LLM_PROVIDER", "openai_compat")
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://example.test/v1/")
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    monkeypatch.setenv("OPENAI_MODEL", "glm-test")
+    sent = {}
+
+    class R:
+        status_code = 200
+
+        def json(self):
+            return {"choices": [{"message": {"content": '{"ok": true}'}}]}
+
+    def post(url, headers, json, timeout):
+        sent.update(url=url, auth=headers["Authorization"], body=json)
+        return R()
+
+    monkeypatch.setattr(requests, "post", post)
+    assert llm.flash_model() == "glm-test" and llm.fallback_models() == []
+    assert llm.generate_json(llm.flash_model(), "sys", "hi") == {"ok": True}
+    assert sent["url"] == "https://example.test/v1/chat/completions" and sent["auth"] == "Bearer k"
+    assert sent["body"]["model"] == "glm-test" and sent["body"]["messages"][0]["role"] == "system"
+    assert llm.LAST_MODEL == "glm-test"
