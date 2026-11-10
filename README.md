@@ -24,6 +24,7 @@ pipeline/alerts.py            volume-spike and price-move alert maths
 pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
 pipeline/fetch_filings.py     NSE announcements -> classified rows (shape verified by probe)
 pipeline/fetch_docs.py        screener.in annual report + transcript links
+pipeline/fetch_pdf.py         download PDF (hash-cached), extract text per page
 tests/                        unit tests
 data/network/                 generated synthetic_network.json
 docs/                         architecture, interaction model, decisions
@@ -51,5 +52,7 @@ All network data is **synthetic**. People are invented. Real company names appea
 - [x] Classifier and alert logic (unit tested)
 - [x] Live probe: NSE and screener.in work from a home connection
 - [ ] Filings + docs fetchers run live (written, tests pass)
-- [ ] PDF download, text extraction, LLM steps
+- [x] Docs fetcher parses real screener HTML (Kaynes: 18 transcripts, 4 ARs)
+- [ ] PDF download + extraction run live (written, tests pass)
+- [ ] LLM steps: results extraction, guidance claims, promised vs delivered
 - [ ] Push, Pull, Call Sheet UI
