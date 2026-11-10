@@ -276,3 +276,34 @@ def test_dev_provider_output_never_touches_shipped_folders(monkeypatch):
     assert llm.derived("guidance") == "guidance" and llm.derived("verdicts") == "verdicts"
     monkeypatch.setenv("LLM_PROVIDER", "openai_compat")
     assert llm.derived("guidance") == "guidance_dev" and llm.derived("llm") == "llm_dev"
+
+
+def test_all_models_out_of_daily_quota_raises_quota_exhausted(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm, "USAGE", tmp_path / "usage.json")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: (_ for _ in ()).throw(AssertionError("must not wait")))
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "fb1")
+
+    def call(model, system, prompt):
+        raise RuntimeError("429 RESOURCE_EXHAUSTED requests per day limit exceeded. Please retry in 20h35m48.4s.")
+
+    with pytest.raises(llm.QuotaExhausted, match="resets in about 20h35m"):
+        llm.generate_json("primary", "s", "p", call=call)
+
+
+def test_usage_counter_counts_per_model_and_resets_daily(monkeypatch, tmp_path):
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    f = tmp_path / "usage.json"
+    assert [llm.count_call("a", f), llm.count_call("a", f), llm.count_call("b", f)] == [1, 2, 1]
+    day = next(iter(json.loads(f.read_text())))
+    f.write_text(json.dumps({"1999-01-01": {"a": 19}, day: {"a": 2}}))  # yesterday's numbers must vanish
+    assert llm.count_call("a", f) == 3 and list(json.loads(f.read_text())) == [day]
+    monkeypatch.setenv("LLM_PROVIDER", "openai_compat")
+    assert llm.count_call("a", f) == 0  # dev provider is not counted against Gemini
+
+
+def test_fake_calls_never_touch_the_real_usage_file(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm, "USAGE", tmp_path / "usage.json")
+    llm.generate_json("m", "s", "p", call=lambda *a: "{}")
+    assert not (tmp_path / "usage.json").exists()

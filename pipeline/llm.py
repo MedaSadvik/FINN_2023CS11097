@@ -111,6 +111,33 @@ def _default_call(model: str, system: str, prompt: str) -> str:
     return (_gemini_call if provider() == "gemini" else _openai_compat_call)(model, system, prompt)
 
 
+class QuotaExhausted(RuntimeError):
+    """The free daily request quota is used up. Waiting a few seconds will not help."""
+
+
+USAGE = ROOT / "data" / "cache" / "llm_usage.json"
+DAILY_LIMIT = int(os.getenv("GEMINI_DAILY_LIMIT", "20"))  # free tier at the time of writing; for the message only
+
+
+def count_call(model: str, path=None) -> int:
+    """Tally successful Gemini requests per model per day (Google resets at midnight Pacific, UTC-8).
+    Returns today's count for this model. Approximate: the server is the real counter."""
+    if provider() != "gemini":
+        return 0
+    path = path or USAGE
+    from datetime import datetime, timedelta, timezone
+    day = (datetime.now(timezone.utc) - timedelta(hours=8)).date().isoformat()
+    try:
+        data = json.loads(path.read_text()) if path.exists() else {}
+    except json.JSONDecodeError:
+        data = {}
+    data = {day: data.get(day, {})}  # keep today only
+    data[day][model] = data[day].get(model, 0) + 1
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data))
+    return data[day][model]
+
+
 TRANSIENT = ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE")  # busy: wait and retry the same model
 HANG = ("504", "DEADLINE_EXCEEDED", "timed out", "Timeout")      # model not answering: retrying wastes minutes
 GONE = ("no longer available", "NOT_FOUND")  # this model will never answer: skip it, do not retry
@@ -133,6 +160,7 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
     The cache is keyed by the REQUESTED model, so a later run is instant whichever model answered.
     """
     global LAST_MODEL
+    counting = call is None  # only real requests count against the quota, never test fakes
     call = call or _default_call
     key = cache_key(model, system, prompt, version)
     path = CACHE / f"{key}.json"
@@ -140,7 +168,7 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
         cached = json.loads(path.read_text())
         LAST_MODEL = cached["model"]
         return cached["data"]
-    t0, last_err = time.time(), None
+    t0, last_err, quota_hits, reset_in = time.time(), None, [], None
     for m in [model] + [f for f in fallback_models() if f != model]:
         print(f"[llm] {m}: sending {len(prompt):,} characters (waits up to 90s)...", file=sys.stderr, flush=True)
         for attempt in range(retries + 1):
@@ -162,6 +190,9 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
                     break
                 if "429" in msg or "RESOURCE_EXHAUSTED" in msg:
                     if re.search(r"PerDay|per day", msg, re.I):  # daily quota gone: waiting is pointless
+                        quota_hits.append(m)
+                        after = re.search(r"retry in (\d+h)?(\d+m)?", msg)
+                        reset_in = "".join(g for g in after.groups() if g) if after else reset_in
                         print(f"[llm] {m} daily quota used up; trying next model", file=sys.stderr, flush=True)
                         break
                     hint = re.search(r"retryDelay['\"]?:\s*['\"]?(\d+)", msg)  # Google says how long to wait
@@ -173,10 +204,15 @@ def generate_json(model: str, system: str, prompt: str, version: str = "v1",
                 time.sleep(wait)
             else:
                 LAST_MODEL = m
-                print(f"[llm] {m} answered in {time.time() - t0:.0f}s", file=sys.stderr, flush=True)
+                used = count_call(m) if counting else 0
+                note = f" (about {used}/{DAILY_LIMIT} free requests used today)" if used else ""
+                print(f"[llm] {m} answered in {time.time() - t0:.0f}s{note}", file=sys.stderr, flush=True)
                 CACHE.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps({"model": m, "data": data}))
                 return data
+    if quota_hits:
+        raise QuotaExhausted(f"daily free quota used up on {quota_hits}"
+                             + (f"; resets in about {reset_in}" if reset_in else "")) from last_err
     raise RuntimeError(f"all models failed; last error: {last_err}") from last_err
 
 

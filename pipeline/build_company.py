@@ -12,7 +12,7 @@ import json
 import sys
 import time
 
-from pipeline import fetch_docs, fetch_pdf, fetch_quarters, guidance, verdicts
+from pipeline import fetch_docs, fetch_pdf, fetch_quarters, guidance, llm, verdicts
 
 
 def build(ticker: str, n_calls: int = 4) -> list:
@@ -41,7 +41,11 @@ def build(ticker: str, n_calls: int = 4) -> list:
         except Exception as e:  # one bad link must not stop the rest
             print(f"   SKIPPED: {type(e).__name__}: {str(e)[:100]}")
             continue
-        result = guidance.run(ticker, period, doc, call_label=t.get("label"))
+        try:
+            result = guidance.run(ticker, period, doc, call_label=t.get("label"))
+        except llm.QuotaExhausted as e:
+            raise SystemExit(f"\nSTOPPED: {e}.\nNothing is lost: finished calls are cached. Run the same command "
+                             f"again later and it continues from here.")
         print(f"   {len(doc['pages'])} pages -> {len(result['claims'])} verified claims "
               f"({len(result['dropped'])} dropped), model {result['model']}")
         time.sleep(1)
