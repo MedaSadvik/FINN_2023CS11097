@@ -25,6 +25,7 @@ pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
 pipeline/fetch_filings.py     NSE announcements -> classified rows (shape verified by probe)
 pipeline/fetch_docs.py        screener.in annual report + transcript links
 pipeline/fetch_pdf.py         download PDF (hash-cached), extract text per page
+pipeline/fetch_quarters.py     quarterly Revenue/EBITDA/PBT/PAT from screener's table (no LLM)
 pipeline/llm.py               one door to Gemini: disk cache, retry, fake-able in tests
 pipeline/guidance.py          extract management guidance + verify every quote on the page
 tests/                        unit tests
@@ -56,6 +57,6 @@ All network data is **synthetic**. People are invented. Real company names appea
 - [ ] Filings + docs fetchers run live (written, tests pass)
 - [x] Docs fetcher parses real screener HTML (Kaynes: 18 transcripts, 4 ARs)
 - [x] PDF download + extraction live: Kaynes transcript 20 pages, annual report 321 pages
-- [ ] Guidance extractor run live (needs GEMINI_API_KEY)
+- [x] Guidance extractor live: Kaynes Q1FY27 -> 2 verified claims, 0 dropped (gemini-3.5-flash, 19s)
 - [ ] Results extraction, promised-vs-delivered verdicts
 - [ ] Push, Pull, Call Sheet UI

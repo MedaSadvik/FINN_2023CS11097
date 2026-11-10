@@ -15,7 +15,7 @@ from pathlib import Path
 from pipeline import llm
 
 ROOT = Path(__file__).resolve().parent.parent / "data" / "cache"
-VERSION = "guidance-v1"  # bump when the prompt changes, so old cache entries are not reused
+VERSION = "guidance-v2"  # bump when the prompt changes, so old cache entries are not reused
 MIN_QUOTE_CHARS = 25     # shorter quotes match by accident
 METRICS = ["revenue_growth", "revenue_target", "ebitda_margin", "profit_growth",
            "capex", "order_book", "other_numeric"]
@@ -27,6 +27,9 @@ Extract a statement only if ALL are true:
 - it is said by company management (not an analyst's question);
 - it looks forward (a target, expectation, plan or range);
 - it is about a number: growth, margin, revenue, profit, capex, order book, capacity.
+  A commitment relative to a benchmark counts as a number, e.g. "we have committed to 2x the market
+  growth" or "margins to stay above 14%". Management's ANSWERS to analyst questions count; the
+  question itself does not.
 
 For each, return:
   page     the page number from the [PAGE n] marker where the quote appears
