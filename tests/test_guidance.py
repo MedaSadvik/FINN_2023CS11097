@@ -142,3 +142,46 @@ def test_busy_model_is_retried_before_fallback(monkeypatch, tmp_path):
 
     assert llm.generate_json("primary", "s", "p", call=call) == []
     assert seen == ["primary"] * 3 + ["fb1"]  # 503 = busy: 3 tries, then fall back
+
+
+def make_pages(n):
+    return [{"page": i, "text": f"page {i} text " * 5} for i in range(1, n + 1)]
+
+
+def test_chunk_pages_cover_everything_with_overlap():
+    pages = make_pages(20)
+    chunks = guidance.chunk_pages(pages)
+    assert len(chunks) == 3
+    assert [p["page"] for p in chunks[0]][0] == 1 and chunks[-1][-1]["page"] == 20
+    assert {p["page"] for c in chunks for p in c} == set(range(1, 21))
+    assert chunks[0][-1]["page"] == chunks[1][0]["page"]  # one page of overlap
+    assert len(guidance.chunk_pages(make_pages(10))) == 1  # short documents stay whole
+
+
+def test_check_numbers():
+    ok = guidance.check_numbers({"quote": "we expect growth of 30%-35% this year", "low": 30, "high": 35})
+    assert ok["numbers"] == "verified" and ok["low"] == 30
+    bad = guidance.check_numbers({"quote": "we expect growth of 30%-35% this year", "low": 30, "high": 40, "basis": "yoy_growth_pct"})
+    assert bad["numbers"] == "unverified_in_quote" and bad["low"] is None and bad["basis"] == "other"
+    assert guidance.check_numbers({"quote": "INR 1,200 crores of capex", "low": 1200})["numbers"] == "verified"
+    assert guidance.check_numbers({"quote": "twice the market", "low": None})["numbers"] == "none"
+
+
+def test_extract_guidance_chunks_and_dedupes(monkeypatch, tmp_path):
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    pages = make_pages(20)
+    pages[7]["text"] = "We expect revenue growth of 30-35% in FY27 given the order book and capacity ramp."
+    calls = []
+
+    def fake(model, system, prompt):
+        calls.append(prompt)
+        if "[PAGE 8]" in prompt:  # page 8 sits in the overlap of chunks 1 and 2
+            return json.dumps({"claims": [{"page": 8, "quote": "We expect revenue growth of 30-35% in FY27 given the order book",
+                                           "metric": "revenue_growth", "target": "t", "basis": "yoy_growth_pct",
+                                           "low": 30, "high": 35, "horizon": "FY27", "scope": "company"}]})
+        return '{"claims": []}'
+
+    r = guidance.extract_guidance(pages, call=fake)
+    assert len(calls) == 3
+    assert len(r["claims"]) == 1 and not r["dropped"]  # seen twice, kept once, no noise in dropped
+    assert r["claims"][0]["numbers"] == "verified"

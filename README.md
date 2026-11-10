@@ -25,6 +25,8 @@ pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
 pipeline/fetch_filings.py     NSE announcements -> classified rows (shape verified by probe)
 pipeline/fetch_docs.py        screener.in annual report + transcript links
 pipeline/fetch_pdf.py         download PDF (hash-cached), extract text per page
+pipeline/verdicts.py           promised vs delivered by arithmetic on reported quarters (no LLM)
+pipeline/build_company.py     ONE command: any ticker -> docs, actuals, guidance, verdicts
 pipeline/fetch_quarters.py     quarterly Revenue/EBITDA/PBT/PAT from screener's table (no LLM)
 pipeline/llm.py               one door to Gemini: disk cache, retry, fake-able in tests
 pipeline/guidance.py          extract management guidance + verify every quote on the page
@@ -58,5 +60,7 @@ All network data is **synthetic**. People are invented. Real company names appea
 - [x] Docs fetcher parses real screener HTML (Kaynes: 18 transcripts, 4 ARs)
 - [x] PDF download + extraction live: Kaynes transcript 20 pages, annual report 321 pages
 - [x] Guidance extractor live: Kaynes Q1FY27 -> 2 verified claims, 0 dropped (gemini-3.5-flash, 19s)
-- [ ] Results extraction, promised-vs-delivered verdicts
+- [x] Quarterly actuals parsed (Kaynes verified: Q1FY27 revenue 946 matches the call)
+- [ ] build_company run live on 4 calls (written, 104 tests pass)
+- [ ] Tier-2 verdicts (segment/capex claims via later transcripts), results-filing cards
 - [ ] Push, Pull, Call Sheet UI

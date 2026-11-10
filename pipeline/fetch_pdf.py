@@ -64,6 +64,18 @@ def find_link(ticker: str, what: str) -> str:
     return hits[0]  # screener lists newest first; first hit wins
 
 
+def ensure_text(ticker: str, what: str, url: str) -> dict:
+    """Download + extract once; later calls read the saved text. Returns the saved document dict."""
+    out = ROOT / "text" / f"{ticker}_{what.upper()}.json"
+    if out.exists():
+        return json.loads(out.read_text())
+    path, digest = download(url)
+    doc = {"ticker": ticker, "what": what, "sha256": digest, "url": url, "pages": extract_pages(path)}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(doc))
+    return doc
+
+
 def main(ticker: str, what: str):
     url = find_link(ticker, what)
     print("downloading", url[:100])
