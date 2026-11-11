@@ -1,1 +1,547 @@
-{}
+{
+ "KAYNES": {
+  "ticker": "KAYNES",
+  "name": "Kaynes Technology",
+  "employer_key": "kaynes",
+  "provider": "openai_compat",
+  "quarters": [
+   {
+    "quarter": "Q2FY25",
+    "revenue": 572.0,
+    "ebitda": 82.0,
+    "pbt": 85.0,
+    "pat": 60.0
+   },
+   {
+    "quarter": "Q3FY25",
+    "revenue": 661.0,
+    "ebitda": 94.0,
+    "pbt": 81.0,
+    "pat": 66.0
+   },
+   {
+    "quarter": "Q4FY25",
+    "revenue": 984.0,
+    "ebitda": 168.0,
+    "pbt": 142.0,
+    "pat": 116.0
+   },
+   {
+    "quarter": "Q1FY26",
+    "revenue": 673.0,
+    "ebitda": 113.0,
+    "pbt": 96.0,
+    "pat": 75.0
+   },
+   {
+    "quarter": "Q2FY26",
+    "revenue": 906.0,
+    "ebitda": 148.0,
+    "pbt": 152.0,
+    "pat": 121.0
+   },
+   {
+    "quarter": "Q3FY26",
+    "revenue": 804.0,
+    "ebitda": 119.0,
+    "pbt": 116.0,
+    "pat": 77.0
+   },
+   {
+    "quarter": "Q4FY26",
+    "revenue": 1243.0,
+    "ebitda": 194.0,
+    "pbt": 140.0,
+    "pat": 91.0
+   },
+   {
+    "quarter": "Q1FY27",
+    "revenue": 946.0,
+    "ebitda": 148.0,
+    "pbt": 88.0,
+    "pat": 56.0
+   }
+  ],
+  "promises": [
+   {
+    "made_in": "Q3FY26",
+    "target": "FY26 revenue to cross INR4,000 crores minimum",
+    "horizon": "FY26",
+    "page": 8,
+    "quote": "including the last quarter for FY '26, we'll cross about INR4,000 crores minimum and mainly driven by EMS revenues",
+    "mark": "quarter for FY '26, we'll cross about INR4,000 crores minimum and mainly",
+    "outcome": "missed",
+    "result": "3626.0 cr vs 4000 cr guided (Q1FY26-Q4FY26)"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "$1 billion revenue in FY28",
+    "horizon": "FY28",
+    "page": 9,
+    "quote": "what we have projected $1 billion, we are still sticking on to that because for us, from our bare board, from our OSAT, additional buildings are going to take place.",
+    "mark": "what we have projected $1 billion, we are still sticking",
+    "outcome": "pending",
+    "result": "due FY28; reported so far through FY27"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "OSAT revenue of at least INR1,500 crores",
+    "horizon": "FY28",
+    "page": 10,
+    "quote": "So, at the minimum, you can expect INR1,500 crores from our OSAT business.",
+    "mark": "So, at the minimum, you can expect INR1,500 crores from our OSAT business.",
+    "outcome": "pending",
+    "result": "due FY28; reported so far through FY27"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "PCB revenue of about INR1,000 crores",
+    "horizon": "FY28",
+    "page": 10,
+    "quote": "Similarly, you can expect about INR1,000 crores from PC Board business.",
+    "mark": "Similarly, you can expect about INR1,000 crores from PC Board business.",
+    "outcome": "pending",
+    "result": "due FY28; reported so far through FY27"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Company revenue growth above 30% in FY27",
+    "horizon": "FY27",
+    "page": 15,
+    "quote": "And like Rameshji said, by itself can grow at about 30% where the company will go certainly larger than that.",
+    "mark": "Rameshji said, by itself can grow at about 30% where the company will go",
+    "outcome": "pending",
+    "result": "so far Q1FY27-Q1FY27: 40.6% vs 30% guided"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "Turn cash positive by end of FY27",
+    "horizon": "FY27",
+    "page": 6,
+    "quote": "that by end of the financial year we'll turn the cash positive, we are pretty confident on that.",
+    "mark": "that by end of the financial year we'll turn the cash positive, we are pretty confident on that.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "Increase solar power capacity to 3 GW",
+    "horizon": "unspecified",
+    "page": 7,
+    "quote": "We also plan to increase our consumption of renewable energy as a power source for our facility to 3 gigawatt in solar",
+    "mark": "energy as a power source for our facility to 3 gigawatt in solar",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "Capex of about INR300 crores for OSAT and PCB",
+    "horizon": "unspecified",
+    "page": 8,
+    "quote": "Our current goal is to capex at about INR300 crores for OSAT and PCB",
+    "mark": "Our current goal is to capex at about INR300 crores for OSAT and PCB",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT and PCB): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "Commercial revenue booking from Q3-Q4 FY27",
+    "horizon": "Q3FY27",
+    "page": 10,
+    "quote": "we are going to have a commercial revenue booking from this year, from third quarter and fourth quarter, and we are committed to that.",
+    "mark": "we are going to have a commercial revenue booking from this year, from third quarter and fourth quarter, and we are committed to that.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "FY27 revenue growth at 2x market growth",
+    "horizon": "FY27",
+    "page": 14,
+    "quote": "revenue growth, we have committed the 2x of the market growth.",
+    "mark": "revenue growth, we have committed the 2x of the market growth.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "FY27 OSAT and PCB combined revenue of INR450-500 crore",
+    "horizon": "FY27",
+    "page": 15,
+    "quote": "INR450 to INR500 crores, which is what we are targeting at this point in time, we are on the target.",
+    "mark": "INR450 to INR500 crores, which is what we",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT and PCB): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "FY27 capex: INR300cr OSAT, INR300cr PCB, INR250cr EMS",
+    "horizon": "FY27",
+    "page": 16,
+    "quote": "We said we will be funding for this capex for this year is about INR300 crores for OSAT, INR300 crores for PCB, and about INR250 crores for EMS business.",
+    "mark": "We said we will be funding for this capex for this year is about INR300 crores for OSAT, INR300 crores for PCB, and about INR250 crores for EMS business.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q1FY27",
+    "target": "Order book above INR8,900 crore",
+    "horizon": "unspecified",
+    "page": 19,
+    "quote": "very strong order book of more than about INR8,900 crores is in the system",
+    "mark": "strong order book of more than about INR8,900 crores is in the system",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q2FY26",
+    "target": "OSAT balance capex of 10.3 billion funded via QIP over five years",
+    "horizon": "unspecified",
+    "page": 7,
+    "quote": "First balance requirement for OSAT INR10.3 billion will be funded through QIP and spent amount of about 3.8 billion and balance internal accruals capex spread over five years and some transitory debt.",
+    "mark": "First balance requirement for OSAT INR10.3 billion will be funded through",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q2FY26",
+    "target": "PCB capex plan of 14 billion with 3.2 billion balance requirement",
+    "horizon": "unspecified",
+    "page": 7,
+    "quote": "with regard to PCB, the current plan includes only capex of 14 billion for which the balance requirement is 3.2 billion and up central government subsidy of about 3 billion",
+    "mark": "the current plan includes only capex of 14 billion for which the balance",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (PCB): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q2FY26",
+    "target": "Interest cost of approximately 10% including all bills discounted",
+    "horizon": "unspecified",
+    "page": 7,
+    "quote": "The interest cost will work out approximately 10% including all bills discounted.",
+    "mark": "interest cost will work out approximately 10% including all bills discounted.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q2FY26",
+    "target": "INR240 crores of receivables to be discounted this year",
+    "horizon": "FY26",
+    "page": 9,
+    "quote": "we are quite confident that INR240 crores, approximately INR240 crores of such receivables will anyway get discounted and it'll reduce the amount",
+    "mark": "we are quite confident that INR240 crores, approximately INR240 crores of such receivables",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (Iskraemeco): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q2FY26",
+    "target": "H2 FY26 smart metering execution of about INR300 crores",
+    "horizon": "H2FY26",
+    "page": 16,
+    "quote": "in the second half, we also plan some execution, which will be of the nature of about INR300-odd crores",
+    "mark": "which will be of the nature of about INR300-odd crores",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (smart metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "INR15,000 crores business potential from HDI PCB investment",
+    "horizon": "unspecified",
+    "page": 5,
+    "quote": "This would mean a business potential of about INR15,000 crores for the group from the customers from our current investment of INR1,500 crores in the HDI PCB manufacturing operations",
+    "mark": "would mean a business potential of about INR15,000 crores for the group from",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Net working capital of 70-85 days by end of FY26",
+    "horizon": "FY26",
+    "page": 7,
+    "quote": "So typically, what we expect is about between 70 to 85 days.",
+    "mark": "typically, what we expect is about between 70 to 85 days.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "metric not computable from reported quarters"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "FY26 metering revenue of about INR300 crores",
+    "horizon": "FY26",
+    "page": 8,
+    "quote": "And maybe about INR300 crores will be metering revenues out of this.",
+    "mark": "And maybe about INR300 crores will be metering revenues",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Q4FY26 smart meter revenue of INR300 crores",
+    "horizon": "Q4FY26",
+    "page": 10,
+    "quote": "So hopefully, the fourth quarter we'll have INR300 crores of smart meter",
+    "mark": "hopefully, the fourth quarter we'll have INR300 crores of smart meter",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (smart meter): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "FY26 smart metering revenue of INR700-800 crores",
+    "horizon": "FY26",
+    "page": 12,
+    "quote": "you will have about INR300 crores of this business coming in, which will total up to about between INR700 crores and INR800 crores of smart metering business for the year",
+    "mark": "which will total up to about between INR700 crores and INR800 crores of smart metering",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (smart metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Total OSAT capex of INR3,200 crores",
+    "horizon": "unspecified",
+    "page": 14,
+    "quote": "the INR3,200 crores is the total capex for OSAT",
+    "mark": "the INR3,200 crores is the total capex",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Total PC Board capex of INR1,400 crores",
+    "horizon": "unspecified",
+    "page": 14,
+    "quote": "INR1,400 crores is the total capex for PC Board",
+    "mark": "INR1,400 crores is the total capex",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (PC Board): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "About INR400 crores of capex in FY26",
+    "horizon": "FY26",
+    "page": 15,
+    "quote": "you can take broadly in this year, maybe about another INR400-odd crores of capex will be spent",
+    "mark": "broadly in this year, maybe about another INR400-odd crores of capex will",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "metric not computable from reported quarters"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Cumulative PC Board capex of INR1,400 crores in FY27",
+    "horizon": "FY27",
+    "page": 15,
+    "quote": "we'll spend about cumulatively INR1,400 crores in the PC Board business",
+    "mark": "we'll spend about cumulatively INR1,400 crores in the PC Board business",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (PC Board): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "OSAT Phase 1 capex of INR1,700-1,800 crores",
+    "horizon": "FY27",
+    "page": 15,
+    "quote": "the OSAT business, the Phase 1 will get completed that is about INR1,700 crores, INR1,800 crores of capex",
+    "mark": "Phase 1 will get completed that is about INR1,700 crores, INR1,800 crores of capex",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Smart metering growth of about 30% p.a. for next 4-5 years",
+    "horizon": "unspecified",
+    "page": 15,
+    "quote": "the market demand is so high for the next 4, 5 years, year-on-year, there will be a growth of around 30%.",
+    "mark": "year-on-year, there will be a growth of around 30%.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (smart metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "Smart metering to grow about 30% in FY27",
+    "horizon": "FY27",
+    "page": 15,
+    "quote": "by itself can grow at about 30% where the company will go certainly larger than that.",
+    "mark": "by itself can grow at about 30% where the company will go",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (smart metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q3FY26",
+    "target": "ODM share of order book up 5-7 percentage points",
+    "horizon": "unspecified",
+    "page": 16,
+    "quote": "It can go up by about 5%, 7 percentage points going forward.",
+    "mark": "It can go up by about 5%, 7 percentage points going forward.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "OSAT revenue visibility of over INR25,000 million over next 5 years",
+    "horizon": "unspecified",
+    "page": 4,
+    "quote": "In OSAT, the order outlook for both the current year and the medium term remains strong with revenue visibility of over INR25,000 million over the next 5 years.",
+    "mark": "In OSAT, the order outlook for both the current year and the medium term remains strong with revenue visibility of over INR25,000 million over the next 5 years.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "NPD-led solutions to reach nearly 30% of total revenue",
+    "horizon": "unspecified",
+    "page": 6,
+    "quote": "our goal is to steadily increase the contribution of NPD-led and value-added solutions to nearly 30% of the total revenue in the coming years",
+    "mark": "NPD-led and value-added solutions to nearly 30% of the total revenue in",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no fiscal period stated"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "grow at double the market growth rate",
+    "horizon": "unspecified",
+    "page": 8,
+    "quote": "we chose to say this time that we'll be outgrowing the market and we'll be doubling the market growth",
+    "mark": "we chose to say this time that we'll be outgrowing the market and we'll be doubling the market growth",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "EMS working capital days to improve by 8-10 days",
+    "horizon": "unspecified",
+    "page": 12,
+    "quote": "Kaynes stand-alone, the EMS business will continue to be cash positive, and we'll be improving it at least by about 8 to 10 days in the years to come in this segment",
+    "mark": "we'll be improving it at least by about 8 to 10 days in the years to come",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (EMS): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "70-80% of INR600 crores negative cash to reduce by Q3FY27",
+    "horizon": "Q3FY27",
+    "page": 12,
+    "quote": "Sir, the INR600 crores by end of the third quarter will come to around we will try to work on the positive, but at least 70% to 80% of this will come down for sure.",
+    "mark": "try to work on the positive, but at least 70% to 80% of this will come down for",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "Rail business growth of around 20-25%",
+    "horizon": "FY27",
+    "page": 14,
+    "quote": "So rail business, I'm expecting this year to grow by around 20%, 25% because of these coming in.",
+    "mark": "I'm expecting this year to grow by around 20%, 25% because of these coming",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (rail): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "Rail margins above current 30% plus",
+    "horizon": "FY27",
+    "page": 14,
+    "quote": "And the margins are going to be north of current 30% plus.",
+    "mark": "margins are going to be north of current 30% plus.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (rail): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "Metering revenue roughly flat vs INR971 crores",
+    "horizon": "FY27",
+    "page": 17,
+    "quote": "For the next year, while the INR971 crores of sales, what we did this year, in absolute numbers, we may remain same or slightly up or down",
+    "mark": "For the next year, while the INR971 crores of sales, what we",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "50% of metering business in old AMISP model",
+    "horizon": "FY27",
+    "page": 17,
+    "quote": "almost 50% of the business will be in the old model and the rest will come in the new model",
+    "mark": "almost 50% of the business will be",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "Recover at least 50% of noncurrent assets immediately",
+    "horizon": "unspecified",
+    "page": 17,
+    "quote": "how we are going to mitigate that risk and at least get 50% immediately",
+    "mark": "going to mitigate that risk and at least get 50% immediately",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (metering): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "2x market growth from start of the year",
+    "horizon": "FY27",
+    "page": 19,
+    "quote": "So we will be doing the 2x growth from the start. When I say 2x growth, it's not the 2x growth of our last quarter comparison, but on the market growth and our growth.",
+    "mark": "So we will be doing the 2x growth from the start. When I say 2x growth, it's not the 2x growth of our last quarter comparison, but on the market growth and our growth.",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "no verified number to check against"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "PCB revenue of INR300-400 crores",
+    "horizon": "FY27",
+    "page": 19,
+    "quote": "I'm sure and certain we will do a good number of PCB of around INR300 crores to INR400 crores",
+    "mark": "will do a good number of PCB of around INR300 crores to INR400 crores",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (PCB): needs a later-transcript check"
+   },
+   {
+    "made_in": "Q4FY26",
+    "target": "OSAT revenue of INR250-300 crores",
+    "horizon": "FY27",
+    "page": 19,
+    "quote": "and OSAT of around INR250 crores to INR300 crores",
+    "mark": "and OSAT of around INR250 crores to INR300 crores",
+    "outcome": "unclear",
+    "result": null,
+    "reason": "segment claim (OSAT): needs a later-transcript check"
+   }
+  ]
+ }
+}
