@@ -7,7 +7,7 @@ export function Shell({ children, banner }: { children: React.ReactNode; banner?
         <Link href="/" className="text-[1.35rem] font-bold tracking-tight">FINN</Link>
         <nav className="flex gap-5 text-[0.95rem] text-ink-2">
           <Link href="/" className="hover:text-ink">Today</Link>
-          <Link href="/company/KAYNES" className="hover:text-ink">Research</Link>
+          <Link href="/company" className="hover:text-ink">Research</Link>
         </nav>
       </header>
       {banner && <p className="bg-wash px-4 py-2 text-sm text-ink-2">{banner}</p>}

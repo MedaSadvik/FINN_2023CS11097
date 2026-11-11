@@ -1,20 +1,37 @@
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Shell } from "@/components/Shell";
 import { PromiseRow } from "@/components/PromiseRow";
 import { CallSheet } from "@/components/CallSheet";
 import { LeadList } from "@/components/LeadList";
 import { getCompany, knownTickers } from "@/lib/data";
 import { callSheet } from "@/lib/network";
+import { nameFor } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return knownTickers().map((ticker) => ({ ticker }));
 }
 
+function NotBuilt({ ticker }: { ticker: string }) {
+  return (
+    <main className="px-4 pt-6">
+      <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">{nameFor(ticker) ?? ticker}</h1>
+      <p className="mt-3">We have not read {ticker}&apos;s earnings calls yet.</p>
+      <p className="mt-2 text-ink-2">
+        In this prototype a company appears after its transcripts are read and checked. Build it with
+        {" "}<code className="rounded bg-wash px-1">python -m pipeline.build_company {ticker}</code>, then export it.
+      </p>
+      <Link href="/company" className="mt-4 inline-flex min-h-11 items-center rounded-full border border-ink px-4 font-semibold hover:bg-ink hover:text-paper">
+        Choose another company
+      </Link>
+    </main>
+  );
+}
+
 async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">["params"] }) {
   const { ticker } = await params;
   const c = getCompany(ticker);
-  if (!c) notFound();
+  if (!c) return <NotBuilt ticker={decodeURIComponent(ticker).toUpperCase()} />;
   const leads = c.employer_key ? callSheet(c.employer_key, 3) : [];
   const checked = c.promises.filter((p) => p.outcome !== "unclear");
   const unclear = c.promises.filter((p) => p.outcome === "unclear");
@@ -29,7 +46,8 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   return (
       <main>
         {banner && <p className="bg-wash px-4 py-2 text-sm text-ink-2">{banner}</p>}
-        <h1 className="px-4 pt-6 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
+        <Link href="/company" className="block px-4 pt-4 text-sm text-ink-2 hover:text-ink">All companies</Link>
+        <h1 className="px-4 pt-2 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
         <div className="px-4">
           <CallSheet label="Who in your network knows this company" title={`Who can explain ${c.name}`}>
             <LeadList leads={leads} empty="No one in your contacts has worked there." />

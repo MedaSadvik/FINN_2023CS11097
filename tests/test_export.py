@@ -51,3 +51,10 @@ def test_mark_finds_numbers_written_with_commas():
     q = "We will cross 4,000 crores of revenue in FY26 as a minimum, and we are confident about that."
     m = export.mark_span(q, 4000, None)
     assert "4,000" in m and m != q
+
+
+def test_website_portfolio_matches_pipeline_config():
+    import re
+    from pipeline.config import PORTFOLIO
+    ts = (Path(__file__).resolve().parent.parent / "frontend" / "lib" / "portfolio.ts").read_text()
+    assert re.findall(r'ticker: "([A-Z0-9]+)", name: "([^"]+)"', ts) == [(t, n) for t, n, _ in PORTFOLIO]
