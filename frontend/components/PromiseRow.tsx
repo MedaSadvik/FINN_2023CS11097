@@ -26,7 +26,7 @@ export function PromiseRow({ p, sample }: { p: P; sample?: boolean }) {
       </blockquote>
       <p className="mt-1.5 flex items-center gap-2 text-sm text-ink-3">
         {sample && <SampleTag>Sample wording</SampleTag>}
-        {p.made_in} call, {p.call_month}, page {p.page}
+        {[`${p.made_in} call`, p.call_month, `page ${p.page}`].filter(Boolean).join(", ")}
       </p>
       {(p.result || p.reason) && <p className="mt-3 text-[0.95rem]">{p.result ?? p.reason}</p>}
     </li>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { FeedItem as Item, Quarter } from "@/lib/types";
-import { callSheet, overlapWith, employerName } from "@/lib/network";
+import { callSheet, overlapWith, employerName, employerKeyFor } from "@/lib/network";
 import { cr, change, pct } from "@/lib/format";
 import { CallSheet } from "./CallSheet";
 import { LeadList } from "./LeadList";
@@ -36,7 +36,7 @@ function Head({ item, kind, sample }: { item: Item; kind: string; sample?: boole
 
 export function FeedItem({ item }: { item: Item }) {
   if (item.type === "results") {
-    const leads = callSheet("kaynes", 2);
+    const leads = callSheet(employerKeyFor(item.ticker), 2);
     return (
       <article className="px-4 py-5">
         <Head item={item} kind={`Results, ${item.quarter}`} />

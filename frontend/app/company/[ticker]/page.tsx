@@ -15,11 +15,20 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   const { ticker } = await params;
   const c = getCompany(ticker);
   if (!c) notFound();
-  const leads = callSheet(c.employer_key, 3);
-  const order = ["missed", "partly", "delivered", "pending", "unclear"];
-  const promises = [...c.promises].sort((a, b) => order.indexOf(a.outcome) - order.indexOf(b.outcome));
+  const leads = c.employer_key ? callSheet(c.employer_key, 3) : [];
+  const checked = c.promises.filter((p) => p.outcome !== "unclear");
+  const unclear = c.promises.filter((p) => p.outcome === "unclear");
+  const count = (o: string) => c.promises.filter((p) => p.outcome === o).length;
+  const parts = ["missed", "partly", "delivered", "pending"].map((o) => [o, count(o)] as const).filter(([, n]) => n);
+  const summary = `${c.promises.length} ${c.promises.length === 1 ? "promise" : "promises"}. ` + [...parts.map(([o, n]) => `${n} ${o}`), `${unclear.length} can't be checked yet`].join(", ") + ".";
+  const banner = c.sample
+    ? "Preview. Quarterly figures are real. Promise wording is placeholder."
+    : c.provider && c.provider !== "gemini"
+      ? "Draft. Promises were extracted by a test model, not the shipped Gemini run."
+      : null;
   return (
       <main>
+        {banner && <p className="bg-wash px-4 py-2 text-sm text-ink-2">{banner}</p>}
         <h1 className="px-4 pt-6 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
         <div className="px-4">
           <CallSheet label="Who in your network knows this company" title={`Who can explain ${c.name}`}>
@@ -29,9 +38,20 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
 
         <h2 className="px-4 pt-8 text-lg font-bold">Promised vs delivered</h2>
         <p className="px-4 pt-1 text-ink-2">Only what management said on earnings calls, checked against reported numbers.</p>
+        <p className="px-4 pt-1 font-semibold">{summary}</p>
         <ul className="mt-3 divide-y divide-line border-y border-line">
-          {promises.map((p) => <PromiseRow key={p.target} p={p} sample />)}
+          {checked.map((p, i) => <PromiseRow key={`${p.made_in}-${i}`} p={p} sample={c.sample} />)}
         </ul>
+        {unclear.length > 0 && (
+          <details className="border-b border-line">
+            <summary className="flex min-h-12 cursor-pointer items-center px-4 font-semibold">
+              {unclear.length} {unclear.length === 1 ? "promise" : "promises"} we can't check yet
+            </summary>
+            <ul className="divide-y divide-line border-t border-line">
+              {unclear.map((p, i) => <PromiseRow key={`${p.made_in}-u${i}`} p={p} sample={c.sample} />)}
+            </ul>
+          </details>
+        )}
 
         <h2 className="px-4 pt-8 text-lg font-bold">Reported quarters</h2>
         <p className="px-4 pt-1 text-ink-2">₹ crore</p>
@@ -59,7 +79,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
 // The page shell is static; the company data streams in behind a placeholder.
 export default function Company({ params }: PageProps<"/company/[ticker]">) {
   return (
-    <Shell banner="Preview build. Quarterly figures are real. Promise wording is placeholder until the verified export is wired in.">
+    <Shell>
       <Suspense fallback={<p className="px-4 pt-6 text-ink-2">Loading research…</p>}>
         <CompanyBody params={params} />
       </Suspense>

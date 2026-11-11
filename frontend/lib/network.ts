@@ -10,6 +10,7 @@ const end = (r: Role) => r.end_year ?? CURRENT;
 const together = (a: Role, b: Role) => a.employer_key === b.employer_key && a.start_year <= end(b) && b.start_year <= end(a);
 
 export const employer = (key: string): Employer | undefined => network.employers.find((e) => e.key === key);
+export const employerKeyFor = (ticker: string) => network.employers.find((e) => e.ticker === ticker)?.key ?? ticker.toLowerCase();
 export const employerName = (key: string) => employer(key)?.name ?? key;
 const currentRole = (p: Person) => p.roles.find((r) => r.end_year === null);
 

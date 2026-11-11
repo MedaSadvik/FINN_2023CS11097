@@ -21,7 +21,7 @@ export type Quarter = { quarter: string; revenue: number; ebitda: number; pbt: n
 export type Outcome = "delivered" | "partly" | "missed" | "pending" | "unclear";
 export type Pledge = {
   made_in: string;
-  call_month: string;
+  call_month?: string;
   target: string;
   horizon: string;
   page: number;
