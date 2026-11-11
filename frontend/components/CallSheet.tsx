@@ -19,13 +19,13 @@ export function CallSheet({ label, title, children }: { label: string; title: st
         aria-label={title}
         onClick={(e) => e.target === ref.current && ref.current?.close()}
       >
-        <div className="flex items-center justify-between border-b border-line px-5 py-3">
+        <div className="sheet-head flex items-center justify-between border-b border-line px-5 py-3">
           <h2 className="text-lg font-bold">{title}</h2>
           <button type="button" onClick={() => ref.current?.close()} className="min-h-11 px-2 text-ink-2 hover:text-ink">
             Close
           </button>
         </div>
-        <div className="overflow-y-auto px-5 py-4">{children}</div>
+        <div className="sheet-body px-5 py-4">{children}</div>
       </dialog>
     </>
   );
