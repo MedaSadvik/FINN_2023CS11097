@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { FeedItem as Item, Quarter } from "@/lib/types";
-import { callSheet, overlapWith, employerKeyFor as employerKeyOf } from "@/lib/network";
+import type { FeedItem as Item, Network, Quarter } from "@/lib/types";
+import { callSheet, overlapWith, employerKeyFor } from "@/lib/network-core";
 import { cr, change, pct, shortDate } from "@/lib/format";
 import { CallSheet } from "./CallSheet";
 import { LeadList } from "./LeadList";
@@ -39,8 +39,8 @@ function FilingLink({ url }: { url?: string | null }) {
   return <a href={url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm text-ink-2 underline underline-offset-2 hover:text-ink">Open the filing</a>;
 }
 
-function WhoToCall({ employerKey, company, label }: { employerKey: string | null; company: string; label: string }) {
-  const leads = employerKey ? callSheet(employerKey, 2) : [];
+function WhoToCall({ net, employerKey, company, label }: { net: Network; employerKey: string | null; company: string; label: string }) {
+  const leads = employerKey ? callSheet(net, employerKey, 2) : [];
   return (
     <CallSheet label={label} title={`Who can explain ${company}`}>
       <LeadList leads={leads} empty="No one in your contacts has worked there." />
@@ -52,7 +52,7 @@ const VERB: Record<string, string> = {
   appointment: "appointed", "re-appointment": "re-appointed", resignation: "resigned as", cessation: "ceased as", other: "named",
 };
 
-export function FeedItem({ item }: { item: Item }) {
+export function FeedItem({ item, net }: { item: Item; net: Network }) {
   if (item.type === "results") {
     return (
       <article className="px-4 py-5">
@@ -77,13 +77,13 @@ export function FeedItem({ item }: { item: Item }) {
           </tbody>
         </table>
         <FilingLink url={item.pdf_url} />
-        <div><WhoToCall employerKey={employerKeyOf(item.ticker)} company={item.company} label="Who to call" /></div>
+        <div><WhoToCall net={net} employerKey={employerKeyFor(net, item.ticker)} company={item.company} label="Who to call" /></div>
       </article>
     );
   }
   if (item.type === "mgmt_change") {
     const p = item.person;
-    const leads = p ? overlapWith(p.history) : [];
+    const leads = p ? overlapWith(net, p.history) : [];
     return (
       <article className="px-4 py-5">
         <Head item={item} kind="Management change" />
@@ -115,7 +115,7 @@ export function FeedItem({ item }: { item: Item }) {
               <LeadList leads={leads} empty="" />
             </CallSheet>
           ) : (
-            <WhoToCall employerKey={item.employer_key} company={item.company} label="Who knows this company" />
+            <WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who knows this company" />
           )}
         </div>
       </article>
@@ -128,7 +128,7 @@ export function FeedItem({ item }: { item: Item }) {
         <p className="mt-1 font-semibold">{item.headline}</p>
         {item.detail && <p className="mt-2 text-ink-2">{item.detail}</p>}
         <FilingLink url={item.pdf_url} />
-        <div><WhoToCall employerKey={item.employer_key} company={item.company} label="Best person to call" /></div>
+        <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Best person to call" /></div>
       </article>
     );
   }
@@ -143,7 +143,7 @@ export function FeedItem({ item }: { item: Item }) {
         {item.price_pct !== null && <>price <Delta v={item.price_pct} /> on the day</>}.
       </p>
       {rule && <p className="mt-1 text-ink-2">Your rules: {rule}.</p>}
-      <div><WhoToCall employerKey={item.employer_key} company={item.company} label="Who to call" /></div>
+      <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who to call" /></div>
     </article>
   );
 }

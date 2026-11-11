@@ -5,7 +5,8 @@ import { PromiseRow } from "@/components/PromiseRow";
 import { CallSheet } from "@/components/CallSheet";
 import { LeadList } from "@/components/LeadList";
 import { getCompany, knownTickers } from "@/lib/data";
-import { callSheet } from "@/lib/network";
+import { callSheet } from "@/lib/network-core";
+import { getNetwork } from "@/lib/account";
 import { nameFor } from "@/lib/portfolio";
 
 export function generateStaticParams() {
@@ -32,7 +33,8 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   const { ticker } = await params;
   const c = getCompany(ticker);
   if (!c) return <NotBuilt ticker={decodeURIComponent(ticker).toUpperCase()} />;
-  const leads = c.employer_key ? callSheet(c.employer_key, 3) : [];
+  const { net } = await getNetwork();
+  const leads = c.employer_key ? callSheet(net, c.employer_key, 3) : [];
   const checked = c.promises.filter((p) => p.outcome !== "unclear");
   const unclear = c.promises.filter((p) => p.outcome === "unclear");
   const count = (o: string) => c.promises.filter((p) => p.outcome === o).length;

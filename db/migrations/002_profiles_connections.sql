@@ -188,6 +188,8 @@ revoke all on profiles, profile_roles, profile_education, connections from anon,
 grant select, insert, update on profiles to authenticated;
 grant select, insert, update, delete on profile_roles, profile_education to authenticated;
 grant select, delete on connections to authenticated;
+revoke all on network_roles, network_education from anon, authenticated;
+grant select on network_roles, network_education to authenticated;
 grant usage on sequence profile_roles_id_seq, profile_education_id_seq to authenticated;
 revoke execute on function connected_to_me, find_user, request_connection, respond_connection from public, anon;
 grant execute on function connected_to_me, find_user, request_connection, respond_connection to authenticated;

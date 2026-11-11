@@ -8,12 +8,13 @@ export type Person = {
   last_spoke: string | null;
   roles: Role[];
   education: Education[];
+  linked?: boolean; // a real connection (live profile), not a sample contact
 };
 export type Employer = { key: string; name: string; sector: string; ticker: string | null };
 export type Relation = { employer_key: string; ticker: string; relation: "competitor" | "supplier" | "customer" };
 export type Network = { employers: Employer[]; employer_relations: Relation[]; people: Person[] };
 
-export type Evidence = { text: string; source: "public profile" | "your notes" };
+export type Evidence = { text: string; source: "public profile" | "their profile" | "your notes" };
 export type Lead = { person: Person; reasons: Evidence[]; tier: "worked_there" | "adjacent" | "overlap" };
 
 export type Quarter = { quarter: string; revenue: number; ebitda: number; pbt: number; pat: number };
@@ -46,3 +47,6 @@ export type FeedItem =
   | (Base & { type: "mgmt_change"; headline: string; detail?: string; person: PersonRecord | null; employer_key: string | null })
   | (Base & { type: "event"; label?: string; headline: string; detail: string; employer_key: string | null })
   | (Base & { type: "alert"; volume_x: number | null; price_pct: number | null; rules?: AlertRules; employer_key: string | null });
+
+export type Profile = { id: string; username: string; display_name: string; headline: string | null };
+export type Account = { userId: string; email: string | null; profile: Profile | null };
