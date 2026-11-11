@@ -32,13 +32,17 @@ export type Pledge = {
   reason?: string;
 };
 
+export type HistoryEntry = {
+  employer: string; title: string | null; start_year: number | null; end_year: number | null; employer_key: string | null;
+};
+export type PersonRecord = {
+  person: string; role: string | null; event: string; quote: string | null; history: HistoryEntry[];
+};
+export type AlertRules = { volume_multiple?: number; price_move?: number };
+
+type Base = { id: string; ticker: string; company: string; filed: string; sample?: boolean; pdf_url?: string | null };
 export type FeedItem =
-  | { id: string; type: "results"; ticker: string; company: string; priority: "high"; filed: string; quarter: string;
-      cur: Quarter; qoq: Quarter; yoy: Quarter }
-  | { id: string; type: "mgmt_change"; ticker: string; company: string; priority: "high"; filed: string;
-      headline: string; person: string; role: string; bio: string;
-      history: { employer_key: string; title: string; start_year: number; end_year: number | null }[] }
-  | { id: string; type: "event"; ticker: string; company: string; priority: "medium"; filed: string;
-      headline: string; detail: string; employer_key: string }
-  | { id: string; type: "alert"; ticker: string; company: string; priority: "medium"; filed: string;
-      trigger: string; volume_x: number; price_pct: number; employer_key: string };
+  | (Base & { type: "results"; quarter: string; cur: Quarter; qoq: Quarter; yoy: Quarter })
+  | (Base & { type: "mgmt_change"; headline: string; detail?: string; person: PersonRecord | null; employer_key: string | null })
+  | (Base & { type: "event"; label?: string; headline: string; detail: string; employer_key: string | null })
+  | (Base & { type: "alert"; volume_x: number | null; price_pct: number | null; rules?: AlertRules; employer_key: string | null });

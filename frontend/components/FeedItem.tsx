@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { FeedItem as Item, Quarter } from "@/lib/types";
-import { callSheet, overlapWith, employerName, employerKeyFor } from "@/lib/network";
-import { cr, change, pct } from "@/lib/format";
+import { callSheet, overlapWith, employerKeyFor as employerKeyOf } from "@/lib/network";
+import { cr, change, pct, shortDate } from "@/lib/format";
 import { CallSheet } from "./CallSheet";
 import { LeadList } from "./LeadList";
 import { SampleTag } from "./Shell";
@@ -12,8 +12,7 @@ const FIELDS: { key: keyof Omit<Quarter, "quarter">; label: string }[] = [
 ];
 
 function Delta({ v }: { v: number }) {
-  const up = v >= 0;
-  return <span className={up ? "text-ok" : "text-miss"}>{pct(v, 0)}</span>;
+  return <span className={v >= 0 ? "text-ok" : "text-miss"}>{pct(v, 0)}</span>;
 }
 
 function summary(r: Extract<Item, { type: "results" }>) {
@@ -23,20 +22,38 @@ function summary(r: Extract<Item, { type: "results" }>) {
   return up(r.yoy) ? "Profit is up on last year, down on last quarter." : "Profit is down on last year, up on last quarter.";
 }
 
-function Head({ item, kind, sample }: { item: Item; kind: string; sample?: boolean }) {
+function Head({ item, kind }: { item: Item; kind: string }) {
+  const when = shortDate(item.filed);
   return (
     <div>
       <Link href={`/company/${item.ticker}`} className="font-bold hover:underline">{item.company}</Link>
       <p className="mt-0.5 flex items-center gap-2 text-sm text-ink-3">
-        {sample && <SampleTag />}{kind}
+        {item.sample && <SampleTag />}{kind}{when && ` · ${when}`}
       </p>
     </div>
   );
 }
 
+function FilingLink({ url }: { url?: string | null }) {
+  if (!url) return null;
+  return <a href={url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm text-ink-2 underline underline-offset-2 hover:text-ink">Open the filing</a>;
+}
+
+function WhoToCall({ employerKey, company, label }: { employerKey: string | null; company: string; label: string }) {
+  const leads = employerKey ? callSheet(employerKey, 2) : [];
+  return (
+    <CallSheet label={label} title={`Who can explain ${company}`}>
+      <LeadList leads={leads} empty="No one in your contacts has worked there." />
+    </CallSheet>
+  );
+}
+
+const VERB: Record<string, string> = {
+  appointment: "appointed", "re-appointment": "re-appointed", resignation: "resigned as", cessation: "ceased as", other: "named",
+};
+
 export function FeedItem({ item }: { item: Item }) {
   if (item.type === "results") {
-    const leads = callSheet(employerKeyFor(item.ticker), 2);
     return (
       <article className="px-4 py-5">
         <Head item={item} kind={`Results, ${item.quarter}`} />
@@ -59,54 +76,74 @@ export function FeedItem({ item }: { item: Item }) {
             ))}
           </tbody>
         </table>
-        <CallSheet label="Who to call" title={`Who can explain ${item.company}`}>
-          <LeadList leads={leads} empty="No one in your contacts has worked there." />
-        </CallSheet>
+        <FilingLink url={item.pdf_url} />
+        <div><WhoToCall employerKey={employerKeyOf(item.ticker)} company={item.company} label="Who to call" /></div>
       </article>
     );
   }
   if (item.type === "mgmt_change") {
-    const leads = overlapWith(item.history);
+    const p = item.person;
+    const leads = p ? overlapWith(p.history) : [];
     return (
       <article className="px-4 py-5">
-        <Head item={item} kind="Management change" sample />
-        <p className="mt-1 font-semibold">{item.headline}</p>
-        <p className="mt-2 text-ink-2">{item.bio}</p>
-        <ul className="mt-3 space-y-1 text-[0.95rem]">
-          {item.history.map((h) => (
-            <li key={h.employer_key}>{h.title}, {employerName(h.employer_key)}, {h.start_year}–{h.end_year ?? "now"}</li>
-          ))}
-        </ul>
-        <CallSheet label={`${leads.length} of your contacts overlap`} title={`Overlap with ${item.person}`}>
-          <LeadList leads={leads} empty="None of your contacts overlapped with them." />
-        </CallSheet>
+        <Head item={item} kind="Management change" />
+        {p ? (
+          <>
+            <p className="mt-1 font-semibold">{p.person} {VERB[p.event] ?? "named"}{p.role ? ` ${p.role}` : ""}</p>
+            {p.quote && <blockquote className="quote mt-3">“{p.quote}”</blockquote>}
+            {p.history.length > 0 && (
+              <ul className="mt-3 space-y-1 text-[0.95rem]">
+                {p.history.map((h, i) => (
+                  <li key={i}>
+                    {h.title ? `${h.title}, ` : "Earlier at "}{h.employer}
+                    {h.start_year ? `, ${h.start_year}–${h.end_year ?? "now"}` : ""}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : (
+          <>
+            <p className="mt-1 font-semibold">{item.headline}</p>
+            {item.detail && <p className="mt-2 text-ink-2">{item.detail}</p>}
+          </>
+        )}
+        <FilingLink url={item.pdf_url} />
+        <div>
+          {leads.length > 0 ? (
+            <CallSheet label={`${leads.length} of your contacts overlap`} title={`Overlap with ${p!.person}`}>
+              <LeadList leads={leads} empty="" />
+            </CallSheet>
+          ) : (
+            <WhoToCall employerKey={item.employer_key} company={item.company} label="Who knows this company" />
+          )}
+        </div>
       </article>
     );
   }
   if (item.type === "event") {
-    const leads = callSheet(item.employer_key, 2);
     return (
       <article className="px-4 py-5">
-        <Head item={item} kind="Material event" sample />
+        <Head item={item} kind={item.label ?? "Material event"} />
         <p className="mt-1 font-semibold">{item.headline}</p>
-        <p className="mt-2 text-ink-2">{item.detail}</p>
-        <CallSheet label="Best person to call" title={`Who can explain ${item.company}`}>
-          <LeadList leads={leads} empty="No one in your contacts has worked there." />
-        </CallSheet>
+        {item.detail && <p className="mt-2 text-ink-2">{item.detail}</p>}
+        <FilingLink url={item.pdf_url} />
+        <div><WhoToCall employerKey={item.employer_key} company={item.company} label="Best person to call" /></div>
       </article>
     );
   }
-  const leads = callSheet(item.employer_key, 2);
+  const r = item.rules;
+  const rule = [r?.volume_multiple && `volume above ${r.volume_multiple}×`, r?.price_move && `price move beyond ±${r.price_move}%`].filter(Boolean).join(", ");
   return (
     <article className="px-4 py-5">
-      <Head item={item} kind="Alert" sample />
+      <Head item={item} kind="Alert" />
       <p className="mt-1 font-semibold">
-        Volume at {item.volume_x}× the 20-day average, price <Delta v={item.price_pct} /> today.
+        {item.volume_x !== null && <>Volume at {item.volume_x}× the 20-day average</>}
+        {item.volume_x !== null && item.price_pct !== null && ", "}
+        {item.price_pct !== null && <>price <Delta v={item.price_pct} /> on the day</>}.
       </p>
-      <p className="mt-1 text-ink-2">Your rules: volume above 2×, price move beyond ±5%.</p>
-      <CallSheet label="Who to call" title={`Who can explain ${item.company}`}>
-        <LeadList leads={leads} empty="No one in your contacts has worked there." />
-      </CallSheet>
+      {rule && <p className="mt-1 text-ink-2">Your rules: {rule}.</p>}
+      <div><WhoToCall employerKey={item.employer_key} company={item.company} label="Who to call" /></div>
     </article>
   );
 }

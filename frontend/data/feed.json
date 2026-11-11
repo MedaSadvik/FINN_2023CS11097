@@ -7,49 +7,59 @@
    "type": "mgmt_change",
    "ticker": "KAYNES",
    "company": "Kaynes Technology",
-   "priority": "high",
    "filed": "2026-11-10",
    "headline": "Appoints a new Chief Operating Officer",
-   "person": "Sample Executive",
-   "role": "Chief Operating Officer",
-   "bio": "Sample bio. Joins from Syrma SGS, where they ran operations for four years.",
-   "history": [
-    {
-     "employer_key": "syrma",
-     "title": "Head of Operations",
-     "start_year": 2019,
-     "end_year": 2023
-    },
-    {
-     "employer_key": "dixon",
-     "title": "Plant Head",
-     "start_year": 2014,
-     "end_year": 2019
-    }
-   ]
+   "person": {
+    "person": "Sample Executive",
+    "role": "Chief Operating Officer",
+    "event": "appointment",
+    "quote": null,
+    "history": [
+     {
+      "employer": "Syrma SGS",
+      "title": "Head of Operations",
+      "start_year": 2019,
+      "end_year": 2023,
+      "employer_key": "syrma"
+     },
+     {
+      "employer": "Dixon Technologies",
+      "title": "Plant Head",
+      "start_year": 2014,
+      "end_year": 2019,
+      "employer_key": "dixon"
+     }
+    ]
+   },
+   "sample": true,
+   "detail": "Sample filing text.",
+   "employer_key": "kaynes"
   },
   {
    "id": "e1",
    "type": "event",
    "ticker": "TEJASNET",
    "company": "Tejas Networks",
-   "priority": "medium",
    "filed": "2026-11-10",
    "headline": "Receives a large order from a telecom operator",
    "detail": "Sample event. Order value and customer come from the filing text in the real feed.",
-   "employer_key": "tejas"
+   "employer_key": "tejas",
+   "sample": true
   },
   {
    "id": "a1",
    "type": "alert",
    "ticker": "KAYNES",
    "company": "Kaynes Technology",
-   "priority": "medium",
    "filed": "2026-11-10",
-   "trigger": "Sample trigger",
    "volume_x": 2.4,
    "price_pct": -6.1,
-   "employer_key": "kaynes"
+   "employer_key": "kaynes",
+   "sample": true,
+   "rules": {
+    "volume_multiple": 2,
+    "price_move": 5
+   }
   }
  ]
 }

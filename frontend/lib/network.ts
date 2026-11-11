@@ -1,4 +1,4 @@
-import type { Employer, Evidence, Lead, Network, Person, Role } from "./types";
+import type { Employer, Evidence, HistoryEntry, Lead, Network, Person, Role } from "./types";
 import { monthYear } from "./format";
 import raw from "@/data/network.json";
 
@@ -75,19 +75,20 @@ export function callSheet(employerKey: string, limit = 3): Lead[] {
 }
 
 /** For a newly named executive: which of your contacts overlapped with them at an earlier employer. */
-export function overlapWith(history: Role[], limit = 3): Lead[] {
+export function overlapWith(history: HistoryEntry[], limit = 3): Lead[] {
   const leads: Lead[] = [];
   for (const p of network.people.filter((x) => x.kind === "contact")) {
     const reasons: Evidence[] = [];
     for (const h of history) {
-      const mine = p.roles.find((r) => together(r, h));
-      if (mine) {
+      if (!h.employer_key) continue; // employer is not in your network, so nobody to compare with
+      const mine = p.roles.find((r) => r.employer_key === h.employer_key && (h.start_year === null || together(r, { ...r, ...h, employer_key: h.employer_key, title: h.title ?? "", start_year: h.start_year, end_year: h.end_year })));
+      if (!mine) continue;
+      if (h.start_year === null) {
+        reasons.push({ text: `${p.full_name} worked at ${employerName(h.employer_key)} as ${mine.title}, ${mine.start_year}–${mine.end_year ?? "now"}. The filing does not say when they were there.`, source: "public profile" });
+      } else {
         const from = Math.max(mine.start_year, h.start_year);
-        const to = Math.min(end(mine), end(h));
-        reasons.push({
-          text: `Both at ${employerName(h.employer_key)} in ${from}–${to === CURRENT ? "now" : to}. ${p.full_name} was there as ${mine.title}.`,
-          source: "public profile",
-        });
+        const to = Math.min(end(mine), h.end_year ?? CURRENT);
+        reasons.push({ text: `Both at ${employerName(h.employer_key)} in ${from}–${to === CURRENT ? "now" : to}. ${p.full_name} was there as ${mine.title}.`, source: "public profile" });
       }
     }
     if (!reasons.length) continue;
