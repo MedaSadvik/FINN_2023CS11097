@@ -52,7 +52,8 @@ def fresh():
     psql((ROOT / "db" / "migrations" / "002_profiles_connections.sql").read_text())
     # alter default privileges in the stub already gave the roles table access; the migration then
     # revokes/grants precisely, so tests see the real rules. Re-apply them last:
-    psql("insert into employers(key,name,sector) values ('syrma','Syrma SGS','electronics'),('kaynes','Kaynes','electronics');")
+    psql((ROOT / "db" / "migrations" / "003_sample_network.sql").read_text())
+    psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
         psql(f"insert into profiles(id,username,display_name,headline) values ('{u}','{['alice','bob','cara'][i]}','{['Alice','Bob','Cara'][i]}','h{i}')", u)
@@ -172,3 +173,35 @@ def test_profile_edit_updates_linked_contact_name():
 def test_anonymous_has_no_access():
     for t in ("profiles", "profile_roles", "connections"):
         assert fails(f"select 1 from {t}", None, role="anon"), t
+
+
+def sample_json():
+    import json
+    d = json.loads((ROOT / "data" / "network" / "synthetic_network.json").read_text())
+    return json.dumps({"people": d["people"]}).replace("'", "''"), len(d["people"])
+
+
+def test_reference_seed_loads_and_is_repeatable():
+    psql((ROOT / "db" / "seed_reference.sql").read_text())                # second run changes nothing
+    assert int(psql("select count(*) from companies")) == 17
+    assert int(psql("select count(*) from employers")) > 10
+
+
+def test_sample_network_loads_privately_and_replaces_itself():
+    payload, n = sample_json()
+    assert psql(f"select load_sample_network('{payload}'::jsonb)", ALICE) == str(n)
+    assert psql("select count(*) from people where synthetic", ALICE) == str(n)
+    assert psql("select count(*) from people", BOB) == "0"                    # nobody else sees it
+    assert int(psql("select count(*) from roles", ALICE)) > 0
+    psql(f"select load_sample_network('{payload}'::jsonb)", ALICE)             # loading twice does not duplicate
+    assert psql("select count(*) from people where synthetic", ALICE) == str(n)
+    assert fails(f"select load_sample_network('{payload}'::jsonb)", None, role="anon")
+
+
+def test_sample_network_never_touches_real_connections():
+    connect(ALICE, "bob", BOB)
+    payload, n = sample_json()
+    psql(f"select load_sample_network('{payload}'::jsonb)", ALICE)
+    assert psql("select count(*) from people where profile_id is not null", ALICE) == "1"
+    psql("select clear_sample_network()", ALICE)
+    assert psql("select count(*) from people", ALICE) == "1"                  # only Bob is left
