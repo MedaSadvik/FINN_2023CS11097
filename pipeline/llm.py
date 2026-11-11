@@ -104,7 +104,11 @@ def _openai_compat_call(model: str, system: str, prompt: str) -> str:
                                          {"role": "user", "content": prompt}]})
     if r.status_code != 200:
         raise RuntimeError(f"{r.status_code} {r.text[:400]}")
-    return r.json()["choices"][0]["message"]["content"]
+    choice = r.json()["choices"][0]
+    text = (choice.get("message") or {}).get("content")
+    if not text or not text.strip():  # reasoning models can spend the whole budget thinking and return null
+        raise RuntimeError(f"503 empty reply from model (finish_reason={choice.get('finish_reason')})")
+    return text
 
 
 def _default_call(model: str, system: str, prompt: str) -> str:

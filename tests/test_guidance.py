@@ -307,3 +307,22 @@ def test_fake_calls_never_touch_the_real_usage_file(monkeypatch, tmp_path):
     monkeypatch.setattr(llm, "USAGE", tmp_path / "usage.json")
     llm.generate_json("m", "s", "p", call=lambda *a: "{}")
     assert not (tmp_path / "usage.json").exists()
+
+
+def test_empty_model_reply_is_retried_not_crashed(monkeypatch, tmp_path):
+    """A reasoning model can answer with null content. That must be retried, never a TypeError."""
+    monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    monkeypatch.setenv("LLM_PROVIDER", "openai_compat")
+    monkeypatch.setenv("OPENAI_BASE_URL", "http://x")
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    replies = iter([None, '{"ok": true}'])
+
+    class R:
+        status_code = 200
+        def json(self):
+            return {"choices": [{"message": {"content": next(replies)}, "finish_reason": "length"}]}
+
+    import requests
+    monkeypatch.setattr(requests, "post", lambda *a, **k: R())
+    assert llm.generate_json("glm", "s", "p") == {"ok": True}
