@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Shell } from "@/components/Shell";
 import { PromiseRow } from "@/components/PromiseRow";
@@ -10,7 +11,7 @@ export function generateStaticParams() {
   return knownTickers().map((ticker) => ({ ticker }));
 }
 
-export default async function Company({ params }: PageProps<"/company/[ticker]">) {
+async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">["params"] }) {
   const { ticker } = await params;
   const c = getCompany(ticker);
   if (!c) notFound();
@@ -18,7 +19,6 @@ export default async function Company({ params }: PageProps<"/company/[ticker]">
   const order = ["missed", "partly", "delivered", "pending", "unclear"];
   const promises = [...c.promises].sort((a, b) => order.indexOf(a.outcome) - order.indexOf(b.outcome));
   return (
-    <Shell banner="Preview build. Quarterly figures are real. Promise wording is placeholder until the verified export is wired in.">
       <main>
         <h1 className="px-4 pt-6 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
         <div className="px-4">
@@ -53,6 +53,16 @@ export default async function Company({ params }: PageProps<"/company/[ticker]">
           </table>
         </div>
       </main>
+  );
+}
+
+// The page shell is static; the company data streams in behind a placeholder.
+export default function Company({ params }: PageProps<"/company/[ticker]">) {
+  return (
+    <Shell banner="Preview build. Quarterly figures are real. Promise wording is placeholder until the verified export is wired in.">
+      <Suspense fallback={<p className="px-4 pt-6 text-ink-2">Loading research…</p>}>
+        <CompanyBody params={params} />
+      </Suspense>
     </Shell>
   );
 }
