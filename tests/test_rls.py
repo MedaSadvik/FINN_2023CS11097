@@ -53,6 +53,7 @@ def fresh():
     # alter default privileges in the stub already gave the roles table access; the migration then
     # revokes/grants precisely, so tests see the real rules. Re-apply them last:
     psql((ROOT / "db" / "migrations" / "003_sample_network.sql").read_text())
+    psql((ROOT / "db" / "migrations" / "004_on_demand_build.sql").read_text())
     psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
@@ -205,3 +206,72 @@ def test_sample_network_never_touches_real_connections():
     assert psql("select count(*) from people where profile_id is not null", ALICE) == "1"
     psql("select clear_sample_network()", ALICE)
     assert psql("select count(*) from people", ALICE) == "1"                  # only Bob is left
+
+
+# ---------------------------------------------------------------- on-demand company builds
+def ask(user, ticker):
+    import json
+    return json.loads(psql(f"select request_build('{ticker}')", user))
+
+
+def test_build_needs_sign_in_and_a_sane_ticker():
+    assert fails("select request_build('INFY')", None, role="anon")
+    assert ask(ALICE, "infy")["state"] == "queued"                    # case-insensitive
+    assert ask(ALICE, "bad ticker!")["state"] == "bad_ticker"
+    assert ask(ALICE, "")["state"] == "bad_ticker"
+    assert ask(ALICE, "X" * 21)["state"] == "bad_ticker"
+
+
+def test_nobody_can_write_build_tables_directly():
+    for sql in ("insert into build_requests(ticker, requested_by) values ('TCS', '%s')" % ALICE,
+                "insert into companies_live(ticker,name,provider,data) values ('TCS','TCS','gemini','{}')",
+                "update build_limits set global_per_day = 9999"):
+        assert fails(sql, ALICE), sql
+    assert fails("select count(*) from build_requests", None, role="anon")
+    assert fails("select count(*) from build_limits", ALICE)
+
+
+def test_same_ticker_is_not_built_twice_at_once():
+    assert ask(ALICE, "TCS")["state"] == "queued"
+    again = ask(BOB, "TCS")
+    assert again["state"] == "in_progress"                            # no second job, no second budget use
+    assert psql("select count(*) from build_requests", ALICE) == "1"
+
+
+def test_per_user_and_global_caps():
+    psql("update build_limits set per_user_per_day = 2, global_per_day = 3")
+    assert ask(ALICE, "AAA")["state"] == "queued"
+    assert ask(ALICE, "BBB")["state"] == "queued"
+    assert ask(ALICE, "CCC")["state"] == "user_limit"
+    assert ask(BOB, "DDD")["state"] == "queued"
+    r = ask(CARA, "EEE")
+    assert r["state"] == "global_limit" and "limit" in r["message"].lower()
+
+
+def test_no_data_and_not_started_do_not_use_budget():
+    psql("update build_limits set per_user_per_day = 1")
+    rid = ask(ALICE, "NOPE")["request_id"]
+    psql(f"update build_requests set status = 'no_data', message = 'No transcripts.' where id = {rid}")  # the job
+    assert ask(BOB, "NOPE") == {"state": "no_data", "message": "No transcripts."}   # cached for a day
+    assert ask(ALICE, "REAL")["state"] == "queued"                    # the failed lookup cost nothing
+    rid = ask(BOB, "OTHER")["request_id"]
+    psql(f"select mark_not_started({rid})", BOB)
+    assert psql("select status from build_requests where ticker = 'OTHER'", BOB) == "not_started"
+    assert ask(BOB, "THIRD")["state"] == "queued"
+    assert psql(f"select mark_not_started({rid})", ALICE) == ""       # someone else's request: no effect
+
+
+def test_requests_are_private_but_status_is_public():
+    ask(ALICE, "TCS")
+    assert psql("select count(*) from build_requests", ALICE) == "1"
+    assert psql("select count(*) from build_requests", BOB) == "0"
+    import json
+    st = json.loads(psql("select build_status('tcs')", None, role="anon"))
+    assert st["state"] == "queued" and set(st) == {"state", "message", "updated_at"}   # no user ids leak
+    assert json.loads(psql("select build_status('NONE')", None, role="anon"))["state"] == "none"
+
+
+def test_built_company_is_public_and_stops_new_requests():
+    psql("insert into companies_live(ticker,name,provider,data) values ('TCS','TCS','gemini','{\"promises\":[]}')")  # the job
+    assert psql("select name from companies_live where ticker = 'TCS'", None, role="anon") == "TCS"
+    assert ask(ALICE, "TCS")["state"] == "exists"

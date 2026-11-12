@@ -15,7 +15,7 @@ import time
 from pipeline import fetch_docs, fetch_pdf, fetch_quarters, guidance, llm, verdicts
 
 
-def build(ticker: str, n_calls: int = 4) -> list:
+def build(ticker: str, n_calls: int = 4, exit_on_quota: bool = True) -> list:
     print(f"== {ticker}: finding documents")
     docs = fetch_docs.fetch_docs(ticker)
     seen, calls = set(), []
@@ -44,6 +44,8 @@ def build(ticker: str, n_calls: int = 4) -> list:
         try:
             result = guidance.run(ticker, period, doc, call_label=t.get("label"))
         except llm.QuotaExhausted as e:
+            if not exit_on_quota:
+                raise  # a caller that runs unattended (the on-demand worker) reports this itself
             raise SystemExit(f"\nSTOPPED: {e}.\nNothing is lost: finished calls are cached. Run the same command "
                              f"again later and it continues from here.")
         print(f"   {len(doc['pages'])} pages -> {len(result['claims'])} verified claims "

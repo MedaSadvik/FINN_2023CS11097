@@ -6,23 +6,28 @@ import { CallSheet } from "@/components/CallSheet";
 import { LeadList } from "@/components/LeadList";
 import { getCompany, knownTickers } from "@/lib/data";
 import { callSheet } from "@/lib/network-core";
-import { getNetwork } from "@/lib/account";
 import { nameFor } from "@/lib/portfolio";
+import { getAccount, getNetwork } from "@/lib/account";
+import { getBuildStatus, getLiveCompany } from "@/lib/live";
+import { buildsEnabled } from "@/lib/github";
+import { panelFor, TICKER_RE } from "@/lib/build-state";
+import { BuildPanel } from "@/components/BuildPanel";
 
 export function generateStaticParams() {
   return knownTickers().map((ticker) => ({ ticker }));
 }
 
-function NotBuilt({ ticker }: { ticker: string }) {
+async function NotBuilt({ ticker }: { ticker: string }) {
+  const valid = TICKER_RE.test(ticker);
+  const [status, account] = valid ? await Promise.all([getBuildStatus(ticker), getAccount()]) : [{ state: "none" as const }, null];
+  const panel = valid ? panelFor(status, { enabled: buildsEnabled, signedIn: account !== null }) : null;
   return (
     <main className="px-4 pt-6">
       <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">{nameFor(ticker) ?? ticker}</h1>
-      <p className="mt-3">We have not read {ticker}&apos;s earnings calls yet.</p>
-      <p className="mt-2 text-ink-2">
-        In this prototype a company appears after its transcripts are read and checked. Build it with
-        {" "}<code className="rounded bg-wash px-1">python -m pipeline.build_company {ticker}</code>, then export it.
-      </p>
-      <Link href="/company" className="mt-4 inline-flex min-h-11 items-center rounded-full border border-ink px-4 font-semibold hover:bg-ink hover:text-paper">
+      <p className="mt-3">We have not read {valid ? `${ticker}\u2019s` : "this company\u2019s"} earnings calls yet.</p>
+      {panel ? <BuildPanel ticker={ticker} panel={panel} />
+        : <p className="mt-2 text-ink-2">Use the NSE symbol, such as INFY or ZOMATO.</p>}
+      <Link href="/company" className="mt-6 inline-flex min-h-11 items-center rounded-full border border-ink px-4 font-semibold hover:bg-ink hover:text-paper">
         Choose another company
       </Link>
     </main>
@@ -31,7 +36,7 @@ function NotBuilt({ ticker }: { ticker: string }) {
 
 async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">["params"] }) {
   const { ticker } = await params;
-  const c = getCompany(ticker);
+  const c = getCompany(ticker) ?? (await getLiveCompany(ticker));
   if (!c) return <NotBuilt ticker={decodeURIComponent(ticker).toUpperCase()} />;
   const { net } = await getNetwork();
   const leads = c.employer_key ? callSheet(net, c.employer_key, 3) : [];

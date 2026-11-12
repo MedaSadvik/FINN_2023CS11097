@@ -21,7 +21,7 @@ export function CompanyPicker({ rows }: { rows: Row[] }) {
           if (symbol) router.push(`/company/${encodeURIComponent(symbol)}`);
         }}
       >
-        <label htmlFor="company-q" className="block text-sm text-ink-2">Search your stocks or type any NSE symbol</label>
+        <label htmlFor="company-q" className="block text-sm text-ink-2">Search your stocks, or type any NSE symbol to build it</label>
         <div className="mt-1 flex gap-2">
           <input
             id="company-q"
@@ -51,7 +51,7 @@ export function CompanyPicker({ rows }: { rows: Row[] }) {
             </Link>
           </li>
         ))}
-        {shown.length === 0 && <li className="px-4 py-4 text-ink-2">No match in your stocks. Press Open to try “{symbol}” on NSE.</li>}
+        {shown.length === 0 && <li className="px-4 py-4 text-ink-2">No match in your stocks. Press Open to view or build “{symbol}”.</li>}
       </ul>
     </div>
   );

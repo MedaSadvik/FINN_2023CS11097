@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { accountsEnabled } from "@/lib/supabase/env";
 import { demoNetwork } from "@/lib/network";
+import { dispatchBuild } from "@/lib/github";
 
 export type ActionState = { ok: boolean; message: string } | null;
 const ok = (message: string): ActionState => ({ ok: true, message });
@@ -170,4 +171,25 @@ export async function clearSample(): Promise<void> {
   if (!s) return;
   await s.supabase.rpc("clear_sample_network");
   revalidatePath("/", "layout");
+}
+
+// ---------------------------------------------------------------- build a company on request
+const STARTED = new Set(["queued", "in_progress", "exists"]);
+
+/** Ask for research on an NSE symbol. The database enforces the daily caps; this only starts the job. */
+export async function requestCompany(_: ActionState, f: FormData): Promise<ActionState> {
+  const s = await me();
+  if (!s) return fail("Sign in to add a company.");
+  const ticker = text(f, "ticker").toUpperCase();
+  const { data, error } = await s.supabase.rpc("request_build", { p_ticker: ticker });
+  if (error || !data) return fail("Something went wrong. Try again in a minute.");
+  const r = data as { state: string; message: string; request_id?: number };
+  if (r.state === "queued" && r.request_id) {
+    if (!(await dispatchBuild(ticker, r.request_id))) {
+      await s.supabase.rpc("mark_not_started", { p_id: r.request_id });  // does not use up the daily budget
+      return fail("Could not start the build. Try again in a minute.");
+    }
+  }
+  if (STARTED.has(r.state)) redirect(`/company/${encodeURIComponent(ticker)}`);
+  return fail(r.message);
 }

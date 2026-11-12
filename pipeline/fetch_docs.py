@@ -86,6 +86,13 @@ def parse_documents(html: str) -> dict:
             "transcripts": transcripts}
 
 
+def parse_name(html: str):
+    """Company name from the page heading, e.g. 'Tata Consultancy Services Ltd'. None if not found."""
+    m = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.S)
+    name = " ".join(re.sub(r"<[^>]+>", "", m.group(1)).split()) if m else ""
+    return name or None
+
+
 def fetch_docs(ticker: str) -> dict:
     import requests
     for variant in ("consolidated/", ""):  # consolidated first, standalone as fallback
@@ -94,8 +101,9 @@ def fetch_docs(ticker: str) -> dict:
         if r.status_code == 200:
             docs = parse_documents(r.text)
             if docs["annual_reports"] or docs["transcripts"]:
+                docs["name"] = parse_name(r.text)
                 return docs
-    return {"annual_reports": [], "transcripts": []}
+    return {"annual_reports": [], "transcripts": [], "name": None}
 
 
 def main(tickers):
