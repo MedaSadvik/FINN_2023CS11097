@@ -6,6 +6,29 @@ const end = (r: Role) => r.end_year ?? CURRENT;
 /** Two stints overlap if they share at least one year. */
 const together = (a: Role, b: Role) => a.employer_key === b.employer_key && a.start_year <= end(b) && b.start_year <= end(a);
 
+const STOP = new Set(["ltd", "limited", "pvt", "private", "inc", "corp", "corporation", "llp", "india", "the", "co"]);
+/** A company name reduced to what identifies it: lowercase, no punctuation, no "Ltd", "India" and the like. */
+export const tidyName = (s: string) =>
+  s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter((w) => w && !STOP.has(w)).join(" ");
+
+/**
+ * Do two employer names mean the same company? Equal after tidying, or one is the other's first whole words
+ * ("Titan" and "Titan Company"). The shorter name must have 5+ letters so "Tata" does not match every Tata company.
+ */
+export function sameCompany(a: string, b: string): boolean {
+  const x = tidyName(a), y = tidyName(b);
+  if (!x || !y) return false;
+  if (x === y) return true;
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  return short.length >= 5 && long.startsWith(short + " ");
+}
+
+/** Where the person said they worked, when it differs from the company we matched it to. */
+const atName = (net: Network, r: Role, key: string) => {
+  const name = employerName(net, key);
+  return r.employer_name && tidyName(r.employer_name) !== tidyName(name) ? `${name} (they wrote \u201c${r.employer_name}\u201d)` : name;
+};
+
 export const employer = (net: Network, key: string): Employer | undefined => net.employers.find((e) => e.key === key);
 export const employerKeyFor = (net: Network, ticker: string) => net.employers.find((e) => e.ticker === ticker)?.key ?? ticker.toLowerCase();
 export const employerName = (net: Network, key: string) => employer(net, key)?.name ?? key;
@@ -25,7 +48,7 @@ function peopleWhoOverlapped(net: Network, role: Role, except: number, limit = 3
  * Plain rules, no model: the LLM never sees the network.
  */
 export function callSheet(net: Network, employerKey: string, limit = 3): Lead[] {
-  const sector = employer(net, employerKey)?.sector;
+  const sector = employer(net, employerKey)?.sector || null; // untracked companies have no sector: never match on it
   const ticker = employer(net, employerKey)?.ticker;
   const related = new Map(
     net.employer_relations.filter((r) => r.ticker === ticker).map((r) => [r.employer_key, r.relation]),
@@ -38,12 +61,12 @@ export function callSheet(net: Network, employerKey: string, limit = 3): Lead[] 
     if (mine.length) {
       const r = mine[0];
       reasons.push({
-        text: `${r.title} at ${employerName(net, employerKey)}, ${r.start_year}–${r.end_year ?? "now"}.`,
+        text: `${r.title} at ${atName(net, r, employerKey)}, ${r.start_year}–${r.end_year ?? "now"}.`,
         source: src(p),
       });
       const peers = peopleWhoOverlapped(net, r, p.id, 8).filter((q) => {
         const cr = currentRole(q);
-        return cr && employer(net, cr.employer_key)?.sector === sector;
+        return cr && sector !== null && employer(net, cr.employer_key)?.sector === sector;
       });
       if (peers.length) {
         const names = peers.slice(0, 2).map((q) => {

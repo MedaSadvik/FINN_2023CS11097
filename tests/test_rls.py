@@ -54,6 +54,7 @@ def fresh():
     # revokes/grants precisely, so tests see the real rules. Re-apply them last:
     psql((ROOT / "db" / "migrations" / "003_sample_network.sql").read_text())
     psql((ROOT / "db" / "migrations" / "004_on_demand_build.sql").read_text())
+    psql((ROOT / "db" / "migrations" / "005_free_text_employers.sql").read_text())
     psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
@@ -275,3 +276,22 @@ def test_built_company_is_public_and_stops_new_requests():
     psql("insert into companies_live(ticker,name,provider,data) values ('TCS','TCS','gemini','{\"promises\":[]}')")  # the job
     assert psql("select name from companies_live where ticker = 'TCS'", None, role="anon") == "TCS"
     assert ask(ALICE, "TCS")["state"] == "exists"
+
+
+# ---------------------------------------------------------------- free-text employers in the Call Sheet view
+def test_free_text_roles_reach_connections_but_not_strangers():
+    psql("insert into profile_roles(profile_id,employer_name,title,start_year,end_year) "
+         f"values ('{BOB}','Titan Company','Analyst',2018,2021)", BOB)
+    assert psql("select count(*) from network_roles where employer_name = 'Titan Company'", ALICE) == "0"  # not connected
+    connect(ALICE, "bob", BOB)
+    assert psql("select employer_key is null, employer_name, title from network_roles "
+                "where employer_name = 'Titan Company'", ALICE) == "t|Titan Company|Analyst"
+    assert psql("select count(*) from network_roles where employer_name = 'Titan Company'", CARA) == "0"  # a stranger still sees nothing
+    psql("delete from connections", ALICE)                                                                    # remove the connection
+    assert psql("select count(*) from network_roles where employer_name = 'Titan Company'", ALICE) == "0"
+
+
+def test_linked_and_sample_roles_keep_their_names():
+    psql("select load_sample_network('{\"people\":[{\"kind\":\"contact\",\"full_name\":\"S\",\"headline\":\"h\","
+         "\"roles\":[{\"employer_key\":\"syrma\",\"title\":\"t\",\"start_year\":2020}],\"education\":[]}]}')", ALICE)
+    assert psql("select employer_key, employer_name from network_roles where employer_key = 'syrma'", ALICE) == "syrma|Syrma SGS"

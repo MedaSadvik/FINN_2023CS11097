@@ -1,4 +1,4 @@
-export type Role = { employer_key: string; title: string; start_year: number; end_year: number | null };
+export type Role = { employer_key: string; employer_name?: string; title: string; start_year: number; end_year: number | null };
 export type Education = { institution: string; start_year: number; end_year: number };
 export type Person = {
   id: number;
