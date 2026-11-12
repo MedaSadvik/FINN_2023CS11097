@@ -25,8 +25,13 @@ export async function dispatchBuild(ticker: string, requestId: number): Promise<
       body: JSON.stringify({ ref, inputs: { ticker, request_id: String(requestId) } }),
       cache: "no-store",
     });
+    if (res.status !== 204) {
+      // Shows in the Vercel function logs. GitHub's reply never contains the token.
+      console.error(`build dispatch refused: HTTP ${res.status} ${(await res.text()).slice(0, 300)}`);
+    }
     return res.status === 204;
-  } catch {
+  } catch (e) {
+    console.error(`build dispatch failed: ${e instanceof Error ? e.message : e}`);
     return false;
   }
 }
