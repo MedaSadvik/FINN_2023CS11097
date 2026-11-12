@@ -1,0 +1,17 @@
+name: probe-sources
+# Throwaway check: can GitHub's servers reach screener.in and the transcript PDFs?
+# Runs on a push to this branch, or by hand. Needs no secrets.
+on:
+  push:
+    branches: [ci/probe-sources]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests pymupdf
+      - run: python scripts/ci_probe.py TCS
