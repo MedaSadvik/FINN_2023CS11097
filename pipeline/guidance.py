@@ -125,6 +125,10 @@ def check_numbers(claim: dict) -> dict:
     if not ok:
         claim.update(low=None, high=None, basis="other", numbers="unverified_in_quote")
     else:
+        # a model sometimes answers "100" instead of 100; everything downstream does arithmetic, so make it a number
+        for k in ("low", "high"):
+            if claim.get(k) is not None:
+                claim[k] = float(claim[k])
         claim["numbers"] = "verified" if claimed else "none"
     return claim
 

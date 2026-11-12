@@ -98,3 +98,18 @@ def test_far_future_promise_is_pending_not_unclear():
     c = {"metric": "revenue_target", "basis": "other", "low": 1, "horizon": "FY28", "scope": "company"}
     r = evaluate(c, QUARTERS)
     assert r["outcome"] == "pending" and "due FY28" in r["delivered_text"]
+
+
+def test_numbers_that_arrive_as_text_give_the_same_verdict():
+    # Regression: a model answered "450" and "500" as text, and the verdict step crashed on the number format.
+    c = {"metric": "revenue_target", "basis": "absolute_crore", "horizon": "FY26", "scope": "company"}
+    as_numbers = evaluate({**c, "low": 450, "high": 500}, QUARTERS)
+    as_text = evaluate({**c, "low": "450", "high": "500"}, QUARTERS)
+    assert as_text == as_numbers and as_text["outcome"] == "delivered"
+    pending = evaluate({**c, "low": "900", "high": None, "horizon": "FY27"}, QUARTERS)   # the 'guided' text path
+    assert pending["outcome"] == "pending"
+
+
+def test_a_non_numeric_value_is_unclear_not_a_crash():
+    c = {"metric": "revenue_target", "basis": "absolute_crore", "low": "about 450", "horizon": "FY26", "scope": "company"}
+    assert evaluate(c, QUARTERS)["outcome"] == "unclear"

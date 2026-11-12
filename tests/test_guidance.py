@@ -169,6 +169,12 @@ def test_check_numbers():
     assert guidance.check_numbers({"quote": "twice the market", "low": None})["numbers"] == "none"
 
 
+def test_check_numbers_turns_text_numbers_into_numbers():
+    c = guidance.check_numbers({"quote": "revenue of 450 to 500 crore", "low": "450", "high": "500"})
+    assert c["numbers"] == "verified" and c["low"] == 450.0 and c["high"] == 500.0
+    assert isinstance(c["low"], float) and isinstance(c["high"], float)
+
+
 def test_extract_guidance_chunks_and_dedupes(monkeypatch, tmp_path):
     monkeypatch.setattr(llm, "CACHE", tmp_path / "llm")
     pages = make_pages(20)

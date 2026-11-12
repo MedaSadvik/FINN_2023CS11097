@@ -76,9 +76,17 @@ def latest_reported_fy(quarters: dict):
     return max(done) if done else None
 
 
+def _as_number(v):
+    """A number, or None when the value is missing or not numeric."""
+    try:
+        return None if v is None else float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def evaluate(claim: dict, quarters: dict) -> dict:
     out = {"outcome": "unclear", "delivered_text": None, "tier": "computed"}
-    low, high = claim.get("low"), claim.get("high")
+    low, high = _as_number(claim.get("low")), _as_number(claim.get("high"))  # claims cached before the fix may hold text
     h = parse_horizon(claim.get("horizon"))
     latest = latest_reported_fy(quarters)
     if h and latest and h["fy"] > latest:  # promise about a year that has not started

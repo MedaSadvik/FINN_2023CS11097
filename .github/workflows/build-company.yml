@@ -41,8 +41,20 @@ jobs:
           cache: pip
           cache-dependency-path: requirements.txt
       - run: pip install requests pymupdf google-genai
+      # Model answers are cached on disk by the pipeline. Keep that cache between runs of the same ticker, so a
+      # build that stopped (daily quota, a crash) continues where it left off instead of paying for every call again.
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/cache
+          key: pipeline-cache-${{ inputs.ticker }}-${{ github.run_id }}
+          restore-keys: pipeline-cache-${{ inputs.ticker }}-
       - name: Build and publish
         run: python scripts/worker_build.py "$TICKER" "$REQUEST_ID"
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: data/cache
+          key: pipeline-cache-${{ inputs.ticker }}-${{ github.run_id }}
       - name: Report a crash
         if: failure()
         run: python scripts/worker_build.py "$TICKER" "$REQUEST_ID" --fail
