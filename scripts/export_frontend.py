@@ -1,6 +1,8 @@
 """Write website data from the pipeline cache.
 
-    python scripts/export_frontend.py KAYNES [TICKER ...]
+    python scripts/export_frontend.py KAYNES [TICKER ...] [--force]
+
+Never replaces a company's Gemini data with output from another provider unless --force is given.
 
 Reads  data/cache/<verdicts>/TICKER.json, data/cache/quarters/TICKER.json, data/network/synthetic_network.json
 Writes frontend/data/companies.json (merged by ticker). Commit that file: the website is built from it.
@@ -19,13 +21,16 @@ from pipeline.export import build_company
 OUT = ROOT / "frontend" / "data" / "companies.json"
 
 
-def main(tickers):
+def main(tickers, force=False):
     names = {t: n for t, n, _ in PORTFOLIO}
     employers = {e["ticker"]: e["key"] for e in
                  json.loads((ROOT / "data" / "network" / "synthetic_network.json").read_text())["employers"] if e["ticker"]}
     cache = ROOT / "data" / "cache"
     merged = json.loads(OUT.read_text()) if OUT.exists() else {}
     for t in tickers:
+        if merged.get(t, {}).get("provider") == "gemini" and llm.provider() != "gemini" and not force:
+            print(f"{t}: kept the existing Gemini data (this run used {llm.provider()}). Use --force to replace it.")
+            continue
         verdicts = cache / llm.derived("verdicts") / f"{t}.json"
         quarters = cache / "quarters" / f"{t}.json"
         if not verdicts.exists() or not quarters.exists():
@@ -44,4 +49,5 @@ def main(tickers):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit("usage: python scripts/export_frontend.py KAYNES [TICKER ...]")
-    main([a.upper() for a in sys.argv[1:]])
+    args = [a for a in sys.argv[1:] if a != "--force"]
+    main([a.upper() for a in args], force="--force" in sys.argv)
