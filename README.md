@@ -10,57 +10,58 @@ Mobile-first financial investment agent. Built for the ENAM Founding AI Engineer
 | **Pull** | Company research grounded only in annual reports and concall transcripts. Star feature: promised vs delivered. |
 | **Network** | Synthetic investor network. Woven into Push and Pull as Call Sheets. Also answers direct questions. |
 
+## Try it
+Live: https://finn-blush.vercel.app (open it on a phone).
+1. **Today** shows what changed, ranked. Tap *Who to call* on a card for the Call Sheet.
+2. **Research** lists the companies read so far. Open one for promised vs delivered. Type any NSE symbol to build a new one (sign in first; a few builds per day).
+3. **Network** needs an account: sign up, add a connection by exact username, accept on the other side, and their career shows up in Call Sheets. *Load sample contacts* gives a test network.
+
+Signed out, you see an invented network. Research marked **Draft** was extracted by a test model; the rest by Gemini. Details: [docs/WRITEUP.md](docs/WRITEUP.md).
+
 ## Stack
-Next.js + Tailwind (Vercel) · Python pipeline · Supabase Postgres (RLS) · Gemini Flash/Pro · GitHub Actions cron.
+Next.js 16 + Tailwind (Vercel) · Python pipeline · Supabase Postgres, Auth and row level security · Gemini Flash · GitHub Actions for on-demand builds.
+
+## Run the pipeline on any ticker
+```bash
+pip install -r requirements.txt
+cp .env.example .env                       # add GEMINI_API_KEY
+python -m pipeline.build_company TITAN     # docs, quarterly numbers, guidance, verdicts (about 15 model calls)
+python scripts/export_frontend.py TITAN    # writes frontend/data/companies.json
+python scripts/build_portfolio.py          # every portfolio stock; resumable
+python scripts/export_feed.py 336 --people # the Today feed for a 14-day window
+```
+
+## Run the website
+```bash
+cd frontend && npm install && npm run dev  # needs Node 22
+```
+Without Supabase keys the site runs signed-out, on the invented network. To switch on accounts, create a Supabase project, run these in its SQL editor in order: `db/schema.sql`, `db/seed_reference.sql`, `db/migrations/002` to `005`. Turn off "Confirm email" under Authentication, then copy `frontend/.env.local.example` to `.env.local` and fill it in.
+
+On-demand builds also need three GitHub Actions secrets (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `GEMINI_API_KEY`) and a token in the website's environment (`BUILD_GITHUB_TOKEN`). The workflow file must be on the default branch.
+
+## Tests
+```bash
+python -m pytest -q                                                     # 149 pass, 26 need a database
+TEST_DATABASE_URL=postgresql://postgres:pw@localhost/finn_test python -m pytest tests/test_rls.py   # privacy rules on real Postgres
+cd frontend && npx tsx --test lib/network.test.ts lib/build-state.test.ts
+```
+The privacy test drops and recreates the `public` schema. Never point it at a real database.
 
 ## Repo layout
 ```
-db/schema.sql                 Postgres schema + row level security
-scripts/seed_network.py       builds the synthetic network (deterministic)
-scripts/check_network.py      checks the network overlaps the portfolio
-scripts/probe_sources.py      Day-1 check: which data sources work from your machine
-pipeline/classify.py          rule-based announcement classifier (no LLM)
-pipeline/alerts.py            volume-spike and price-move alert maths
-pipeline/fetch_prices.py      end-of-day prices via yfinance (untested live)
-pipeline/fetch_filings.py     NSE announcements -> classified rows (shape verified by probe)
-pipeline/fetch_docs.py        screener.in annual report + transcript links
-pipeline/fetch_pdf.py         download PDF (hash-cached), extract text per page
-pipeline/verdicts.py           promised vs delivered by arithmetic on reported quarters (no LLM)
-pipeline/build_company.py     ONE command: any ticker -> docs, actuals, guidance, verdicts
-pipeline/fetch_quarters.py     quarterly Revenue/EBITDA/PBT/PAT from screener's table (no LLM)
-pipeline/llm.py               one door to Gemini: disk cache, retry, fake-able in tests
-pipeline/guidance.py          extract management guidance + verify every quote on the page
-tests/                        unit tests
-data/network/                 generated synthetic_network.json
-docs/                         architecture, interaction model, decisions
+db/schema.sql, db/migrations/    Postgres schema, row level security, accounts, connections, on-demand builds
+pipeline/                        Python: fetchers, classifier, alerts, guidance extraction, verdicts, feed, export, llm.py
+scripts/                         build_portfolio, export_frontend, export_feed, worker_build (GitHub Actions), probes
+frontend/                        Next.js app (Today, Research, Network, profile)
+.github/workflows/               build-company.yml: the on-demand research job
+tests/                           Python tests, including privacy rules on real Postgres
+docs/                            WRITEUP.md, architecture.md, interaction_model.md
+data/network/                    the invented network (120 people, 36 employers)
 ```
 
-## Day-1 data probe (run on your own machine)
-```bash
-pip install -r requirements.txt
-python scripts/probe_sources.py        # tests Yahoo, NSE, screener.in for all 17 tickers
-python -m pytest -q tests              # classifier + alert logic
-```
-
-## Try the network generator
-```bash
-python3 scripts/seed_network.py
-python3 scripts/check_network.py
-```
-
-## Data and privacy note
-All network data is **synthetic**. People are invented. Real company names appear only as employers. Real people named in filings are described only from what the filing itself discloses. See `docs/architecture.md`.
+## Data and privacy
+The demo network is invented. Real company names appear only as employers. Accounts are real: privacy is enforced in the database, and no contact data goes to any model. See the privacy section of [docs/WRITEUP.md](docs/WRITEUP.md).
 
 ## Status
-- [x] Architecture, interaction model
-- [x] Schema, synthetic network
-- [x] Classifier and alert logic (unit tested)
-- [x] Live probe: NSE and screener.in work from a home connection
-- [ ] Filings + docs fetchers run live (written, tests pass)
-- [x] Docs fetcher parses real screener HTML (Kaynes: 18 transcripts, 4 ARs)
-- [x] PDF download + extraction live: Kaynes transcript 20 pages, annual report 321 pages
-- [x] Guidance extractor live: Kaynes Q1FY27 -> 2 verified claims, 0 dropped (gemini-3.5-flash, 19s)
-- [x] Quarterly actuals parsed (Kaynes verified: Q1FY27 revenue 946 matches the call)
-- [ ] build_company run live on 4 calls (written, 104 tests pass)
-- [ ] Tier-2 verdicts (segment/capex claims via later transcripts), results-filing cards
-- [ ] Push, Pull, Call Sheet UI
+Built: Push (digest and alerts), Pull (promised vs delivered, any ticker), Network (accounts, connections, Call Sheet), on-demand builds with daily caps.
+Not built: verdicts for segment-level claims (most promises read "can't check yet"), a free-form ask bar, phone push notifications.
