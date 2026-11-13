@@ -8,7 +8,7 @@ Mobile-first financial investment agent. Built for the ENAM Founding AI Engineer
 |---|---|
 | **Push** | Windowed digest of filings, ranked. Alerts on volume, price move, filing type. |
 | **Pull** | Company research grounded only in annual reports and concall transcripts. Star feature: promised vs delivered. |
-| **Network** | Synthetic investor network. Woven into Push and Pull as Call Sheets. Also answers direct questions. |
+| **Network** | Synthetic investor network. Woven into Push and Pull as Call Sheets. On its own tab it flags who is worth a call and who knows what. |
 
 ## Try it
 Live: https://finn-blush.vercel.app (open it on a phone).
@@ -65,5 +65,5 @@ data/network/                    the invented network (120 people, 36 employers)
 The demo network is invented. Real company names appear only as employers. Accounts are real: privacy is enforced in the database, and no contact data goes to any model. See the privacy section of [docs/WRITEUP.md](docs/WRITEUP.md).
 
 ## Status
-Built: Push (digest and alerts), Pull (promised vs delivered, any ticker), Network (accounts, connections, Call Sheet), on-demand builds with daily caps.
+Built: Push (digest and alerts), Pull (promised vs delivered, any ticker), Network (accounts, connections, Call Sheet, worth-a-call, who-knows-what), on-demand builds with daily caps.
 Not built: verdicts for segment-level claims (most promises read "can't check yet"), a free-form ask bar, phone push notifications.
