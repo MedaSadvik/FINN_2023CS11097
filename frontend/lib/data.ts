@@ -40,7 +40,7 @@ function resultsItem(c: CompanyData): FeedItem | null {
 
 type LiveFeed = {
   window?: { start: string; end: string; hours: number };
-  routine_hidden?: number; routine_filed?: string[]; market?: Market; provider?: string | null; items: FeedItem[];
+  routine_hidden?: number; routine_filed?: string[]; market?: Market; filings_as_of?: string | null; provider?: string | null; items: FeedItem[];
 };
 
 /** Real feed (scripts/export_feed.py) when exported, otherwise the labelled sample. */
@@ -55,6 +55,7 @@ export function getFeed() {
       routineFiled: real.routine_filed ?? null,
       routineTotal: real.routine_hidden ?? 0,
       market: real.market ?? null,
+      filingsAsOfMs: real.filings_as_of ? new Date(real.filings_as_of).getTime() : null,
     };
     return { live: true as const, provider: real.provider ?? null, end, snapshot };
   }

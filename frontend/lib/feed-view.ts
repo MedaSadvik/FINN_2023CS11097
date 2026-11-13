@@ -63,6 +63,7 @@ export type FeedSnapshot = {
   routineFiled: string[] | null; // null: an older export that only has a total
   routineTotal: number;
   market: Market | null; // null: an older export with alerts already decided
+  filingsAsOfMs: number | null; // when NSE was last read successfully; null in older exports
 };
 
 export function pickWindow(key: string | undefined, maxHours: number) {
@@ -109,3 +110,7 @@ export function selectFeed(s: FeedSnapshot, hours: number, prefs: Prefs): View {
     : hours >= s.maxHours ? s.routineTotal : null;
   return { items, routineHidden, hiddenByYou: filings.length - shown.length };
 }
+
+/** Filings older than this at the time of the snapshot are called out, so a quiet feed is never mistaken for a quiet market. */
+export const STALE_HOURS = 30;
+export const filingsStale = (s: FeedSnapshot) => s.filingsAsOfMs !== null && s.endMs - s.filingsAsOfMs > STALE_HOURS * 3_600_000;

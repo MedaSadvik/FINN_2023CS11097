@@ -18,32 +18,12 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from pipeline import feed, llm
+from pipeline.people import read_people
 from pipeline.config import PORTFOLIO
 
 IST = timezone(timedelta(hours=5, minutes=30))
 CACHE = ROOT / "data" / "cache"
 OUT = ROOT / "frontend" / "data" / "feed_live.json"
-
-
-def read_people(filings, employers, hours, now):
-    """Management-change filings in the window -> verified person records (needs the PDF text and a model)."""
-    from pipeline import fetch_pdf, people
-    out = {}
-    for f in filings:
-        recent = datetime.fromisoformat(f["announced_at"]) >= now - timedelta(hours=hours)
-        if f["category"] != "management_change" or not recent or not f.get("pdf_url"):
-            continue
-        try:
-            path, _ = fetch_pdf.download(f["pdf_url"], referer="https://www.nseindia.com/")
-            text = "\n".join(p["text"] for p in fetch_pdf.extract_pages(path))
-            rec = people.extract_person(text, employers)
-        except Exception as e:
-            print(f"  {f['ticker']}: could not read filing ({type(e).__name__}: {e})")
-            continue
-        print(f"  {f['ticker']}: {rec['person'] if rec else 'no named person found'}")
-        if rec:
-            out[f["exchange_id"]] = rec
-    return out
 
 
 def main(hours, with_people):

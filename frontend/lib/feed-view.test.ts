@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DEFAULT_PREFS, encodePrefs, parsePrefs, pickWindow, selectFeed, type FeedSnapshot } from "./feed-view";
+import { filingsStale, DEFAULT_PREFS, encodePrefs, parsePrefs, pickWindow, selectFeed, type FeedSnapshot } from "./feed-view";
 import type { FeedItem } from "./types";
 
 const END = new Date("2026-11-11T16:00:00+05:30").getTime();
@@ -13,7 +13,7 @@ const quiet = (n: number): [string, number, number][] =>
 
 const snap = (over: Partial<FeedSnapshot> = {}): FeedSnapshot => ({
   endMs: END, maxHours: 336, routineTotal: 5, routineFiled: [hoursAgo(2), hoursAgo(50), hoursAgo(200)],
-  items: [ev("new", "M&A", 3), ev("mid", "capex", 40), ev("old", "litigation", 150)], market: null, ...over,
+  items: [ev("new", "M&A", 3), ev("mid", "capex", 40), ev("old", "litigation", 150)], market: null, filingsAsOfMs: END, ...over,
 });
 
 test("window keeps only what is inside it, and counts routine filings for that window", () => {
@@ -86,4 +86,11 @@ test("window choice never exceeds the export", () => {
   assert.equal(pickWindow("7d", 336).hours, 168);
   assert.equal(pickWindow("14d", 48).key, "24h"); // not offered; falls back to the default or the largest usable
   assert.equal(pickWindow(undefined, 336).key, "3d");
+});
+
+test("filings count as stale only when the last good read is over 30 hours before the snapshot", () => {
+  assert.equal(filingsStale(snap()), false);
+  assert.equal(filingsStale(snap({ filingsAsOfMs: END - 29 * 3_600_000 })), false);
+  assert.equal(filingsStale(snap({ filingsAsOfMs: END - 31 * 3_600_000 })), true);
+  assert.equal(filingsStale(snap({ filingsAsOfMs: null })), false); // an older export: nothing to compare
 });

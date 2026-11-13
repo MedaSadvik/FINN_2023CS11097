@@ -6,8 +6,8 @@ import { FeedItem } from "@/components/FeedItem";
 import { AlertSettings, WindowPicker } from "@/components/FeedControls";
 import { getFeed } from "@/lib/data";
 import { getNetwork } from "@/lib/account";
-import { PREFS_COOKIE, parsePrefs, pickWindow, selectFeed } from "@/lib/feed-view";
-import { windowLabel } from "@/lib/format";
+import { PREFS_COOKIE, filingsStale, parsePrefs, pickWindow, selectFeed } from "@/lib/feed-view";
+import { at, windowLabel } from "@/lib/format";
 
 async function TodayBody({ searchParams }: { searchParams: PageProps<"/">["searchParams"] }) {
   const feed = getFeed();
@@ -19,7 +19,7 @@ async function TodayBody({ searchParams }: { searchParams: PageProps<"/">["searc
       : mode === "demo" ? "Network is synthetic." : null
     : `Preview build. Results numbers are real. Cards marked Sample use placeholder content.${syn}`;
 
-  let items, windowText, picker = null, hiddenLine: string | null = null, emptyText: string;
+  let items, windowText, picker = null, hiddenLine: string | null = null, emptyText: string, stale: string | null = null;
   if (feed.live) {
     const [{ w }, jar] = await Promise.all([searchParams, cookies()]);
     const prefs = parsePrefs(jar.get(PREFS_COOKIE)?.value);
@@ -39,6 +39,9 @@ async function TodayBody({ searchParams }: { searchParams: PageProps<"/">["searc
     ].filter(Boolean);
     hiddenLine = bits.length ? bits.join(". ") + "." : null;
     emptyText = `Nothing important in the last ${win.label}.`;
+    if (filingsStale(feed.snapshot) && feed.snapshot.filingsAsOfMs !== null) {
+      stale = `Filings were last read ${at(new Date(feed.snapshot.filingsAsOfMs).toISOString())}. The latest refresh could not reach NSE, so newer filings are missing.`;
+    }
   } else {
     items = feed.items;
     windowText = feed.note;
@@ -48,6 +51,7 @@ async function TodayBody({ searchParams }: { searchParams: PageProps<"/">["searc
   return (
     <>
       {banner && <p className="bg-wash px-4 py-2 text-sm text-ink-2">{banner}</p>}
+      {stale && <p role="status" className="bg-wash px-4 py-2 text-sm font-medium">{stale}</p>}
       <main>
         <h1 className="px-4 pt-6 text-[1.7rem] leading-tight font-bold tracking-tight">What changed</h1>
         <p className="px-4 pt-1 text-ink-2">{windowText}</p>
