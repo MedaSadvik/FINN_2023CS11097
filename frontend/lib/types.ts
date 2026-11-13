@@ -14,7 +14,7 @@ export type Employer = { key: string; name: string; sector: string; ticker: stri
 export type Relation = { employer_key: string; ticker: string; relation: "competitor" | "supplier" | "customer" };
 export type Network = { employers: Employer[]; employer_relations: Relation[]; people: Person[] };
 
-export type Evidence = { text: string; source: "public profile" | "their profile" | "your notes" };
+export type Evidence = { text: string; source: "public profile" | "their profile" | "your notes" | "NSE filing" };
 export type Lead = { person: Person; reasons: Evidence[]; tier: "worked_there" | "adjacent" | "overlap" };
 
 export type Quarter = { quarter: string; revenue: number; ebitda: number; pbt: number; pat: number };
