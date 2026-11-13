@@ -1,0 +1,98 @@
+{
+ "ticker": "KAYNES",
+ "employer_key": "kaynes",
+ "name": "Kaynes Technology",
+ "quarters": [
+  {
+   "quarter": "Q4FY25",
+   "revenue": 984,
+   "ebitda": 168,
+   "pbt": 142,
+   "pat": 116
+  },
+  {
+   "quarter": "Q1FY26",
+   "revenue": 673,
+   "ebitda": 113,
+   "pbt": 96,
+   "pat": 75
+  },
+  {
+   "quarter": "Q2FY26",
+   "revenue": 906,
+   "ebitda": 148,
+   "pbt": 152,
+   "pat": 121
+  },
+  {
+   "quarter": "Q3FY26",
+   "revenue": 804,
+   "ebitda": 119,
+   "pbt": 116,
+   "pat": 77
+  },
+  {
+   "quarter": "Q4FY26",
+   "revenue": 1243,
+   "ebitda": 194,
+   "pbt": 140,
+   "pat": 91
+  },
+  {
+   "quarter": "Q1FY27",
+   "revenue": 946,
+   "ebitda": 148,
+   "pbt": 88,
+   "pat": 56
+  }
+ ],
+ "promises": [
+  {
+   "made_in": "Q4FY25",
+   "call_month": "May 2025",
+   "target": "FY26 revenue of ₹4,000 cr or more",
+   "horizon": "FY26",
+   "page": 11,
+   "quote": "We are looking at crossing four thousand crores of revenue in FY26.",
+   "mark": "crossing four thousand crores of revenue in FY26",
+   "outcome": "missed",
+   "result": "₹3,626 cr against ₹4,000 cr+ guided (Q1FY26 to Q4FY26)"
+  },
+  {
+   "made_in": "Q1FY27",
+   "call_month": "Aug 2026",
+   "target": "OSAT and PCB together reach ₹500 cr revenue in FY27",
+   "horizon": "FY27",
+   "page": 14,
+   "quote": "For the full year we expect OSAT and PCB together to deliver about five hundred crores of revenue.",
+   "mark": "OSAT and PCB together to deliver about five hundred crores",
+   "outcome": "unclear",
+   "result": null,
+   "reason": "Segment revenue is not in the quarterly tables. Needs a later-call check."
+  },
+  {
+   "made_in": "Q1FY27",
+   "call_month": "Aug 2026",
+   "target": "FY27 capex: ₹300 cr OSAT, ₹300 cr PCB, ₹250 cr EMS",
+   "horizon": "FY27",
+   "page": 16,
+   "quote": "Capex for FY27 is three hundred crores each in OSAT and PCB, and two fifty in EMS.",
+   "mark": "three hundred crores each in OSAT and PCB, and two fifty in EMS",
+   "outcome": "pending",
+   "result": "Due FY27. Reported so far through Q1FY27."
+  },
+  {
+   "made_in": "Q1FY27",
+   "call_month": "Aug 2026",
+   "target": "Grow at 2x the market",
+   "horizon": "unspecified",
+   "page": 14,
+   "quote": "We have committed ourselves to growing at twice the rate of the market.",
+   "mark": "growing at twice the rate of the market",
+   "outcome": "unclear",
+   "result": null,
+   "reason": "No period and no market benchmark stated."
+  }
+ ],
+ "sample": true
+}

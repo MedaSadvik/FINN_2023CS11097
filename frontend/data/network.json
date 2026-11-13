@@ -1,0 +1,4097 @@
+{
+ "_note": "SYNTHETIC DATA. Invented people. Real company names are used only as employers.",
+ "seed": 2026,
+ "generated_for": "2026-11-10",
+ "employers": [
+  {
+   "key": "kaynes",
+   "name": "Kaynes Technology",
+   "sector": "semis_electronics",
+   "ticker": "KAYNES"
+  },
+  {
+   "key": "cgpower",
+   "name": "CG Power",
+   "sector": "semis_electronics",
+   "ticker": "CGPOWER"
+  },
+  {
+   "key": "dixon",
+   "name": "Dixon Technologies",
+   "sector": "semis_electronics",
+   "ticker": "DIXON"
+  },
+  {
+   "key": "syrma",
+   "name": "Syrma SGS",
+   "sector": "semis_electronics",
+   "ticker": "SYRMA"
+  },
+  {
+   "key": "tejas",
+   "name": "Tejas Networks",
+   "sector": "semis_electronics",
+   "ticker": "TEJASNET"
+  },
+  {
+   "key": "micron",
+   "name": "Micron India",
+   "sector": "semis_electronics",
+   "ticker": null
+  },
+  {
+   "key": "ti",
+   "name": "Texas Instruments India",
+   "sector": "semis_electronics",
+   "ticker": null
+  },
+  {
+   "key": "qualcomm",
+   "name": "Qualcomm India",
+   "sector": "semis_electronics",
+   "ticker": null
+  },
+  {
+   "key": "intel",
+   "name": "Intel India",
+   "sector": "semis_electronics",
+   "ticker": null
+  },
+  {
+   "key": "tataelec",
+   "name": "Tata Electronics",
+   "sector": "semis_electronics",
+   "ticker": null
+  },
+  {
+   "key": "netweb",
+   "name": "Netweb Technologies",
+   "sector": "ai_cloud",
+   "ticker": "NETWEB"
+  },
+  {
+   "key": "e2e",
+   "name": "E2E Networks",
+   "sector": "ai_cloud",
+   "ticker": "E2E"
+  },
+  {
+   "key": "nvidia",
+   "name": "Nvidia India",
+   "sector": "ai_cloud",
+   "ticker": null
+  },
+  {
+   "key": "aws",
+   "name": "AWS India",
+   "sector": "ai_cloud",
+   "ticker": null
+  },
+  {
+   "key": "microsoft",
+   "name": "Microsoft India",
+   "sector": "ai_cloud",
+   "ticker": null
+  },
+  {
+   "key": "yotta",
+   "name": "Yotta Data Services",
+   "sector": "ai_cloud",
+   "ticker": null
+  },
+  {
+   "key": "infosys",
+   "name": "Infosys",
+   "sector": "it_services",
+   "ticker": "INFY"
+  },
+  {
+   "key": "tcs",
+   "name": "TCS",
+   "sector": "it_services",
+   "ticker": "TCS"
+  },
+  {
+   "key": "wipro",
+   "name": "Wipro",
+   "sector": "it_services",
+   "ticker": "WIPRO"
+  },
+  {
+   "key": "hcltech",
+   "name": "HCL Tech",
+   "sector": "it_services",
+   "ticker": "HCLTECH"
+  },
+  {
+   "key": "persistent",
+   "name": "Persistent Systems",
+   "sector": "it_services",
+   "ticker": "PERSISTENT"
+  },
+  {
+   "key": "tataelxsi",
+   "name": "Tata Elxsi",
+   "sector": "it_services",
+   "ticker": "TATAELXSI"
+  },
+  {
+   "key": "accenture",
+   "name": "Accenture India",
+   "sector": "it_services",
+   "ticker": null
+  },
+  {
+   "key": "cognizant",
+   "name": "Cognizant",
+   "sector": "it_services",
+   "ticker": null
+  },
+  {
+   "key": "sunpharma",
+   "name": "Sun Pharma",
+   "sector": "pharma",
+   "ticker": "SUNPHARMA"
+  },
+  {
+   "key": "drreddys",
+   "name": "Dr Reddy's",
+   "sector": "pharma",
+   "ticker": null
+  },
+  {
+   "key": "cipla",
+   "name": "Cipla",
+   "sector": "pharma",
+   "ticker": null
+  },
+  {
+   "key": "hdfcbank",
+   "name": "HDFC Bank",
+   "sector": "financials",
+   "ticker": "HDFCBANK"
+  },
+  {
+   "key": "icicibank",
+   "name": "ICICI Bank",
+   "sector": "financials",
+   "ticker": null
+  },
+  {
+   "key": "axisbank",
+   "name": "Axis Bank",
+   "sector": "financials",
+   "ticker": null
+  },
+  {
+   "key": "goldman",
+   "name": "Goldman Sachs India",
+   "sector": "financials",
+   "ticker": null
+  },
+  {
+   "key": "reliance",
+   "name": "Reliance Industries",
+   "sector": "energy_infra",
+   "ticker": "RELIANCE"
+  },
+  {
+   "key": "lt",
+   "name": "Larsen & Toubro",
+   "sector": "energy_infra",
+   "ticker": "LT"
+  },
+  {
+   "key": "siemens",
+   "name": "Siemens India",
+   "sector": "energy_infra",
+   "ticker": null
+  },
+  {
+   "key": "abb",
+   "name": "ABB India",
+   "sector": "energy_infra",
+   "ticker": null
+  },
+  {
+   "key": "ntpc",
+   "name": "NTPC",
+   "sector": "energy_infra",
+   "ticker": null
+  }
+ ],
+ "employer_relations": [
+  {
+   "employer_key": "syrma",
+   "ticker": "KAYNES",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "dixon",
+   "ticker": "KAYNES",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "tataelec",
+   "ticker": "KAYNES",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "micron",
+   "ticker": "KAYNES",
+   "relation": "customer"
+  },
+  {
+   "employer_key": "ti",
+   "ticker": "KAYNES",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "qualcomm",
+   "ticker": "DIXON",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "nvidia",
+   "ticker": "NETWEB",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "intel",
+   "ticker": "NETWEB",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "yotta",
+   "ticker": "E2E",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "aws",
+   "ticker": "E2E",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "nvidia",
+   "ticker": "E2E",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "microsoft",
+   "ticker": "E2E",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "siemens",
+   "ticker": "CGPOWER",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "abb",
+   "ticker": "CGPOWER",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "ntpc",
+   "ticker": "CGPOWER",
+   "relation": "customer"
+  },
+  {
+   "employer_key": "ntpc",
+   "ticker": "LT",
+   "relation": "customer"
+  },
+  {
+   "employer_key": "tcs",
+   "ticker": "INFY",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "wipro",
+   "ticker": "INFY",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "hcltech",
+   "ticker": "INFY",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "accenture",
+   "ticker": "INFY",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "cognizant",
+   "ticker": "TCS",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "accenture",
+   "ticker": "TCS",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "tataelxsi",
+   "ticker": "PERSISTENT",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "cognizant",
+   "ticker": "PERSISTENT",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "drreddys",
+   "ticker": "SUNPHARMA",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "cipla",
+   "ticker": "SUNPHARMA",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "icicibank",
+   "ticker": "HDFCBANK",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "axisbank",
+   "ticker": "HDFCBANK",
+   "relation": "competitor"
+  },
+  {
+   "employer_key": "qualcomm",
+   "ticker": "TEJASNET",
+   "relation": "supplier"
+  },
+  {
+   "employer_key": "tataelec",
+   "ticker": "TEJASNET",
+   "relation": "supplier"
+  }
+ ],
+ "people": [
+  {
+   "id": 1,
+   "kind": "contact",
+   "full_name": "Priya Iyer",
+   "headline": "VP Supply Chain, Micron India",
+   "last_spoke": "2025-09-16",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ti",
+     "title": "Design Engineer",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "kaynes",
+     "title": "Head of Operations",
+     "start_year": 2017,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "micron",
+     "title": "VP Supply Chain",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "kind": "contact",
+   "full_name": "Rohan Kapoor",
+   "headline": "Business Unit Head, Accenture India",
+   "last_spoke": "2026-06-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2009,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "wipro",
+     "title": "Account Head",
+     "start_year": 2016,
+     "end_year": 2022
+    },
+    {
+     "employer_key": "accenture",
+     "title": "Business Unit Head",
+     "start_year": 2022,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "kind": "contact",
+   "full_name": "Meera Nair",
+   "headline": "VP Supply Chain, Tata Electronics",
+   "last_spoke": "2026-02-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "dixon",
+     "title": "Plant Manager",
+     "start_year": 2013,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "syrma",
+     "title": "Head of Operations",
+     "start_year": 2018,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "tataelec",
+     "title": "VP Supply Chain",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2008,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "kind": "contact",
+   "full_name": "Karthik Reddy",
+   "headline": "VP Infrastructure, Yotta Data Services",
+   "last_spoke": "2026-08-12",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2015,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "e2e",
+     "title": "Director Engineering",
+     "start_year": 2020,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "yotta",
+     "title": "VP Infrastructure",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2011,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "kind": "contact",
+   "full_name": "Divya Menon",
+   "headline": "Head of Corporate Banking, ICICI Bank",
+   "last_spoke": "2025-01-19",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hdfcbank",
+     "title": "Credit Manager",
+     "start_year": 2012,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "kind": "contact",
+   "full_name": "Siddharth Joshi",
+   "headline": "VP Strategy, NTPC",
+   "last_spoke": "2026-04-14",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "lt",
+     "title": "Project Manager",
+     "start_year": 2008,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "siemens",
+     "title": "Head of Projects",
+     "start_year": 2015,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "ntpc",
+     "title": "VP Strategy",
+     "start_year": 2021,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "kind": "contact",
+   "full_name": "Neha Banerjee",
+   "headline": "Head of Business Development, Dr Reddy's",
+   "last_spoke": "2025-12-15",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "sunpharma",
+     "title": "Regulatory Manager",
+     "start_year": 2011,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "kind": "contact",
+   "full_name": "Vikram Sethi",
+   "headline": "Formerly Head of Operations, Netweb Technologies",
+   "last_spoke": "2026-09-11",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tejas",
+     "title": "Design Engineer",
+     "start_year": 2012,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "qualcomm",
+     "title": "Product Manager",
+     "start_year": 2016,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "netweb",
+     "title": "Head of Operations",
+     "start_year": 2021,
+     "end_year": 2024
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2008,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "kind": "contact",
+   "full_name": "Tanvi Menon",
+   "headline": "Head of Corporate Banking, Goldman Sachs India",
+   "last_spoke": "2024-08-22",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Design Engineer",
+     "start_year": 2010,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Head of Corporate Banking",
+     "start_year": 2017,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Head of Corporate Banking",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "kind": "contact",
+   "full_name": "Ritu Desai",
+   "headline": "Head of Operations, Tejas Networks",
+   "last_spoke": "2024-11-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "qualcomm",
+     "title": "Plant Manager",
+     "start_year": 2012,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "tejas",
+     "title": "Head of Operations",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "kind": "contact",
+   "full_name": "Manish Bhatt",
+   "headline": "VP Infrastructure, Yotta Data Services",
+   "last_spoke": "2024-06-23",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "microsoft",
+     "title": "Product Manager",
+     "start_year": 2006,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Director Engineering",
+     "start_year": 2010,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "yotta",
+     "title": "VP Infrastructure",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2002,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "kind": "contact",
+   "full_name": "Nikhil Singh",
+   "headline": "Account Head, Persistent Systems",
+   "last_spoke": "2024-10-21",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tcs",
+     "title": "Delivery Manager",
+     "start_year": 2013,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Account Head",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2011,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "kind": "contact",
+   "full_name": "Gaurav Mehta",
+   "headline": "VP Supply Chain, Qualcomm India",
+   "last_spoke": "2025-01-19",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Design Engineer",
+     "start_year": 2005,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2012,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "qualcomm",
+     "title": "VP Supply Chain",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2001,
+     "end_year": 2005
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "kind": "contact",
+   "full_name": "Ritu Singh",
+   "headline": "VP Supply Chain, Kaynes Technology",
+   "last_spoke": "2024-05-24",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "microsoft",
+     "title": "Product Manager",
+     "start_year": 2013,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2020,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "kaynes",
+     "title": "VP Supply Chain",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2009,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "kind": "contact",
+   "full_name": "Manish Nair",
+   "headline": "VP Supply Chain, CG Power",
+   "last_spoke": "2026-08-12",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "qualcomm",
+     "title": "Plant Manager",
+     "start_year": 2009,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "hdfcbank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2014,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "cgpower",
+     "title": "VP Supply Chain",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2005,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "kind": "contact",
+   "full_name": "Rohan Iyer",
+   "headline": "Regulatory Manager, Sun Pharma",
+   "last_spoke": "2025-03-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Analyst",
+     "start_year": 2009,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "sunpharma",
+     "title": "Regulatory Manager",
+     "start_year": 2011,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "kind": "contact",
+   "full_name": "Siddharth Agarwal",
+   "headline": "Delivery Manager, Tata Elxsi",
+   "last_spoke": "2024-12-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hdfcbank",
+     "title": "Analyst",
+     "start_year": 2008,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "tataelxsi",
+     "title": "Delivery Manager",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "kind": "contact",
+   "full_name": "Nikhil Bhatt",
+   "headline": "Group Treasurer, ICICI Bank",
+   "last_spoke": "2025-06-18",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Analyst",
+     "start_year": 2007,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "ntpc",
+     "title": "Project Manager",
+     "start_year": 2012,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Group Treasurer",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2005,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 19,
+   "kind": "contact",
+   "full_name": "Varun Iyer",
+   "headline": "Head of Operations, Micron India",
+   "last_spoke": "2025-12-15",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hdfcbank",
+     "title": "Credit Manager",
+     "start_year": 2008,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "micron",
+     "title": "Head of Operations",
+     "start_year": 2010,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 20,
+   "kind": "contact",
+   "full_name": "Isha Krishnan",
+   "headline": "Credit Manager, ICICI Bank",
+   "last_spoke": "2025-03-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2009,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2011,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2005,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 21,
+   "kind": "contact",
+   "full_name": "Nikhil Banerjee",
+   "headline": "Head of Operations, Syrma SGS",
+   "last_spoke": "2026-05-14",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cgpower",
+     "title": "Plant Manager",
+     "start_year": 2015,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "dixon",
+     "title": "Plant Manager",
+     "start_year": 2021,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "syrma",
+     "title": "Head of Operations",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 22,
+   "kind": "contact",
+   "full_name": "Neha Rao",
+   "headline": "Head of Business Development, Dr Reddy's",
+   "last_spoke": "2024-10-21",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2007,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2003,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 23,
+   "kind": "contact",
+   "full_name": "Deepak Kapoor",
+   "headline": "Head of Projects, ABB India",
+   "last_spoke": "2026-10-11",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "abb",
+     "title": "Project Manager",
+     "start_year": 2011,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "abb",
+     "title": "Head of Projects",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 24,
+   "kind": "contact",
+   "full_name": "Amit Joshi",
+   "headline": "Head of Operations, Tejas Networks",
+   "last_spoke": "2025-01-19",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "micron",
+     "title": "Design Engineer",
+     "start_year": 2012,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "wipro",
+     "title": "Delivery Manager",
+     "start_year": 2017,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "tejas",
+     "title": "Head of Operations",
+     "start_year": 2021,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2008,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 25,
+   "kind": "contact",
+   "full_name": "Harsh Sethi",
+   "headline": "Delivery Manager, Infosys",
+   "last_spoke": "2026-02-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Delivery Manager",
+     "start_year": 2007,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2003,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 26,
+   "kind": "contact",
+   "full_name": "Isha Iyer",
+   "headline": "Account Head, Infosys",
+   "last_spoke": "2026-03-15",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tataelxsi",
+     "title": "Delivery Manager",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Account Head",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 27,
+   "kind": "contact",
+   "full_name": "Rahul Chawla",
+   "headline": "Plant Manager, Qualcomm India",
+   "last_spoke": "2025-03-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cgpower",
+     "title": "Plant Manager",
+     "start_year": 2009,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "qualcomm",
+     "title": "Plant Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 28,
+   "kind": "contact",
+   "full_name": "Aarav Joshi",
+   "headline": "Business Unit Head, Infosys",
+   "last_spoke": "2024-11-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tcs",
+     "title": "Delivery Manager",
+     "start_year": 2011,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "siemens",
+     "title": "Head of Projects",
+     "start_year": 2018,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Business Unit Head",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 29,
+   "kind": "contact",
+   "full_name": "Sneha Kapoor",
+   "headline": "Credit Manager, Axis Bank",
+   "last_spoke": "2026-07-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "goldman",
+     "title": "Analyst",
+     "start_year": 2006,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "axisbank",
+     "title": "Credit Manager",
+     "start_year": 2010,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 30,
+   "kind": "contact",
+   "full_name": "Lakshmi Gupta",
+   "headline": "VP Supply Chain, Texas Instruments India",
+   "last_spoke": "2025-05-19",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "micron",
+     "title": "Plant Manager",
+     "start_year": 2007,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "tataelec",
+     "title": "Head of Operations",
+     "start_year": 2013,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "ti",
+     "title": "VP Supply Chain",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2005,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 31,
+   "kind": "contact",
+   "full_name": "Siddharth Reddy",
+   "headline": "VP Supply Chain, Qualcomm India",
+   "last_spoke": "2024-08-22",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Plant Manager",
+     "start_year": 2015,
+     "end_year": 2022
+    },
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2022,
+     "end_year": 2024
+    },
+    {
+     "employer_key": "qualcomm",
+     "title": "VP Supply Chain",
+     "start_year": 2024,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 32,
+   "kind": "contact",
+   "full_name": "Harsh Gupta",
+   "headline": "Plant Manager, Micron India",
+   "last_spoke": "2026-03-15",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Plant Manager",
+     "start_year": 2013,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "micron",
+     "title": "Plant Manager",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2011,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 33,
+   "kind": "contact",
+   "full_name": "Nisha Banerjee",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": "2025-08-17",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2013,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2009,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 34,
+   "kind": "contact",
+   "full_name": "Ritu Sharma",
+   "headline": "VP Commercial, Sun Pharma",
+   "last_spoke": "2026-01-14",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2012,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2019,
+     "end_year": 2024
+    },
+    {
+     "employer_key": "sunpharma",
+     "title": "VP Commercial",
+     "start_year": 2024,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 35,
+   "kind": "contact",
+   "full_name": "Nikhil Kapoor",
+   "headline": "Director Engineering, AWS India",
+   "last_spoke": "2024-11-20",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2013,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "intel",
+     "title": "Head of Operations",
+     "start_year": 2016,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "aws",
+     "title": "Director Engineering",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2011,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 36,
+   "kind": "contact",
+   "full_name": "Rahul Banerjee",
+   "headline": "Director Engineering, Nvidia India",
+   "last_spoke": "2025-09-16",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "lt",
+     "title": "Head of Projects",
+     "start_year": 2014,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Director Engineering",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 37,
+   "kind": "contact",
+   "full_name": "Aarav Kapoor",
+   "headline": "Product Manager, Microsoft India",
+   "last_spoke": "2024-08-22",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "yotta",
+     "title": "Solutions Engineer",
+     "start_year": 2013,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Product Manager",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2011,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 38,
+   "kind": "contact",
+   "full_name": "Siddharth Kulkarni",
+   "headline": "Product Manager, E2E Networks",
+   "last_spoke": "2025-10-16",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 39,
+   "kind": "contact",
+   "full_name": "Deepak Pillai",
+   "headline": "Product Manager, AWS India",
+   "last_spoke": "2026-08-12",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2014,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "aws",
+     "title": "Product Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2010,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 40,
+   "kind": "contact",
+   "full_name": "Siddharth Patil",
+   "headline": "Head of Operations, Texas Instruments India",
+   "last_spoke": "2025-12-15",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tejas",
+     "title": "Design Engineer",
+     "start_year": 2006,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "ti",
+     "title": "Head of Operations",
+     "start_year": 2010,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2002,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 41,
+   "kind": "contact",
+   "full_name": "Manish Patil",
+   "headline": "Account Head, Accenture India",
+   "last_spoke": "2025-09-16",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "syrma",
+     "title": "Plant Manager",
+     "start_year": 2008,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "accenture",
+     "title": "Account Head",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2006,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 42,
+   "kind": "contact",
+   "full_name": "Meera Chawla",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": "2026-02-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Product Manager",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 43,
+   "kind": "contact",
+   "full_name": "Siddharth Kapoor",
+   "headline": "Director Engineering, Yotta Data Services",
+   "last_spoke": "2025-09-16",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2014,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Director Engineering",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2012,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 44,
+   "kind": "contact",
+   "full_name": "Vikram Chawla",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": "2024-08-22",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "netweb",
+     "title": "Solutions Engineer",
+     "start_year": 2015,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2020,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2011,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 45,
+   "kind": "contact",
+   "full_name": "Siddharth Iyer",
+   "headline": "Head of Projects, Reliance Industries",
+   "last_spoke": "2025-06-18",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "axisbank",
+     "title": "Analyst",
+     "start_year": 2012,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "reliance",
+     "title": "Head of Projects",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2008,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 46,
+   "kind": "contact",
+   "full_name": "Tanvi Agarwal",
+   "headline": "Director Engineering, E2E Networks",
+   "last_spoke": "2026-08-12",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2014,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "netweb",
+     "title": "Product Manager",
+     "start_year": 2016,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "e2e",
+     "title": "Director Engineering",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2010,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 47,
+   "kind": "contact",
+   "full_name": "Siddharth Pillai",
+   "headline": "Business Unit Head, HCL Tech",
+   "last_spoke": "2026-02-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "wipro",
+     "title": "Consultant",
+     "start_year": 2011,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "accenture",
+     "title": "Delivery Manager",
+     "start_year": 2013,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "hcltech",
+     "title": "Business Unit Head",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 48,
+   "kind": "contact",
+   "full_name": "Deepak Malhotra",
+   "headline": "Account Head, Cognizant",
+   "last_spoke": "2026-02-13",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2010,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "cognizant",
+     "title": "Account Head",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 49,
+   "kind": "contact",
+   "full_name": "Pooja Krishnan",
+   "headline": "Head of Operations, Intel India",
+   "last_spoke": "2025-07-18",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Consultant",
+     "start_year": 2016,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "intel",
+     "title": "Head of Operations",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2012,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 50,
+   "kind": "contact",
+   "full_name": "Harsh Kapoor",
+   "headline": "Director Engineering, Nvidia India",
+   "last_spoke": "2026-10-11",
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2015,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Director Engineering",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 51,
+   "kind": "extended",
+   "full_name": "Vikram Mehta",
+   "headline": "Account Head, Persistent Systems",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "accenture",
+     "title": "Consultant",
+     "start_year": 2008,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Account Head",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 52,
+   "kind": "extended",
+   "full_name": "Ritu Agarwal",
+   "headline": "Director Engineering, Yotta Data Services",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cipla",
+     "title": "Analyst",
+     "start_year": 2011,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2018,
+     "end_year": 2025
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Director Engineering",
+     "start_year": 2025,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 53,
+   "kind": "extended",
+   "full_name": "Varun Nair",
+   "headline": "Credit Manager, ICICI Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2009,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2013,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2005,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 54,
+   "kind": "extended",
+   "full_name": "Manish Agarwal",
+   "headline": "Regulatory Manager, Dr Reddy's",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2014,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2012,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 55,
+   "kind": "extended",
+   "full_name": "Neha Singh",
+   "headline": "Head of Projects, Reliance Industries",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Manager",
+     "start_year": 2010,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "reliance",
+     "title": "Head of Projects",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 56,
+   "kind": "extended",
+   "full_name": "Neha Mehta",
+   "headline": "Director Engineering, AWS India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Solutions Engineer",
+     "start_year": 2015,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "aws",
+     "title": "Director Engineering",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2011,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 57,
+   "kind": "extended",
+   "full_name": "Ananya Nair",
+   "headline": "Head of Operations, CG Power",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hcltech",
+     "title": "Delivery Manager",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Credit Manager",
+     "start_year": 2014,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "cgpower",
+     "title": "Head of Operations",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 58,
+   "kind": "extended",
+   "full_name": "Pooja Singh",
+   "headline": "Plant Manager, Micron India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Plant Manager",
+     "start_year": 2011,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "micron",
+     "title": "Plant Manager",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 59,
+   "kind": "extended",
+   "full_name": "Tanvi Sethi",
+   "headline": "Head of Projects, Siemens India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "lt",
+     "title": "Project Engineer",
+     "start_year": 2010,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "siemens",
+     "title": "Head of Projects",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 60,
+   "kind": "extended",
+   "full_name": "Deepak Rao",
+   "headline": "Head of Projects, NTPC",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Manager",
+     "start_year": 2016,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "qualcomm",
+     "title": "Head of Operations",
+     "start_year": 2020,
+     "end_year": 2025
+    },
+    {
+     "employer_key": "ntpc",
+     "title": "Head of Projects",
+     "start_year": 2025,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 61,
+   "kind": "extended",
+   "full_name": "Tanvi Kulkarni",
+   "headline": "Head of Operations, Texas Instruments India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cgpower",
+     "title": "Plant Manager",
+     "start_year": 2014,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "ti",
+     "title": "Head of Operations",
+     "start_year": 2020,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2012,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 62,
+   "kind": "extended",
+   "full_name": "Priya Patil",
+   "headline": "Plant Manager, Intel India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "kaynes",
+     "title": "Plant Manager",
+     "start_year": 2010,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "intel",
+     "title": "Plant Manager",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 63,
+   "kind": "extended",
+   "full_name": "Pooja Gupta",
+   "headline": "Head of Corporate Banking, Axis Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Credit Manager",
+     "start_year": 2014,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "axisbank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2021,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 64,
+   "kind": "extended",
+   "full_name": "Rahul Patil",
+   "headline": "Delivery Manager, Infosys",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cognizant",
+     "title": "Delivery Manager",
+     "start_year": 2008,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 65,
+   "kind": "extended",
+   "full_name": "Kavya Krishnan",
+   "headline": "Credit Manager, Goldman Sachs India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2007,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Credit Manager",
+     "start_year": 2013,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2005,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 66,
+   "kind": "extended",
+   "full_name": "Karthik Sharma",
+   "headline": "Head of Business Development, Dr Reddy's",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tataelxsi",
+     "title": "Consultant",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "cognizant",
+     "title": "Delivery Manager",
+     "start_year": 2009,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 67,
+   "kind": "extended",
+   "full_name": "Manish Mehta",
+   "headline": "Plant Manager, Syrma SGS",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tcs",
+     "title": "Consultant",
+     "start_year": 2009,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "syrma",
+     "title": "Plant Manager",
+     "start_year": 2013,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2005,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 68,
+   "kind": "extended",
+   "full_name": "Priya Joshi",
+   "headline": "Director Engineering, Yotta Data Services",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Engineer",
+     "start_year": 2016,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Director Engineering",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 69,
+   "kind": "extended",
+   "full_name": "Rohan Bose",
+   "headline": "Head of Business Development, Sun Pharma",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "sunpharma",
+     "title": "Regulatory Manager",
+     "start_year": 2006,
+     "end_year": 2008
+    },
+    {
+     "employer_key": "sunpharma",
+     "title": "Head of Business Development",
+     "start_year": 2008,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 70,
+   "kind": "extended",
+   "full_name": "Rohan Gupta",
+   "headline": "Consultant, HCL Tech",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hcltech",
+     "title": "Consultant",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 71,
+   "kind": "extended",
+   "full_name": "Neha Malhotra",
+   "headline": "VP Infrastructure, Nvidia India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "netweb",
+     "title": "Solutions Engineer",
+     "start_year": 2011,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2016,
+     "end_year": 2022
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "VP Infrastructure",
+     "start_year": 2022,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 72,
+   "kind": "extended",
+   "full_name": "Aarav Desai",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Solutions Engineer",
+     "start_year": 2006,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "cipla",
+     "title": "Head of Business Development",
+     "start_year": 2012,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2002,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 73,
+   "kind": "extended",
+   "full_name": "Divya Krishnan",
+   "headline": "Director Engineering, Netweb Technologies",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2011,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "cipla",
+     "title": "Regulatory Manager",
+     "start_year": 2015,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "netweb",
+     "title": "Director Engineering",
+     "start_year": 2021,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 74,
+   "kind": "extended",
+   "full_name": "Ananya Menon",
+   "headline": "VP Infrastructure, AWS India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "netweb",
+     "title": "Product Manager",
+     "start_year": 2016,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2018,
+     "end_year": 2023
+    },
+    {
+     "employer_key": "aws",
+     "title": "VP Infrastructure",
+     "start_year": 2023,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 75,
+   "kind": "extended",
+   "full_name": "Aarav Malhotra",
+   "headline": "Account Head, Persistent Systems",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "wipro",
+     "title": "Delivery Manager",
+     "start_year": 2013,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Account Head",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2011,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 76,
+   "kind": "extended",
+   "full_name": "Arjun Malhotra",
+   "headline": "Head of Business Development, Dr Reddy's",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "qualcomm",
+     "title": "Plant Manager",
+     "start_year": 2008,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2010,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2004,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 77,
+   "kind": "extended",
+   "full_name": "Meera Bose",
+   "headline": "Account Head, Persistent Systems",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "wipro",
+     "title": "Consultant",
+     "start_year": 2009,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Account Head",
+     "start_year": 2011,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 78,
+   "kind": "extended",
+   "full_name": "Shreya Mehta",
+   "headline": "Head of Corporate Banking, Goldman Sachs India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "goldman",
+     "title": "Credit Manager",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Head of Corporate Banking",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2002,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 79,
+   "kind": "extended",
+   "full_name": "Neha Bhatt",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2012,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 80,
+   "kind": "extended",
+   "full_name": "Deepak Krishnan",
+   "headline": "Business Unit Head, Accenture India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cognizant",
+     "title": "Consultant",
+     "start_year": 2011,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Account Head",
+     "start_year": 2018,
+     "end_year": 2024
+    },
+    {
+     "employer_key": "accenture",
+     "title": "Business Unit Head",
+     "start_year": 2024,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2007,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 81,
+   "kind": "extended",
+   "full_name": "Nisha Gupta",
+   "headline": "Head of Projects, ABB India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Engineer",
+     "start_year": 2010,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "abb",
+     "title": "Head of Projects",
+     "start_year": 2013,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 82,
+   "kind": "extended",
+   "full_name": "Deepak Nair",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "netweb",
+     "title": "Solutions Engineer",
+     "start_year": 2016,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 83,
+   "kind": "extended",
+   "full_name": "Divya Iyer",
+   "headline": "VP Infrastructure, Yotta Data Services",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "netweb",
+     "title": "Solutions Engineer",
+     "start_year": 2005,
+     "end_year": 2007
+    },
+    {
+     "employer_key": "netweb",
+     "title": "Director Engineering",
+     "start_year": 2007,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "yotta",
+     "title": "VP Infrastructure",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2003,
+     "end_year": 2005
+    }
+   ]
+  },
+  {
+   "id": 84,
+   "kind": "extended",
+   "full_name": "Kavya Gupta",
+   "headline": "Head of Corporate Banking, ICICI Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2010,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "hdfcbank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2015,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 85,
+   "kind": "extended",
+   "full_name": "Kavya Patil",
+   "headline": "Business Unit Head, Infosys",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "accenture",
+     "title": "Consultant",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "cognizant",
+     "title": "Delivery Manager",
+     "start_year": 2009,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Business Unit Head",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 86,
+   "kind": "extended",
+   "full_name": "Kavya Nair",
+   "headline": "Credit Manager, ICICI Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2007,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2005,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 87,
+   "kind": "extended",
+   "full_name": "Amit Krishnan",
+   "headline": "Delivery Manager, TCS",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Consultant",
+     "start_year": 2014,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "tcs",
+     "title": "Delivery Manager",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2010,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 88,
+   "kind": "extended",
+   "full_name": "Karthik Bose",
+   "headline": "VP Infrastructure, Nvidia India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "nvidia",
+     "title": "Solutions Engineer",
+     "start_year": 2014,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Director Engineering",
+     "start_year": 2017,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "VP Infrastructure",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2010,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 89,
+   "kind": "extended",
+   "full_name": "Sneha Sethi",
+   "headline": "Group Treasurer, Axis Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tejas",
+     "title": "Plant Manager",
+     "start_year": 2010,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "tataelec",
+     "title": "Plant Manager",
+     "start_year": 2014,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "axisbank",
+     "title": "Group Treasurer",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 90,
+   "kind": "extended",
+   "full_name": "Amit Chawla",
+   "headline": "Account Head, Accenture India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "microsoft",
+     "title": "Product Manager",
+     "start_year": 2015,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "accenture",
+     "title": "Account Head",
+     "start_year": 2020,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2011,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 91,
+   "kind": "extended",
+   "full_name": "Manish Sharma",
+   "headline": "Head of Business Development, Sun Pharma",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "aws",
+     "title": "Product Manager",
+     "start_year": 2005,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "sunpharma",
+     "title": "Head of Business Development",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2003,
+     "end_year": 2005
+    }
+   ]
+  },
+  {
+   "id": 92,
+   "kind": "extended",
+   "full_name": "Rahul Joshi",
+   "headline": "Head of Projects, Siemens India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Engineer",
+     "start_year": 2016,
+     "end_year": 2022
+    },
+    {
+     "employer_key": "siemens",
+     "title": "Head of Projects",
+     "start_year": 2022,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 93,
+   "kind": "extended",
+   "full_name": "Ananya Agarwal",
+   "headline": "Head of Operations, Micron India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "cgpower",
+     "title": "Design Engineer",
+     "start_year": 2008,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "micron",
+     "title": "Head of Operations",
+     "start_year": 2011,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2006,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 94,
+   "kind": "extended",
+   "full_name": "Priya Reddy",
+   "headline": "Head of Operations, CG Power",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "aws",
+     "title": "Solutions Engineer",
+     "start_year": 2007,
+     "end_year": 2010
+    },
+    {
+     "employer_key": "cgpower",
+     "title": "Head of Operations",
+     "start_year": 2010,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2005,
+     "end_year": 2007
+    }
+   ]
+  },
+  {
+   "id": 95,
+   "kind": "extended",
+   "full_name": "Vikram Rao",
+   "headline": "Head of Corporate Banking, HDFC Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "axisbank",
+     "title": "Credit Manager",
+     "start_year": 2009,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "hdfcbank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 96,
+   "kind": "extended",
+   "full_name": "Karthik Rao",
+   "headline": "Business Unit Head, TCS",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2011,
+     "end_year": 2013
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2013,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "tcs",
+     "title": "Business Unit Head",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "ISB Hyderabad",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 97,
+   "kind": "extended",
+   "full_name": "Rahul Menon",
+   "headline": "Head of Operations, Texas Instruments India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tejas",
+     "title": "Design Engineer",
+     "start_year": 2010,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "ti",
+     "title": "Head of Operations",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2006,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 98,
+   "kind": "extended",
+   "full_name": "Ananya Mehta",
+   "headline": "Account Head, Persistent Systems",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Consultant",
+     "start_year": 2015,
+     "end_year": 2021
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Account Head",
+     "start_year": 2021,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 99,
+   "kind": "extended",
+   "full_name": "Rahul Rao",
+   "headline": "Delivery Manager, Persistent Systems",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "wipro",
+     "title": "Consultant",
+     "start_year": 2013,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "persistent",
+     "title": "Delivery Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "VJTI Mumbai",
+     "start_year": 2009,
+     "end_year": 2013
+    }
+   ]
+  },
+  {
+   "id": 100,
+   "kind": "extended",
+   "full_name": "Tanvi Joshi",
+   "headline": "Product Manager, Yotta Data Services",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2008,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2006,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 101,
+   "kind": "extended",
+   "full_name": "Ritu Bose",
+   "headline": "Director Engineering, Nvidia India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Consultant",
+     "start_year": 2010,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Director Engineering",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 102,
+   "kind": "extended",
+   "full_name": "Gaurav Sharma",
+   "headline": "Product Manager, Nvidia India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "yotta",
+     "title": "Solutions Engineer",
+     "start_year": 2006,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Product Manager",
+     "start_year": 2011,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2002,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 103,
+   "kind": "extended",
+   "full_name": "Aarav Sethi",
+   "headline": "Plant Manager, Kaynes Technology",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Analyst",
+     "start_year": 2011,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "kaynes",
+     "title": "Plant Manager",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 104,
+   "kind": "extended",
+   "full_name": "Lakshmi Kulkarni",
+   "headline": "VP Infrastructure, Yotta Data Services",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "aws",
+     "title": "Product Manager",
+     "start_year": 2012,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Product Manager",
+     "start_year": 2019,
+     "end_year": 2022
+    },
+    {
+     "employer_key": "yotta",
+     "title": "VP Infrastructure",
+     "start_year": 2022,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 105,
+   "kind": "extended",
+   "full_name": "Shreya Menon",
+   "headline": "Head of Business Development, Cipla",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Regulatory Manager",
+     "start_year": 2015,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "cipla",
+     "title": "Head of Business Development",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Delhi",
+     "start_year": 2011,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 106,
+   "kind": "extended",
+   "full_name": "Ananya Rao",
+   "headline": "Head of Business Development, Dr Reddy's",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "infosys",
+     "title": "Consultant",
+     "start_year": 2015,
+     "end_year": 2020
+    },
+    {
+     "employer_key": "drreddys",
+     "title": "Head of Business Development",
+     "start_year": 2020,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2013,
+     "end_year": 2015
+    }
+   ]
+  },
+  {
+   "id": 107,
+   "kind": "extended",
+   "full_name": "Neha Desai",
+   "headline": "VP Infrastructure, Microsoft India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Solutions Engineer",
+     "start_year": 2008,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "yotta",
+     "title": "Product Manager",
+     "start_year": 2012,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "VP Infrastructure",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2006,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 108,
+   "kind": "extended",
+   "full_name": "Karthik Menon",
+   "headline": "Head of Corporate Banking, Goldman Sachs India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2014,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Head of Corporate Banking",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2010,
+     "end_year": 2014
+    }
+   ]
+  },
+  {
+   "id": 109,
+   "kind": "extended",
+   "full_name": "Sneha Patil",
+   "headline": "Project Manager, Siemens India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "ntpc",
+     "title": "Project Manager",
+     "start_year": 2010,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "siemens",
+     "title": "Project Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Ahmedabad",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 110,
+   "kind": "extended",
+   "full_name": "Priya Rao",
+   "headline": "Group Treasurer, Goldman Sachs India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "siemens",
+     "title": "Project Engineer",
+     "start_year": 2008,
+     "end_year": 2011
+    },
+    {
+     "employer_key": "lt",
+     "title": "Project Manager",
+     "start_year": 2011,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Group Treasurer",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2006,
+     "end_year": 2008
+    }
+   ]
+  },
+  {
+   "id": 111,
+   "kind": "extended",
+   "full_name": "Isha Menon",
+   "headline": "Head of Corporate Banking, Goldman Sachs India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "drreddys",
+     "title": "Analyst",
+     "start_year": 2005,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "goldman",
+     "title": "Head of Corporate Banking",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2001,
+     "end_year": 2005
+    }
+   ]
+  },
+  {
+   "id": 112,
+   "kind": "extended",
+   "full_name": "Arjun Iyer",
+   "headline": "Head of Corporate Banking, Axis Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "intel",
+     "title": "Design Engineer",
+     "start_year": 2016,
+     "end_year": 2019
+    },
+    {
+     "employer_key": "axisbank",
+     "title": "Head of Corporate Banking",
+     "start_year": 2019,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "NIT Trichy",
+     "start_year": 2014,
+     "end_year": 2016
+    }
+   ]
+  },
+  {
+   "id": 113,
+   "kind": "extended",
+   "full_name": "Aarav Nair",
+   "headline": "Director Engineering, Nvidia India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "persistent",
+     "title": "Consultant",
+     "start_year": 2009,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "nvidia",
+     "title": "Director Engineering",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIM Bangalore",
+     "start_year": 2007,
+     "end_year": 2009
+    }
+   ]
+  },
+  {
+   "id": 114,
+   "kind": "extended",
+   "full_name": "Harsh Chawla",
+   "headline": "Delivery Manager, Infosys",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "infosys",
+     "title": "Consultant",
+     "start_year": 2010,
+     "end_year": 2017
+    },
+    {
+     "employer_key": "infosys",
+     "title": "Delivery Manager",
+     "start_year": 2017,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Madras",
+     "start_year": 2008,
+     "end_year": 2010
+    }
+   ]
+  },
+  {
+   "id": 115,
+   "kind": "extended",
+   "full_name": "Pooja Banerjee",
+   "headline": "Plant Manager, Kaynes Technology",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "kaynes",
+     "title": "Design Engineer",
+     "start_year": 2012,
+     "end_year": 2018
+    },
+    {
+     "employer_key": "kaynes",
+     "title": "Plant Manager",
+     "start_year": 2018,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2010,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 116,
+   "kind": "extended",
+   "full_name": "Gaurav Singh",
+   "headline": "Director Engineering, Microsoft India",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "e2e",
+     "title": "Product Manager",
+     "start_year": 2012,
+     "end_year": 2014
+    },
+    {
+     "employer_key": "microsoft",
+     "title": "Director Engineering",
+     "start_year": 2014,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2008,
+     "end_year": 2012
+    }
+   ]
+  },
+  {
+   "id": 117,
+   "kind": "extended",
+   "full_name": "Neha Iyer",
+   "headline": "Credit Manager, HDFC Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "hdfcbank",
+     "title": "Credit Manager",
+     "start_year": 2011,
+     "end_year": 2015
+    },
+    {
+     "employer_key": "hdfcbank",
+     "title": "Credit Manager",
+     "start_year": 2015,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "BITS Pilani",
+     "start_year": 2009,
+     "end_year": 2011
+    }
+   ]
+  },
+  {
+   "id": 118,
+   "kind": "extended",
+   "full_name": "Varun Malhotra",
+   "headline": "Plant Manager, Kaynes Technology",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "kaynes",
+     "title": "Design Engineer",
+     "start_year": 2005,
+     "end_year": 2012
+    },
+    {
+     "employer_key": "kaynes",
+     "title": "Plant Manager",
+     "start_year": 2012,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2001,
+     "end_year": 2005
+    }
+   ]
+  },
+  {
+   "id": 119,
+   "kind": "extended",
+   "full_name": "Priya Singh",
+   "headline": "Head of Operations, Dixon Technologies",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "tataelxsi",
+     "title": "Consultant",
+     "start_year": 2006,
+     "end_year": 2009
+    },
+    {
+     "employer_key": "dixon",
+     "title": "Head of Operations",
+     "start_year": 2009,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "IIT Bombay",
+     "start_year": 2004,
+     "end_year": 2006
+    }
+   ]
+  },
+  {
+   "id": 120,
+   "kind": "extended",
+   "full_name": "Karthik Krishnan",
+   "headline": "Credit Manager, ICICI Bank",
+   "last_spoke": null,
+   "synthetic": true,
+   "roles": [
+    {
+     "employer_key": "goldman",
+     "title": "Credit Manager",
+     "start_year": 2014,
+     "end_year": 2016
+    },
+    {
+     "employer_key": "icicibank",
+     "title": "Credit Manager",
+     "start_year": 2016,
+     "end_year": null
+    }
+   ],
+   "education": [
+    {
+     "institution": "SRCC Delhi",
+     "start_year": 2012,
+     "end_year": 2014
+    }
+   ]
+  }
+ ]
+}

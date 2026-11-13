@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@fontsource-variable/schibsted-grotesk/wght.css";
+@import "@fontsource-variable/newsreader/wght-italic.css";
+
+/*
+  FINN look: a printed transcript, marked up by someone who read it.
+  - Sans (Schibsted Grotesk) says what the numbers say.
+  - Serif italic (Newsreader) is only ever what management said.
+  - Highlighter yellow marks one thing: a quote we verified on the page.
+  - Outcome colours are semantic only. Everything else is ink on white.
+*/
+@theme {
+  --color-paper: #ffffff;
+  --color-wash: #f2f4f7;
+  --color-ink: #0e1a2b;
+  --color-ink-2: #4a5a72;
+  --color-ink-3: #6b7a91;
+  --color-line: #e1e5ec;
+  --color-mark: #ffe24a;
+  --color-ok: #0b7a5b;
+  --color-part: #a85f00;
+  --color-miss: #be2f26;
+  --color-pend: #566882;
+
+  --font-sans: "Schibsted Grotesk Variable", system-ui, sans-serif;
+  --font-quote: "Newsreader Variable", Georgia, serif;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+/* Management's words: serif italic, with the verified part highlighted. */
+.quote {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.quote mark {
+  background: linear-gradient(transparent 12%, var(--color-mark) 12%, var(--color-mark) 92%, transparent 92%);
+  color: inherit;
+  padding: 0 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
