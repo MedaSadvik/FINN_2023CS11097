@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Shell } from "@/components/Shell";
+import { NetworkInsights } from "@/components/NetworkInsights";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { monthYear } from "@/lib/format";
 import { acceptRequest, clearSample, declineRequest, loadSample, removeConnection, requestConnection } from "@/app/actions";
@@ -169,7 +170,10 @@ export default function Network() {
     <Shell>
       <main className="pb-6">
         <h1 className="px-4 pt-6 pb-4 text-[1.7rem] leading-tight font-bold tracking-tight">Your network</h1>
-        <Suspense fallback={<p className="px-4 text-ink-2">Loading…</p>}><Body /></Suspense>
+        <Suspense fallback={<p className="px-4 text-ink-2">Loading…</p>}>
+          <NetworkInsights />
+          <div className="pt-10"><Body /></div>
+        </Suspense>
       </main>
     </Shell>
   );

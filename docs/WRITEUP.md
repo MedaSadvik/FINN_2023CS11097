@@ -79,6 +79,12 @@ No servers to keep alive.
 
 The mock network has 120 invented people, 36 employers and 30 employer relations (competitor, supplier, customer), built to overlap the 17-stock portfolio and the research companies. A Call Sheet ranks people by rule: worked at the company, then at a competitor, supplier or customer, then overlapped with someone who did. Each line is a plain fact tagged by source ("public profile", "their profile", "your notes"). There is no strength score, because I could not defend one.
 
+Two things the Network notices without being asked, both plain rules over the contacts and the feed:
+- **Worth a call.** A contact who worked at a company that just filed, and whom you have not spoken to in six months or more. It shows the career line, the filing, the silence, and one question to ask, chosen by filing type. Still-there contacts rank above former ones. A pointer on Today shows how many there are for the window picked.
+- **Who knows what.** Go-to people per sector, counted from years at companies FINN tracks. A sector where you hold companies and know no one is flagged as a gap.
+
+If a contact typed their employer by hand, it is matched to a tracked company by name. The model never sees the network.
+
 ## Known limits (said plainly)
 
 - Most promises read "can't check yet". Segment and capex claims need later transcripts, and I did not build that second tier. This weakens the headline feature, and it is the first thing I would build next.
