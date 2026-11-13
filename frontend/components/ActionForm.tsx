@@ -5,7 +5,7 @@ import type { ActionState } from "@/app/actions";
 /** A form that runs a server action and shows its one-line result. */
 export function ActionForm({ action, children, submit, className }: {
   action: (prev: ActionState, f: FormData) => Promise<ActionState>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   submit: string;
   className?: string;
 }) {

@@ -160,17 +160,21 @@ export async function removeConnection(f: FormData) {
 }
 
 // ---------------------------------------------------------------- sample contacts
-export async function loadSample(): Promise<void> {
+export async function loadSample(): Promise<ActionState> {
   const s = await me();
-  if (!s) return;
-  await s.supabase.rpc("load_sample_network", { p: { people: demoNetwork.people } });
+  if (!s) return fail("Sign in first.");
+  const { data, error } = await s.supabase.rpc("load_sample_network", { p: { people: demoNetwork.people } });
+  if (error) return fail(explain(error));
   revalidatePath("/", "layout");
+  return ok(`Loaded ${data ?? demoNetwork.people.length} sample contacts.`);
 }
-export async function clearSample(): Promise<void> {
+export async function clearSample(): Promise<ActionState> {
   const s = await me();
-  if (!s) return;
-  await s.supabase.rpc("clear_sample_network");
+  if (!s) return fail("Sign in first.");
+  const { error } = await s.supabase.rpc("clear_sample_network");
+  if (error) return fail(explain(error));
   revalidatePath("/", "layout");
+  return ok("Sample contacts removed.");
 }
 
 // ---------------------------------------------------------------- build a company on request

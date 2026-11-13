@@ -55,6 +55,7 @@ def fresh():
     psql((ROOT / "db" / "migrations" / "003_sample_network.sql").read_text())
     psql((ROOT / "db" / "migrations" / "004_on_demand_build.sql").read_text())
     psql((ROOT / "db" / "migrations" / "005_free_text_employers.sql").read_text())
+    psql((ROOT / "db" / "migrations" / "006_demo_accounts.sql").read_text())
     psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
@@ -295,3 +296,28 @@ def test_linked_and_sample_roles_keep_their_names():
     psql("select load_sample_network('{\"people\":[{\"kind\":\"contact\",\"full_name\":\"S\",\"headline\":\"h\","
          "\"roles\":[{\"employer_key\":\"syrma\",\"title\":\"t\",\"start_year\":2020}],\"education\":[]}]}')", ALICE)
     assert psql("select employer_key, employer_name from network_roles where employer_key = 'syrma'", ALICE) == "syrma|Syrma SGS"
+
+
+# ---------------------------------------------------------------- demo accounts
+def test_users_cannot_make_themselves_demo_accounts():
+    assert fails("update profiles set is_demo = true where id = '%s'" % ALICE, ALICE)
+    assert fails("insert into profiles(id,username,display_name,is_demo) values (gen_random_uuid(),'zed','Zed',true)", ALICE)
+    assert psql("select is_demo from profiles where id = '%s'" % ALICE, ALICE) == "f"
+    psql("update profiles set display_name = 'Alice B' where id = '%s'" % ALICE, ALICE)   # normal edits still work
+    assert psql("select display_name from profiles where id = '%s'" % ALICE, ALICE) == "Alice B"
+
+
+def test_demo_account_connects_at_once_and_shares_its_career():
+    psql("insert into profile_roles(profile_id,employer_name,title,start_year,end_year) "
+         f"values ('{BOB}','Titan Company','Analyst',2018,2021)", BOB)
+    psql(f"update profiles set is_demo = true where id = '{BOB}'")                     # the setup script, with the secret key
+    assert psql("select request_connection('bob')", ALICE) == "connected"             # no waiting for an answer
+    assert psql("select count(*) from network_roles where employer_name = 'Titan Company'", ALICE) == "1"
+    assert psql("select count(*) from people where owner_id = '%s' and profile_id = '%s'" % (ALICE, BOB), ALICE) == "1"
+    assert psql("select count(*) from network_roles where employer_name = 'Titan Company'", CARA) == "0"   # others still see nothing
+    assert psql("select request_connection('bob')", ALICE) == "already_connected"
+
+
+def test_ordinary_profiles_still_need_to_accept():
+    assert psql("select request_connection('bob')", ALICE) == "requested"
+    assert psql("select status from connections", ALICE) == "pending"

@@ -2,10 +2,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Shell } from "@/components/Shell";
 import { ActionForm, Field } from "@/components/ActionForm";
+import { monthYear } from "@/lib/format";
 import { acceptRequest, clearSample, declineRequest, loadSample, removeConnection, requestConnection } from "@/app/actions";
 import { getAccount, getNetwork } from "@/lib/account";
 import { accountsEnabled } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
+import type { Person } from "@/lib/types";
 
 type Conn = { id: number; requester_id: string; addressee_id: string; status: "pending" | "accepted" };
 type Prof = { id: string; username: string; display_name: string; headline: string | null };
@@ -17,6 +19,23 @@ function Tiny({ action, id, label, strong }: { action: (f: FormData) => Promise<
       <input type="hidden" name="id" value={id} />
       <button type="submit" className={`min-h-11 rounded-full px-4 text-[0.95rem] font-semibold ${strong ? "bg-ink text-paper" : "border border-line text-ink-2 hover:border-ink hover:text-ink"}`}>{label}</button>
     </form>
+  );
+}
+
+function SampleList({ title, people }: { title: string; people: Person[] }) {
+  if (people.length === 0) return null;
+  return (
+    <section>
+      <h3 className="px-4 pt-6 font-semibold">{title} <span className="font-normal text-ink-2">({people.length})</span></h3>
+      <ul className="mt-2 divide-y divide-line border-y border-line">
+        {people.map((p) => (
+          <li key={p.id} className="px-4 py-2">
+            <p className="font-semibold">{p.full_name}</p>
+            <p className="text-sm text-ink-2">{p.headline}{p.last_spoke ? ` · last spoke ${monthYear(p.last_spoke)}` : ""}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -61,14 +80,16 @@ async function Body() {
   const incoming = conns.filter((c) => c.status === "pending" && c.addressee_id === account.userId);
   const outgoing = conns.filter((c) => c.status === "pending" && c.requester_id === account.userId);
   const connected = conns.filter((c) => c.status === "accepted");
-  const sample = view.net.people.filter((p) => !p.linked).length;
+  const samplePeople = view.net.people.filter((p) => !p.linked).sort((a, b) => a.full_name.localeCompare(b.full_name));
+  const sample = samplePeople.length;
 
   return (
     <>
       <div className="px-4">
         <p className="text-ink-2">You are <span className="font-semibold text-ink">@{account.profile.username}</span>. Share it so people can find you.</p>
         <ActionForm action={requestConnection} submit="Send request">
-          <Field label="Add a connection by exact username" name="username" required maxLength={21} placeholder="priya_iyer" autoComplete="off" />
+          <Field label="Add a connection by exact username" name="username" required maxLength={21} placeholder="priya_iyer" autoComplete="off"
+            hint="To try it alone, add demo_priya, demo_kabir or demo_meera. They accept at once." />
         </ActionForm>
       </div>
 
@@ -131,11 +152,14 @@ async function Body() {
           ? `${sample} invented people are in your network so Today and Research have something to show. They are synthetic.`
           : "Your Call Sheets only use your connections. To try FINN before anyone accepts, load a set of invented contacts."}
       </p>
-      <form action={sample > 0 ? clearSample : loadSample} className="px-4">
-        <button type="submit" className="mt-3 min-h-11 rounded-full border border-ink px-5 font-semibold hover:bg-ink hover:text-paper">
-          {sample > 0 ? "Remove sample contacts" : "Load sample contacts"}
-        </button>
-      </form>
+      <ActionForm action={sample > 0 ? clearSample : loadSample} submit={sample > 0 ? "Remove sample contacts" : "Load sample contacts"} className="px-4" />
+
+      {sample > 0 && (
+        <>
+          <SampleList title="Close contacts" people={samplePeople.filter((p) => p.kind === "contact")} />
+          <SampleList title="Wider network" people={samplePeople.filter((p) => p.kind !== "contact")} />
+        </>
+      )}
     </>
   );
 }

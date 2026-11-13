@@ -14,7 +14,7 @@ Mobile-first financial investment agent. Built for the ENAM Founding AI Engineer
 Live: https://finn-blush.vercel.app (open it on a phone).
 1. **Today** shows what changed, ranked. Tap *Who to call* on a card for the Call Sheet.
 2. **Research** lists the companies read so far. Open one for promised vs delivered. Type any NSE symbol to build a new one (sign in first; a few builds per day).
-3. **Network** needs an account: sign up, add a connection by exact username, accept on the other side, and their career shows up in Call Sheets. *Load sample contacts* gives a test network.
+3. **Network** needs an account. Sign up, then add `demo_priya`, `demo_kabir` or `demo_meera` by username. They accept at once, and their invented careers show up in Call Sheets ("their profile"). Real people accept by hand. *Load sample contacts* gives you a full invented network instead.
 
 Signed out, you see an invented network. Research marked **Draft** was extracted by a test model; the rest by Gemini. Details: [docs/WRITEUP.md](docs/WRITEUP.md).
 
@@ -35,7 +35,9 @@ python scripts/export_feed.py 336 --people # the Today feed for a 14-day window
 ```bash
 cd frontend && npm install && npm run dev  # needs Node 22
 ```
-Without Supabase keys the site runs signed-out, on the invented network. To switch on accounts, create a Supabase project, run these in its SQL editor in order: `db/schema.sql`, `db/seed_reference.sql`, `db/migrations/002` to `005`. Turn off "Confirm email" under Authentication, then copy `frontend/.env.local.example` to `.env.local` and fill it in.
+Without Supabase keys the site runs signed-out, on the invented network. To switch on accounts, create a Supabase project, run these in its SQL editor in order: `db/schema.sql`, `db/seed_reference.sql`, `db/migrations/002` to `006`. Turn off "Confirm email" under Authentication, then copy `frontend/.env.local.example` to `.env.local` and fill it in.
+
+Demo accounts: run `006`, set `DEMO_EMAIL_TEMPLATE` in `.env` (an address you control, with `{name}`, like `you+{name}@gmail.com`), then `python scripts/create_demo_accounts.py`.
 
 On-demand builds also need three GitHub Actions secrets (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `GEMINI_API_KEY`) and a token in the website's environment (`BUILD_GITHUB_TOKEN`). The workflow file must be on the default branch.
 
