@@ -1,10 +1,12 @@
 "use server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { accountsEnabled } from "@/lib/supabase/env";
 import { demoNetwork } from "@/lib/network";
 import { dispatchBuild } from "@/lib/github";
+import { CATEGORIES, MOVE_CHOICES, PREFS_COOKIE, VOLUME_CHOICES, encodePrefs, type Prefs } from "@/lib/feed-view";
 
 export type ActionState = { ok: boolean; message: string } | null;
 const ok = (message: string): ActionState => ({ ok: true, message });
@@ -196,4 +198,28 @@ export async function requestCompany(_: ActionState, f: FormData): Promise<Actio
   }
   if (STARTED.has(r.state)) redirect(`/company/${encodeURIComponent(ticker)}`);
   return fail(r.message);
+}
+
+// ---------------------------------------------------------------- Today settings (a cookie on this device)
+const choice = (f: FormData, k: string, allowed: readonly number[]) => {
+  const v = text(f, k);
+  if (v === "off") return null;
+  const n = Number(v);
+  return allowed.includes(n) ? n : undefined;
+};
+
+/** Save what counts as unusual and which filing types to show. Lives in a cookie: per device, no account needed. */
+export async function savePrefs(_: ActionState, f: FormData): Promise<ActionState> {
+  const volume = choice(f, "volume", VOLUME_CHOICES), move = choice(f, "move", MOVE_CHOICES);
+  if (volume === undefined || move === undefined) return fail("Pick one of the listed values.");
+  const shown = new Set(f.getAll("show").map(String));
+  const prefs: Prefs = { volume, move, off: CATEGORIES.map((c) => c.key).filter((k) => !shown.has(k)) };
+  (await cookies()).set(PREFS_COOKIE, encodePrefs(prefs), { maxAge: 60 * 60 * 24 * 365, path: "/", sameSite: "lax", httpOnly: true });
+  revalidatePath("/");
+  return ok("Saved.");
+}
+
+export async function resetPrefs() {
+  (await cookies()).delete(PREFS_COOKIE);
+  revalidatePath("/");
 }

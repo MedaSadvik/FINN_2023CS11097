@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from pipeline import feed, people
+from pipeline import alerts, feed, people
 
 IST = timezone(timedelta(hours=5, minutes=30))
 NOW = datetime(2026, 11, 10, 18, 0, tzinfo=IST)
@@ -92,3 +92,20 @@ def test_extract_person_uses_model_and_verifies(monkeypatch, tmp_path):
     call = lambda m, s, p: '{"person": "Ritu Rao", "role": "Chief Financial Officer", "event": "resignation", "quote": "Ms Ritu Rao has resigned as Chief Financial Officer with effect from 1 December.", "history": []}'
     rec = people.extract_person(text, EMPLOYERS, call=call)
     assert rec["person"] == "Ritu Rao" and rec["event"] == "resignation"
+
+
+def test_client_side_alerts_ship_price_rows_and_routine_times():
+    quiet = [(f"2026-10-{d:02d}", 100.0, 1000) for d in range(1, 29)] + [(f"2026-11-{d:02d}", 100.0, 1000) for d in range(1, 21)]
+    out = build([filing("press_release", 1, 2), filing("press_release", 1, 30)], prices={"KAYNES": quiet}, bake_alerts=False)
+    assert out["items"] == [] and out["routine_hidden"] == 2 and len(out["routine_filed"]) == 2
+    rows = out["market"]["KAYNES"]["rows"]
+    assert len(rows) == feed.MARKET_ROWS and rows[-1] == ["2026-11-20", 100.0, 1000]
+    assert out["market"]["KAYNES"]["company"] == "Kaynes" and out["market"]["KAYNES"]["employer_key"] == "kaynes"
+    assert "market" not in build([], prices={"KAYNES": quiet})  # default keeps the old behaviour
+
+
+def test_ts_alert_fixture_matches_python():
+    """frontend/lib/alerts.fixture.json is what the TypeScript port is tested against. If this fails, the maths changed."""
+    import json
+    for c in json.loads((Path(__file__).resolve().parent.parent / "frontend" / "lib" / "alerts.fixture.json").read_text()):
+        assert alerts.check_all([tuple(r) for r in c["rows"]], c["rules"]) == c["expect"], c["name"]

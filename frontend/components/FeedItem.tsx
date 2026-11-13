@@ -142,7 +142,7 @@ export function FeedItem({ item, net }: { item: Item; net: Network }) {
         {item.volume_x !== null && item.price_pct !== null && ", "}
         {item.price_pct !== null && <>price <Delta v={item.price_pct} /> on the day</>}.
       </p>
-      {rule && <p className="mt-1 text-ink-2">Your rules: {rule}.</p>}
+      {rule && <p className="mt-1 text-ink-2">Your rules: {rule}.{item.earlier ? ` ${item.earlier} earlier ${item.earlier === 1 ? "day" : "days"} in this window too.` : ""}</p>}
       <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who to call" /></div>
     </article>
   );

@@ -6,5 +6,5 @@ export const monthYear = (iso: string) =>
 export const years = (a: number, b: number | null) => `${a}–${b ?? "now"}`;
 export const shortDate = (iso: string) =>
   iso ? new Date(iso.length <= 10 ? iso + "T00:00:00+05:30" : iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" }) : "";
-const at = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", hour12: true, timeZone: "Asia/Kolkata" });
+export const at = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", hour12: true, timeZone: "Asia/Kolkata" });
 export const windowLabel = (start: string, end: string) => `${at(start)} to ${at(end)}`;

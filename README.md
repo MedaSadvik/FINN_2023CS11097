@@ -28,7 +28,7 @@ cp .env.example .env                       # add GEMINI_API_KEY
 python -m pipeline.build_company TITAN     # docs, quarterly numbers, guidance, verdicts (about 15 model calls)
 python scripts/export_frontend.py TITAN    # writes frontend/data/companies.json
 python scripts/build_portfolio.py          # every portfolio stock; resumable
-python scripts/export_feed.py 336 --people # the Today feed for a 14-day window
+python scripts/refresh_feed.py             # the Today feed: filings, prices, results numbers, new executives (--no-people skips the model)
 ```
 
 ## Run the website

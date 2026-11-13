@@ -41,12 +41,12 @@ export type PersonRecord = {
 };
 export type AlertRules = { volume_multiple?: number; price_move?: number };
 
-type Base = { id: string; ticker: string; company: string; filed: string; sample?: boolean; pdf_url?: string | null };
+type Base = { id: string; ticker: string; company: string; filed: string; sample?: boolean; pdf_url?: string | null; category?: string };
 export type FeedItem =
   | (Base & { type: "results"; quarter: string; cur: Quarter; qoq: Quarter; yoy: Quarter })
   | (Base & { type: "mgmt_change"; headline: string; detail?: string; person: PersonRecord | null; employer_key: string | null })
   | (Base & { type: "event"; label?: string; headline: string; detail: string; employer_key: string | null })
-  | (Base & { type: "alert"; volume_x: number | null; price_pct: number | null; rules?: AlertRules; employer_key: string | null });
+  | (Base & { type: "alert"; volume_x: number | null; price_pct: number | null; rules?: AlertRules; employer_key: string | null; earlier?: number });
 
 export type Profile = { id: string; username: string; display_name: string; headline: string | null };
 export type Account = { userId: string; email: string | null; profile: Profile | null };

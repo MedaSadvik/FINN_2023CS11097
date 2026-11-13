@@ -8,6 +8,7 @@ Anything that fails the check is dropped, so the card can never show an invented
 Employers are then matched to the ones in the investor's network by name (plain rules, no model).
 """
 import re
+from datetime import datetime, timedelta
 
 from pipeline import llm
 from pipeline.guidance import squash
@@ -67,3 +68,24 @@ def extract_person(text: str, employers: list, call=None):
     kwargs = {"call": call} if call else {}
     raw = llm.generate_json(llm.flash_model(), SYSTEM, text[:12000], VERSION, **kwargs)
     return verify(raw if isinstance(raw, dict) else {}, text, employers)
+
+
+def read_people(filings, employers, hours, now):
+    """Management-change filings in the window -> verified person records (needs the PDF text and a model)."""
+    from pipeline import fetch_pdf
+    out = {}
+    for f in filings:
+        recent = datetime.fromisoformat(f["announced_at"]) >= now - timedelta(hours=hours)
+        if f["category"] != "management_change" or not recent or not f.get("pdf_url"):
+            continue
+        try:
+            path, _ = fetch_pdf.download(f["pdf_url"], referer="https://www.nseindia.com/")
+            text = "\n".join(p["text"] for p in fetch_pdf.extract_pages(path))
+            rec = extract_person(text, employers)
+        except Exception as e:
+            print(f"  {f['ticker']}: could not read filing ({type(e).__name__}: {e})")
+            continue
+        print(f"  {f['ticker']}: {rec['person'] if rec else 'no named person found'}")
+        if rec:
+            out[f["exchange_id"]] = rec
+    return out
