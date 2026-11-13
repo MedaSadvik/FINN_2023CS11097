@@ -72,25 +72,45 @@ def results_item(f: dict, name: str, quarters: dict):
             "pdf_url": f.get("pdf_url")}
 
 
+MARKET_ROWS = 45  # 20 days for the average + the longest window (14 days is about 10 trading days) + slack
+
+
+def market_block(prices: dict, names: dict, employers: dict) -> dict:
+    """Recent end-of-day rows per ticker, so the app can check the investor's own thresholds."""
+    return {t: {"company": names.get(t, t), "employer_key": employers.get(t),
+                "rows": [[d, c, v] for d, c, v in rows[-MARKET_ROWS:]]}
+            for t, rows in prices.items() if rows}
+
+
 def build_feed(filings: list, prices: dict, quarters: dict, names: dict, employers: dict, now: datetime,
-               hours: int = 48, rules: dict = None, people: dict = None) -> dict:
-    """quarters: ticker -> {quarter: {...}}. people: filing exchange_id -> verified person record."""
+               hours: int = 48, rules: dict = None, people: dict = None, bake_alerts: bool = True) -> dict:
+    """quarters: ticker -> {quarter: {...}}. people: filing exchange_id -> verified person record.
+
+    bake_alerts=False leaves alerts out of `items` and ships the price rows instead (`market`), so the app
+    checks the investor's own thresholds. `routine_filed` lists when each routine filing came in, so the app
+    can count what is hidden for whichever window is picked.
+    """
     rules = DEFAULT_RULES if rules is None else rules
     start = now - timedelta(hours=hours)
     recent = [f for f in filings if datetime.fromisoformat(f["announced_at"]) >= start]
-    items, routine = [], 0
+    items, routine, routine_filed = [], 0, []
     for f in recent:
         if f["priority"] == 0:  # hidden outright (investor-meeting notices, routine paperwork)
             continue
         if f["priority"] == 1:  # counted so the user knows something was left out
             routine += 1
+            routine_filed.append(f["announced_at"])
             continue
         name, key = names.get(f["ticker"], f["ticker"]), employers.get(f["ticker"])
         item = None
         if f["category"] == "results" and f["ticker"] in quarters:
             item = results_item(f, name, quarters[f["ticker"]])
         items.append(item or filing_item(f, name, key, (people or {}).get(f["exchange_id"])))
-    items += alert_items(prices, names, employers, rules)
+    if bake_alerts:
+        items += alert_items(prices, names, employers, rules)
     items.sort(key=lambda i: (i["priority"], i["filed"]), reverse=True)  # priority first, then newest
-    return {"window": {"start": start.isoformat(), "end": now.isoformat(), "hours": hours},
-            "routine_hidden": routine, "items": items}
+    out = {"window": {"start": start.isoformat(), "end": now.isoformat(), "hours": hours},
+           "routine_hidden": routine, "routine_filed": routine_filed, "items": items}
+    if not bake_alerts:
+        out["market"] = market_block(prices, names, employers)
+    return out

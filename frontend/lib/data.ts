@@ -3,7 +3,7 @@ import realCompanies from "@/data/companies.json";
 import feed from "@/data/feed.json";
 import live from "@/data/feed_live.json";
 import type { FeedItem, Pledge, Quarter } from "./types";
-import { windowLabel } from "./format";
+import type { FeedSnapshot, Market } from "./feed-view";
 
 export type CompanyData = {
   ticker: string;
@@ -38,22 +38,27 @@ function resultsItem(c: CompanyData): FeedItem | null {
     cur, qoq: prev, yoy };
 }
 
-type LiveFeed = { window?: { start: string; end: string; hours: number }; routine_hidden?: number; provider?: string | null; items: FeedItem[] };
+type LiveFeed = {
+  window?: { start: string; end: string; hours: number };
+  routine_hidden?: number; routine_filed?: string[]; market?: Market; provider?: string | null; items: FeedItem[];
+};
 
 /** Real feed (scripts/export_feed.py) when exported, otherwise the labelled sample. */
 export function getFeed() {
   const real = live as unknown as LiveFeed;
   if (real.items.length || real.window) {
-    return {
-      live: true,
-      window: real.window ? windowLabel(real.window.start, real.window.end) : "",
-      hours: real.window?.hours ?? 48,
-      routineHidden: real.routine_hidden ?? 0,
-      provider: real.provider ?? null,
+    const end = real.window ? real.window.end : new Date().toISOString();
+    const snapshot: FeedSnapshot = {
+      endMs: new Date(end).getTime(),
+      maxHours: real.window?.hours ?? 48,
       items: real.items,
+      routineFiled: real.routine_filed ?? null,
+      routineTotal: real.routine_hidden ?? 0,
+      market: real.market ?? null,
     };
+    return { live: true as const, provider: real.provider ?? null, end, snapshot };
   }
   const results = Object.values(companies).map(resultsItem).filter((x): x is FeedItem => x !== null);
-  return { live: false, window: feed.window, hours: 48, routineHidden: 0, provider: null,
+  return { live: false as const, provider: null, note: feed.window,
     items: [...results, ...(feed.items as unknown as FeedItem[])] };
 }

@@ -2,11 +2,12 @@
 
     python -m pipeline.fetch_filings 14        # NSE announcements (home connection)
     python -m pipeline.fetch_prices            # Yahoo end-of-day prices
-    python scripts/export_feed.py              # last 48 hours
+    python scripts/export_feed.py 336          # last 14 days (the app's window picker goes up to this)
     python scripts/export_feed.py 120          # last 120 hours
     python scripts/export_feed.py 120 --people # also read management-change PDFs (uses the model)
 
 Writes frontend/data/feed_live.json. Commit it: the website is built from it.
+Alerts are not decided here: the file carries recent price rows and the app checks the investor's own thresholds.
 """
 import json
 import sys
@@ -57,7 +58,7 @@ def main(hours, with_people):
     now = datetime.now(IST)
     people = read_people(filings, network["employers"], hours, now) if with_people else {}
     result = feed.build_feed(filings, feed.load_prices(CACHE / "prices.csv"), quarters, names, by_ticker,
-                             now, hours, people=people)
+                             now, hours, people=people, bake_alerts=False)
     result["provider"] = llm.provider() if with_people else None
     OUT.write_text(json.dumps(result, indent=1, ensure_ascii=False))
     kinds = {}
