@@ -27,6 +27,7 @@ def main(tickers, force=False):
                  json.loads((ROOT / "data" / "network" / "synthetic_network.json").read_text())["employers"] if e["ticker"]}
     cache = ROOT / "data" / "cache"
     merged = json.loads(OUT.read_text()) if OUT.exists() else {}
+    old_snapshot = {t: c["snapshot"] for t, c in merged.items() if c.get("snapshot")}
     for t in tickers:
         if merged.get(t, {}).get("provider") == "gemini" and llm.provider() != "gemini" and not force:
             print(f"{t}: kept the existing Gemini data (this run used {llm.provider()}). Use --force to replace it.")
@@ -36,8 +37,12 @@ def main(tickers, force=False):
         if not verdicts.exists() or not quarters.exists():
             raise SystemExit(f"{t}: run `python -m pipeline.build_company {t}` first (missing {verdicts.name} or quarters)")
         provider = llm.provider()
+        insight = cache / llm.derived("insight") / f"{t}.json"
         merged[t] = build_company(t, names.get(t, t), employers.get(t), json.loads(verdicts.read_text()),
-                                  json.loads(quarters.read_text()), provider)
+                                  json.loads(quarters.read_text()), provider,
+                                  json.loads(insight.read_text()) if insight.exists() else None)
+        if "snapshot" not in merged[t] and old_snapshot.get(t):  # a rerun without quota must not erase it
+            merged[t]["snapshot"] = old_snapshot[t]
         counts = {}
         for p in merged[t]["promises"]:
             counts[p["outcome"]] = counts.get(p["outcome"], 0) + 1

@@ -71,6 +71,18 @@ def _measure(claim: dict, quarters: dict, labels: list):
     return None
 
 
+def reported_count(h: dict, quarters: dict) -> tuple:
+    """(quarters of the promised period already reported, quarters in the period)."""
+    labels = quarter_labels(h)
+    return sum(1 for l in labels if quarters.get(l, {}).get("revenue") is not None), len(labels)
+
+
+def not_yet_due(claim: dict, h: dict, quarters: dict, what: str) -> dict:
+    done, of = reported_count(h, quarters)
+    return {"outcome": "pending", "tier": "computed",
+            "delivered_text": f"due {claim.get('horizon')}: {done} of {of} quarters reported so far. {what} is checked once the period is complete."}
+
+
 def latest_reported_fy(quarters: dict):
     done = [int(k[-2:]) for k, v in quarters.items() if v.get("revenue") is not None]
     return max(done) if done else None
@@ -96,6 +108,8 @@ def evaluate(claim: dict, quarters: dict) -> dict:
         out["reason"] = "no verified number to check against"
         return out
     if claim.get("scope") not in (None, "company", "unspecified", "consolidated"):
+        if h and reported_count(h, quarters)[0] < reported_count(h, quarters)[1]:  # the period is still running
+            return not_yet_due(claim, h, quarters, "A segment figure")
         out["reason"] = f"segment claim ({claim.get('scope')}): needs a later-transcript check"
         return out
     if h is None:
@@ -109,6 +123,8 @@ def evaluate(claim: dict, quarters: dict) -> dict:
         have = [l for l in labels if quarters.get(l, {}).get("revenue") is not None]
         ytd = _measure(claim, quarters, have) if have else None
         if ytd is None:
+            if reported_count(h, quarters)[0] < reported_count(h, quarters)[1]:
+                return not_yet_due(claim, h, quarters, "This kind of figure")
             out["reason"] = "metric not computable from reported quarters"
             return out
         out.update(outcome="pending", actual=round(ytd[0], 1), computed_from=have,

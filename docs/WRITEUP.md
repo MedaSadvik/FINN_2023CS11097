@@ -31,7 +31,11 @@ Built: the three layers above, real accounts and connections, on-demand research
 1. A model reads a transcript and returns each forward-looking claim as JSON, with the **verbatim quote** and the page.
 2. Code checks that the quote really exists on that page. If not, the claim is dropped. Any number must appear in the quote, or it is blanked.
 3. The verdict is **arithmetic on the reported quarters**, not a model's opinion. FY26 revenue of 3,626 cr against a guided 4,000 cr or more is "missed", by subtraction. A future year is "pending", with year-to-date shown.
-4. When a claim cannot be checked from the reported table (segment revenue, capex), it says so: "can't check yet". It never guesses.
+4. A claim the table cannot check (segment revenue, capex) is **pending** while its year is still running ("due FY27: 2 of 4 quarters reported so far"). Once the year has ended, a second step reads the later call that reports it. A model finds where management states the actual number (up to 3 requests per company, on pages picked by keyword), code checks the quote is verbatim on that page, the number is inside the quote, and the unit and period match. The verdict is then the same arithmetic as before, and the page shows the later quote beside the original. If any check fails, the claim stays "can't check yet". It never guesses.
+
+**Business snapshot, bull and bear.** One model request per company reads the opening pages and the pages most about demand, margins and risks in the latest call. It returns what the company does (by segment), three reasons it could work and three reasons it might not. Every line carries a verbatim quote and page number. A line whose quote is not on that page, or whose number is not in its quote, is dropped, so the model chooses and phrases but cannot invent evidence. The page labels this Draft when a test model wrote it.
+
+**What they said, against the numbers.** Plain rules put the checked promises beside the multi-year numbers. If management kept its promises while profit is not turning into cash, or debt is rising, the page says so in one headline and lists the warnings. No model. A "key numbers" block at the top shows the latest year's revenue, profit, margin, return on capital, debt to equity and operating cash.
 
 **Multi-year view.** Three more sections on each research page, all arithmetic on the annual tables (profit and loss, balance sheet, cash flow, ratios) that screener.in standardises from the company's own filings. No model, no cost.
 - **Trajectory:** revenue by year with operating margin, the 3-year growth rate, and whether margin is expanding or compressing.
@@ -49,6 +53,9 @@ The rule: use a model only where a rule cannot do the job, and never let it be t
 |---|---|
 | Filing classification, alerts, verdicts, Call Sheet matching, feed ranking | Plain code. No model. |
 | Claim extraction from transcripts | Gemini Flash, with quote verification |
+| Segment promises, from later calls | Gemini Flash, up to 3 requests per company, quote and number verified, verdict by arithmetic |
+| Business summary, bull and bear | Gemini Flash, 1 request per company, every line verified against a quote |
+| Narrative vs numbers, key numbers | Plain code. No model. |
 | Management-change extraction from a filing | Gemini Flash, verified against the filing text |
 
 - **One door** (`pipeline/llm.py`): every call goes through one wrapper. It caches each answer on disk by a hash of model, prompt and version, so a rerun costs nothing. It retries busy servers, and falls back through a list of models when one is overloaded or its daily quota is used up.
@@ -93,7 +100,8 @@ If a contact typed their employer by hand, it is matched to a tracked company by
 
 ## Known limits (said plainly)
 
-- Most promises read "can't check yet". Segment and capex claims need later transcripts, and I did not build that second tier. This weakens the headline feature, and it is the first thing I would build next.
+- Many promises still read "can't check yet". Segment and capex claims are settled only when a later call states the number plainly for the same period, and often it does not. Running years show "pending" instead.
+- Annual reports are not read as text. Multi-year numbers come from screener.in's standardised annual tables, and the business summary and bull and bear come from the latest call only.
 - Research for most portfolio stocks is a draft from a test model. Treat the promise lists as indicative.
 - The free Gemini quota allows about five companies a day, which is why on-demand building has daily caps.
 - screener.in is a single point of dependency for documents and quarterly numbers.

@@ -113,3 +113,27 @@ def test_numbers_that_arrive_as_text_give_the_same_verdict():
 def test_a_non_numeric_value_is_unclear_not_a_crash():
     c = {"metric": "revenue_target", "basis": "absolute_crore", "low": "about 450", "horizon": "FY26", "scope": "company"}
     assert evaluate(c, QUARTERS)["outcome"] == "unclear"
+
+
+# ---- a promise whose period is still running is "pending", not "unclear"
+RUNNING = {**year(26, 120), "Q1FY27": {"revenue": 130, "ebitda": 20}, "Q2FY27": {"revenue": 135, "ebitda": 20}}
+
+
+def segment(horizon="FY27", **kw):
+    return {"metric": "other_numeric", "basis": "absolute_crore", "low": 300, "high": None, "horizon": horizon, "scope": "OSAT", **kw}
+
+
+def test_segment_promise_for_a_running_year_is_pending_with_progress():
+    r = evaluate(segment(), RUNNING)
+    assert r["outcome"] == "pending" and "2 of 4 quarters reported" in r["delivered_text"]
+
+
+def test_segment_promise_for_a_finished_year_still_needs_a_later_call():
+    r = evaluate(segment(horizon="FY26"), RUNNING)
+    assert r["outcome"] == "unclear" and "later-transcript" in r["reason"]
+
+
+def test_uncomputable_company_metric_in_a_running_year_is_pending():
+    c = {"metric": "capex", "basis": "absolute_crore", "low": 400, "high": None, "horizon": "FY27", "scope": "company"}
+    assert evaluate(c, RUNNING)["outcome"] == "pending"
+    assert evaluate({**c, "horizon": "FY26"}, RUNNING)["outcome"] == "unclear"

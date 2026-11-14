@@ -2,7 +2,7 @@ import sample from "@/data/kaynes.json";
 import realCompanies from "@/data/companies.json";
 import feed from "@/data/feed.json";
 import live from "@/data/feed_live.json";
-import type { FeedItem, Pledge, Quarter } from "./types";
+import type { FeedItem, Pledge, Quarter, Snapshot } from "./types";
 import type { FeedSnapshot, Market } from "./feed-view";
 import type { Financials } from "./financials";
 import financialsFile from "@/data/financials.json";
@@ -16,6 +16,7 @@ export type CompanyData = {
   sample?: boolean;   // placeholder wording, shown with a label
   provider?: string;  // "gemini" is the shipped run; anything else is a test model
   financials?: Financials; // multi-year numbers read with an on-demand build
+  snapshot?: Snapshot;     // business summary and bull/bear, each line with a quote from the latest call
 };
 
 /** Multi-year numbers: from the build itself, else the portfolio file (scripts/export_financials.py). Null when neither has them. */
