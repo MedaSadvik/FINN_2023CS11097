@@ -33,6 +33,12 @@ Built: the three layers above, real accounts and connections, on-demand research
 3. The verdict is **arithmetic on the reported quarters**, not a model's opinion. FY26 revenue of 3,626 cr against a guided 4,000 cr or more is "missed", by subtraction. A future year is "pending", with year-to-date shown.
 4. When a claim cannot be checked from the reported table (segment revenue, capex), it says so: "can't check yet". It never guesses.
 
+**Multi-year view.** Three more sections on each research page, all arithmetic on the annual tables (profit and loss, balance sheet, cash flow, ratios) that screener.in standardises from the company's own filings. No model, no cost.
+- **Trajectory:** revenue by year with operating margin, the 3-year growth rate, and whether margin is expanding or compressing.
+- **Balance sheet:** borrowings against net worth, interest cover, how the company is funded, and whether the cash conversion cycle is lengthening.
+- **Cash quality:** profit against operating cash flow, year by year. If profit is not turning into cash, it says so in a plain sentence.
+Each section is left out when its table is incomplete, and a growth rate is never computed from a zero or negative base. A monthly Action refreshes the portfolio's numbers; an on-demand build reads them for the new company in the same run.
+
 **Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change.
 
 ## LLM routing and efficiency

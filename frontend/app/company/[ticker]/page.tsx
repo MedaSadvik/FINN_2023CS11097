@@ -4,7 +4,8 @@ import { Shell } from "@/components/Shell";
 import { PromiseRow } from "@/components/PromiseRow";
 import { CallSheet } from "@/components/CallSheet";
 import { LeadList } from "@/components/LeadList";
-import { getCompany, knownTickers } from "@/lib/data";
+import { getCompany, getFinancials, knownTickers } from "@/lib/data";
+import { FinancialSections, financialParts } from "@/components/FinancialSections";
 import { callSheet, tidyName } from "@/lib/network-core";
 import { nameFor } from "@/lib/portfolio";
 import { getAccount, getNetwork } from "@/lib/account";
@@ -41,11 +42,18 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   const key = c.employer_key ?? `name:${tidyName(c.name)}`;
   const { net } = await getNetwork(undefined, { key, name: c.name });
   const leads = callSheet(net, key, 3);
+  const fin = getFinancials(c);
+  const parts = financialParts(fin);
+  const jumps = [
+    { id: "promises", label: "Promises", show: true }, { id: "quarters", label: "Quarters", show: true },
+    { id: "trajectory", label: "Trajectory", show: !!parts.trajectory }, { id: "balance", label: "Balance sheet", show: !!parts.balance },
+    { id: "cash", label: "Cash", show: !!parts.cash },
+  ].filter((j) => j.show);
   const checked = c.promises.filter((p) => p.outcome !== "unclear");
   const unclear = c.promises.filter((p) => p.outcome === "unclear");
   const count = (o: string) => c.promises.filter((p) => p.outcome === o).length;
-  const parts = ["missed", "partly", "delivered", "pending"].map((o) => [o, count(o)] as const).filter(([, n]) => n);
-  const summary = `${c.promises.length} ${c.promises.length === 1 ? "promise" : "promises"}. ` + [...parts.map(([o, n]) => `${n} ${o}`), `${unclear.length} can't be checked yet`].join(", ") + ".";
+  const tally = ["missed", "partly", "delivered", "pending"].map((o) => [o, count(o)] as const).filter(([, n]) => n);
+  const summary = `${c.promises.length} ${c.promises.length === 1 ? "promise" : "promises"}. ` + [...tally.map(([o, n]) => `${n} ${o}`), `${unclear.length} can't be checked yet`].join(", ") + ".";
   const banner = c.sample
     ? "Preview. Quarterly figures are real. Promise wording is placeholder."
     : c.provider && c.provider !== "gemini"
@@ -62,7 +70,15 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
           </CallSheet>
         </div>
 
-        <h2 className="px-4 pt-8 text-lg font-bold">Promised vs delivered</h2>
+        {jumps.length > 2 && (
+          <nav aria-label="On this page" className="mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+            {jumps.map((j) => (
+              <a key={j.id} href={`#${j.id}`} className="inline-flex min-h-11 flex-none items-center rounded-full border border-line px-4 text-[0.95rem] text-ink-2 hover:border-ink hover:text-ink">{j.label}</a>
+            ))}
+          </nav>
+        )}
+
+        <h2 id="promises" className="scroll-mt-4 px-4 pt-8 text-lg font-bold">Promised vs delivered</h2>
         <p className="px-4 pt-1 text-ink-2">Only what management said on earnings calls, checked against reported numbers.</p>
         <p className="px-4 pt-1 font-semibold">{summary}</p>
         <ul className="mt-3 divide-y divide-line border-y border-line">
@@ -79,7 +95,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
           </details>
         )}
 
-        <h2 className="px-4 pt-8 text-lg font-bold">Reported quarters</h2>
+        <h2 id="quarters" className="scroll-mt-4 px-4 pt-8 text-lg font-bold">Reported quarters</h2>
         <p className="px-4 pt-1 text-ink-2">₹ crore</p>
         <div className="overflow-x-auto px-4 pt-3">
           <table className="w-full text-[0.95rem] tabular-nums">
@@ -98,6 +114,8 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
             </tbody>
           </table>
         </div>
+
+        {fin && <FinancialSections f={fin} />}
       </main>
   );
 }

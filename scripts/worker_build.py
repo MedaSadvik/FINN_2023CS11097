@@ -11,7 +11,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import requests
@@ -57,7 +57,7 @@ def employer_key_for(ticker: str):
 
 def run(ticker: str, request_id: int, api, steps=None) -> str:
     """Returns the final status. `steps` lets tests replace the network and the model."""
-    from pipeline import build_company, export, fetch_docs, llm
+    from pipeline import build_company, export, fetch_docs, fetch_financials, llm
     steps = steps or {}
     find_docs = steps.get("fetch_docs", fetch_docs.fetch_docs)
     build = steps.get("build", lambda t: build_company.build(t, 4, exit_on_quota=False))
@@ -80,6 +80,12 @@ def run(ticker: str, request_id: int, api, steps=None) -> str:
         verdicts, quarters = read_outputs(ticker)
         company = export.build_company(ticker, docs.get("name") or ticker, employer_key_for(ticker),
                                        verdicts, quarters, provider())
+        try:  # multi-year numbers are an extra: the research is still worth publishing without them
+            fin = steps.get("financials", fetch_financials.fetch_financials)(ticker)
+            if fin:
+                company["financials"] = {**fin, "fetched": date.today().isoformat()}
+        except Exception as e:
+            print(f"financials skipped: {type(e).__name__}: {e}")
         api.publish(company)
         api.set_status(request_id, "done", None)
         return "done"

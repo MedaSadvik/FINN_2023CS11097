@@ -1,0 +1,40 @@
+name: refresh-financials
+# Reads the multi-year financials (profit and loss, balance sheet, cash flow, ratios) for the portfolio from screener.in
+# and commits frontend/data/financials.json. Annual numbers change a few times a year, so this runs monthly.
+# Run it by hand once after merging, so the research pages have numbers straight away.
+on:
+  schedule:
+    - cron: "0 3 1 * *"     # 08:30 IST on the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-financials
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Read financials
+        run: python scripts/export_financials.py | tee "$GITHUB_STEP_SUMMARY"
+      - name: Commit
+        run: |
+          python - <<'PY'
+          import json; json.load(open("frontend/data/financials.json"), parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))
+          PY
+          if git diff --quiet -- frontend/data/financials.json; then echo "No change."; exit 0; fi
+          git config user.name "finn-refresh"
+          git config user.email "finn-refresh@users.noreply.github.com"
+          git add frontend/data/financials.json
+          git commit -m "Refresh financials $(date -u +%Y-%m-%d)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

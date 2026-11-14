@@ -4,6 +4,8 @@ import feed from "@/data/feed.json";
 import live from "@/data/feed_live.json";
 import type { FeedItem, Pledge, Quarter } from "./types";
 import type { FeedSnapshot, Market } from "./feed-view";
+import type { Financials } from "./financials";
+import financialsFile from "@/data/financials.json";
 
 export type CompanyData = {
   ticker: string;
@@ -13,7 +15,12 @@ export type CompanyData = {
   promises: Pledge[];
   sample?: boolean;   // placeholder wording, shown with a label
   provider?: string;  // "gemini" is the shipped run; anything else is a test model
+  financials?: Financials; // multi-year numbers read with an on-demand build
 };
+
+/** Multi-year numbers: from the build itself, else the portfolio file (scripts/export_financials.py). Null when neither has them. */
+export const getFinancials = (c: CompanyData): Financials | null =>
+  c.financials ?? (financialsFile as unknown as Record<string, Financials>)[c.ticker.toUpperCase()] ?? null;
 
 // Real exports (scripts/export_frontend.py) win over the built-in sample.
 const companies: Record<string, CompanyData> = {

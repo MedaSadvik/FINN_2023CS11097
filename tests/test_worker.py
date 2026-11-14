@@ -27,7 +27,8 @@ QUARTERS = {"Q1FY27": {"revenue": 90, "ebitda": 10, "pbt": 8, "pat": 6}}
 
 def steps(**over):
     base = {"fetch_docs": lambda t: {"transcripts": [{"url": "x"}], "name": "Acme Ltd"},
-            "build": lambda t: None, "read_outputs": lambda t: ([ROW], QUARTERS), "provider": lambda: "gemini"}
+            "build": lambda t: None, "read_outputs": lambda t: ([ROW], QUARTERS), "provider": lambda: "gemini",
+            "financials": lambda t: {}}
     return {**base, **over}
 
 
@@ -36,6 +37,21 @@ def test_success_publishes_and_marks_done():
     assert w.run("ACME", 7, api, steps()) == "done"
     assert [s for s, _ in api.statuses] == ["building", "done"]
     assert api.published[0]["name"] == "Acme Ltd" and api.published[0]["provider"] == "gemini"
+
+
+def test_multi_year_numbers_are_attached_when_found():
+    api = FakeApi()
+    fin = {"basis": "consolidated", "years": ["FY26"], "rows": {"FY26": {"revenue": 100.0}}}
+    assert w.run("ACME", 7, api, steps(financials=lambda t: fin)) == "done"
+    assert api.published[0]["financials"]["rows"]["FY26"]["revenue"] == 100.0 and "fetched" in api.published[0]["financials"]
+
+
+def test_a_financials_failure_does_not_stop_the_research_being_published():
+    def boom(t):
+        raise RuntimeError("screener down")
+    api = FakeApi()
+    assert w.run("ACME", 7, api, steps(financials=boom)) == "done"
+    assert "financials" not in api.published[0]
 
 
 def test_no_transcripts_stops_before_any_model_call():
