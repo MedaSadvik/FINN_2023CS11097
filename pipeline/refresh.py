@@ -57,12 +57,12 @@ def refresh(old: dict, now: datetime, hours: int, tickers: list, names: dict, em
 
     # ---- prices, one company at a time
     prices, kept = {}, []
-    old_rows = {t: [tuple(r) for r in m["rows"]] for t, m in (old.get("market") or {}).items()}
+    old_rows = {t: feedlib.clean_rows(m["rows"]) for t, m in (old.get("market") or {}).items()}
     for t in tickers:
         try:
-            rows = sorted(fetch.prices(t))
+            rows = feedlib.clean_rows(sorted(fetch.prices(t)))
             if not rows:
-                raise ValueError("no rows")
+                raise ValueError("no usable rows")
             prices[t] = rows
         except Exception as e:
             if t in old_rows:
