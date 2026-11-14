@@ -94,3 +94,62 @@ def test_missing_fields_reports_a_changed_label():
     assert missing_fields(f) == ["depreciation", "other_income"]  # the fixture has no such rows
     assert "revenue" not in missing_fields(f) and "borrowings" not in missing_fields(f)
     assert missing_fields({}) == ["everything"]
+
+
+# ---- found on the live site: TTM header, half-year columns, a stale consolidated page
+def with_ttm_key(html):
+    """screener's TTM header carries the text TTM as its date key, not a date."""
+    return html.replace("<th>TTM</th>", '<th data-date-key="TTM">TTM</th>')
+
+
+def test_ttm_with_a_literal_ttm_key_is_dropped_not_a_crash():
+    html = with_ttm_key(HTML)
+    assert 'data-date-key="TTM"' in html
+    f = parse_financials(html)
+    assert f["years"] == ["FY24", "FY25", "FY26"]
+
+
+def test_a_half_year_column_is_not_a_fiscal_year():
+    html = HTML.replace('<th data-date-key="2026-03-31">x</th></tr></thead><tbody><tr><td class="text">Equity Capital',
+                        '<th data-date-key="2026-03-31">x</th><th data-date-key="2026-09-30">x</th></tr></thead><tbody><tr><td class="text">Equity Capital')
+    html = html.replace("<td>67</td></tr>", "<td>67</td><td>70</td></tr>", 1)  # a September balance sheet cell
+    assert 'data-date-key="2026-09-30"' in html and "<td>70</td>" in html
+    f = parse_financials(html)
+    assert f["years"] == ["FY24", "FY25", "FY26"] and "Sep 26" not in f["rows"]
+
+
+def page(last_year):
+    return table("profit-loss", [f"{y}-03-31" for y in range(last_year - 2, last_year + 1)],
+                 [row("Sales", "1", "2", "3"), row("Net Profit", "1", "1", "1")])
+
+
+def test_a_stale_consolidated_page_loses_to_a_current_standalone_one():
+    pages = {"consolidated/": page(2015), "": page(2026)}
+    f = fetch_financials_with(pages)
+    assert f["basis"] == "standalone" and f["years"][-1] == "FY26"
+
+
+def test_a_current_consolidated_page_is_used_without_asking_for_the_other():
+    asked = []
+    pages = {"consolidated/": page(2026), "": page(2026)}
+    f = fetch_financials_with(pages, asked)
+    assert f["basis"] == "consolidated" and asked == ["consolidated/"]
+
+
+def test_consolidated_missing_falls_back_to_standalone():
+    f = fetch_financials_with({"consolidated/": None, "": page(2026)})
+    assert f["basis"] == "standalone"
+
+
+def test_nothing_readable_is_empty():
+    assert fetch_financials_with({"consolidated/": None, "": "<html></html>"}) == {}
+
+
+def fetch_financials_with(pages, asked=None):
+    from pipeline.fetch_financials import fetch_financials
+
+    def get(ticker, variant):
+        if asked is not None:
+            asked.append(variant)
+        return pages[variant]
+    return fetch_financials("X", get=get, this_year=2026)

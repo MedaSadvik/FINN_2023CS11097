@@ -9,10 +9,13 @@ so they stay within the "primary data only" rule for research. Row labels were c
 import re
 import sys
 import time
+from collections import Counter
+from datetime import date
 
 from pipeline.fetch_quarters import UA, Table, to_number
 
 KEEP_YEARS = 8
+DATE_KEY = re.compile(r"^\d{4}-\d{2}-\d{2}$")  # column headers also include "TTM" and half-year dates, which are not fiscal years
 MONTHS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 # section id on the page -> [(screener row label prefix, lowercase) -> our field]. First match wins.
@@ -71,22 +74,34 @@ def _section(html: str, section_id: str) -> str:
 
 
 def parse_financials(html: str) -> dict:
-    """{'years': ['FY24', ...], 'rows': {'FY24': {'revenue': 2000.0, ...}}} . Empty dict if there is no profit and loss table."""
-    rows: dict = {}
-    order: list = []
+    """{'years': ['FY24', ...], 'rows': {'FY24': {'revenue': 2000.0, ...}}} . Empty dict if there is no profit and loss table.
+
+    Only fiscal-year columns are kept. A column counts as a fiscal year when its header is a date in the company's usual
+    year-end month. That drops the TTM column (its header says "TTM") and half-year balance sheets (a September date for a
+    March company), neither of which is comparable with the annual figures.
+    """
+    tables = []
     for section_id, mapping in SECTIONS.items():
         block = _section(html, section_id)
-        if not block:
-            continue
-        t = AnnualTable()
-        t.feed(block)
+        if block:
+            t = AnnualTable()
+            t.feed(block)
+            tables.append((mapping, t))
+    months = Counter(k[5:7] for _, t in tables for k in t.cols if k and DATE_KEY.match(k))
+    if not months:
+        return {}
+    year_end = months.most_common(1)[0][0]
+
+    rows: dict = {}
+    order: list = []
+    for mapping, t in tables:
         for label, cells in t.rows:
             clean = re.sub(r"[+\s]+$", "", label).strip().lower()
             field = next((f for prefix, f in mapping if clean.startswith(prefix)), None)
             if field is None:
                 continue
             for date_key, cell in zip(t.cols, cells):
-                if not date_key:
+                if not date_key or not DATE_KEY.match(date_key) or date_key[5:7] != year_end:
                     continue
                 y = year_label(date_key)
                 if y not in order:
@@ -94,7 +109,7 @@ def parse_financials(html: str) -> dict:
                 rows.setdefault(y, {}).setdefault(field, to_number(cell))  # first matching row wins
     if not any("revenue" in r for r in rows.values()):
         return {}
-    years = sorted(order, key=lambda y: _sort_key(y))[-KEEP_YEARS:]
+    years = sorted(order, key=_sort_key)[-KEEP_YEARS:]
     return {"years": years, "rows": {y: rows[y] for y in years}}
 
 
@@ -105,16 +120,31 @@ def _sort_key(label: str):
     return (2000 + int(yy), MONTHS.index(mon))
 
 
-def fetch_financials(ticker: str) -> dict:
-    """Consolidated figures when screener has them, else standalone. Empty dict when nothing could be read."""
+def _get(ticker: str, variant: str):
     import requests
+    r = requests.get(f"https://www.screener.in/company/{ticker}/{variant}", headers={"User-Agent": UA}, timeout=25)
+    return r.text if r.status_code == 200 else None
+
+
+def fetch_financials(ticker: str, get=_get, this_year: int = None) -> dict:
+    """Consolidated figures when screener has recent ones, otherwise whichever basis is more recent. Empty when nothing can be read.
+
+    Some companies (TATAELXSI is one) have a consolidated page that stops years ago, while the standalone page is current,
+    so a consolidated page is only trusted when its latest year is no more than a year old.
+    """
+    this_year = this_year or date.today().year
+    found = {}
     for basis, variant in (("consolidated", "consolidated/"), ("standalone", "")):
-        r = requests.get(f"https://www.screener.in/company/{ticker}/{variant}", headers={"User-Agent": UA}, timeout=25)
-        if r.status_code == 200:
-            parsed = parse_financials(r.text)
-            if parsed:
-                return {"basis": basis, **parsed}
-    return {}
+        html = get(ticker, variant)
+        parsed = parse_financials(html) if html else {}
+        if parsed:
+            found[basis] = parsed
+            if _sort_key(parsed["years"][-1])[0] >= this_year - 1:
+                break  # recent enough, no need to look at the other basis
+    if not found:
+        return {}
+    basis = max(found, key=lambda b: (_sort_key(found[b]["years"][-1]), b == "consolidated"))
+    return {"basis": basis, **found[basis]}
 
 
 def missing_fields(f: dict) -> list:
