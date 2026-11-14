@@ -47,7 +47,7 @@ Built: the three layers above, real accounts and connections, on-demand research
 - **Cash quality:** profit against operating cash flow, year by year. If profit is not turning into cash, it says so in a plain sentence.
 Each section is left out when its table is incomplete, and a growth rate is never computed from a zero or negative base. A monthly Action refreshes the portfolio's numbers; an on-demand build reads them for the new company in the same run.
 
-**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN, ASIANPAINT, OLAELEC and SBIN were built that way (none is in the portfolio, and OLAELEC is a recent listing), with no code change.
+**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN, ASIANPAINT, OLAELEC and SBIN were built that way (none is in the portfolio), with no code change.
 
 ## LLM routing and efficiency
 
