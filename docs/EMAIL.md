@@ -52,7 +52,7 @@ WHAT I WOULD DO NEXT
 
 LIMITS, SAID PLAINLY
 
-Research for most portfolio stocks is a draft written by a test model and labelled Draft on the page; Kaynes, TITAN and ASIANPAINT were built with Gemini. The free Gemini quota allows only a few companies a day, so on-demand builds are capped. screener.in is a single point of dependency. Matching a contact's typed employer to a company is by name and can miss.
+Research for most portfolio stocks is a draft written by a test model and labelled Draft on the page; Kaynes and the four research companies outside the portfolio (TITAN, ASIANPAINT, OLAELEC, SBIN) were built with Gemini. The free Gemini quota allows only a few companies a day, so on-demand builds are capped. screener.in is a single point of dependency. Matching a contact's typed employer to a company is by name and can miss.
 
 Thank you for the opportunity.
 

@@ -47,7 +47,7 @@ Built: the three layers above, real accounts and connections, on-demand research
 - **Cash quality:** profit against operating cash flow, year by year. If profit is not turning into cash, it says so in a plain sentence.
 Each section is left out when its table is incomplete, and a growth rate is never computed from a zero or negative base. A monthly Action refreshes the portfolio's numbers; an on-demand build reads them for the new company in the same run.
 
-**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change.
+**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN, ASIANPAINT, OLAELEC and SBIN were built that way (none is in the portfolio, and OLAELEC is a recent listing), with no code change.
 
 ## LLM routing and efficiency
 
@@ -64,7 +64,7 @@ The rule: use a model only where a rule cannot do the job, and never let it be t
 
 - **One door** (`pipeline/llm.py`): every call goes through one wrapper. It caches each answer on disk by a hash of model, prompt and version, so a rerun costs nothing. It retries busy servers, and falls back through a list of models when one is overloaded or its daily quota is used up.
 - **Quota awareness.** The free tier is small, so a build stops with a plain "API limit reached" message instead of failing. In the on-demand job, the cache is saved between runs, so a stopped build resumes without paying again.
-- **A test model for drafts.** To fill the portfolio without spending Gemini quota, I built the draft research for most portfolio stocks with a separate test model (Hyde's GLM). That output is labelled **Draft** on the page. No deployed code ever calls that model. The website has no model calls at all, the on-demand job refuses any provider except Gemini, and the test key exists only on my machine. Kaynes, TITAN and ASIANPAINT were built with Gemini.
+- **A test model for drafts.** To fill the portfolio without spending Gemini quota, I built the draft research for most portfolio stocks with a separate test model (Hyde's GLM). That output is labelled **Draft** on the page. No deployed code ever calls that model. The website has no model calls at all, the on-demand job refuses any provider except Gemini, and the test key exists only on my machine. Kaynes and the four research companies outside the portfolio (TITAN, ASIANPAINT, OLAELEC, SBIN) were built with Gemini.
 
 ## Privacy and security
 
