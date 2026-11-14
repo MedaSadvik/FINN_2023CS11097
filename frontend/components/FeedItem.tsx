@@ -39,11 +39,11 @@ function FilingLink({ url }: { url?: string | null }) {
   return <a href={url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm text-ink-2 underline underline-offset-2 hover:text-ink">Open the filing</a>;
 }
 
-function WhoToCall({ net, employerKey, company, label }: { net: Network; employerKey: string | null; company: string; label: string }) {
+function WhoToCall({ net, employerKey, company, label, about }: { net: Network; employerKey: string | null; company: string; label: string; about: string }) {
   const leads = employerKey ? callSheet(net, employerKey, 2) : [];
   return (
     <CallSheet label={label} title={`Who can explain ${company}`}>
-      <LeadList leads={leads} empty="No one in your contacts has worked there." />
+      <LeadList leads={leads} empty="No one in your contacts has worked there." about={about} />
     </CallSheet>
   );
 }
@@ -77,7 +77,7 @@ export function FeedItem({ item, net }: { item: Item; net: Network }) {
           </tbody>
         </table>
         <FilingLink url={item.pdf_url} />
-        <div><WhoToCall net={net} employerKey={employerKeyFor(net, item.ticker)} company={item.company} label="Who to call" /></div>
+        <div><WhoToCall net={net} employerKey={employerKeyFor(net, item.ticker)} company={item.company} label="Who to call" about={item.ticker} /></div>
       </article>
     );
   }
@@ -112,10 +112,10 @@ export function FeedItem({ item, net }: { item: Item; net: Network }) {
         <div>
           {leads.length > 0 ? (
             <CallSheet label={`${leads.length} of your contacts overlap`} title={`Overlap with ${p!.person}`}>
-              <LeadList leads={leads} empty="" />
+              <LeadList leads={leads} empty="" about={item.ticker} />
             </CallSheet>
           ) : (
-            <WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who knows this company" />
+            <WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who knows this company" about={item.ticker} />
           )}
         </div>
       </article>
@@ -128,7 +128,7 @@ export function FeedItem({ item, net }: { item: Item; net: Network }) {
         <p className="mt-1 font-semibold">{item.headline}</p>
         {item.detail && <p className="mt-2 text-ink-2">{item.detail}</p>}
         <FilingLink url={item.pdf_url} />
-        <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Best person to call" /></div>
+        <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Best person to call" about={item.ticker} /></div>
       </article>
     );
   }
@@ -143,7 +143,7 @@ export function FeedItem({ item, net }: { item: Item; net: Network }) {
         {item.price_pct !== null && <>price <Delta v={item.price_pct} /> on the day</>}.
       </p>
       {rule && <p className="mt-1 text-ink-2">Your rules: {rule}.{item.earlier ? ` ${item.earlier} earlier ${item.earlier === 1 ? "day" : "days"} in this window too.` : ""}</p>}
-      <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who to call" /></div>
+      <div><WhoToCall net={net} employerKey={item.employer_key} company={item.company} label="Who to call" about={item.ticker} /></div>
     </article>
   );
 }

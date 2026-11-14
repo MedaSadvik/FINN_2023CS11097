@@ -9,6 +9,7 @@ export type Person = {
   roles: Role[];
   education: Education[];
   linked?: boolean; // a real connection (live profile), not a sample contact
+  profileId?: string; // the connection's account id, so the Connections list can open their profile
 };
 export type Employer = { key: string; name: string; sector: string; ticker: string | null };
 export type Relation = { employer_key: string; ticker: string; relation: "competitor" | "supplier" | "customer" };

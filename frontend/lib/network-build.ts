@@ -52,6 +52,7 @@ export function buildNetwork(rows: DbRows, target?: { key: string; name: string 
     roles: (roles.get(p.id) ?? []).sort((a, b) => b.start_year - a.start_year),
     education: edu.get(p.id) ?? [],
     linked: p.profile_id !== null,
+    ...(p.profile_id ? { profileId: p.profile_id } : {}),
   }));
   return { employers, employer_relations: rows.relations, people };
 }
