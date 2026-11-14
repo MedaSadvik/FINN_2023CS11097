@@ -4,6 +4,7 @@ Push has two parts (per the brief): a WINDOWED DIGEST of filings, ranked by prio
 ALERTS from volume and price. Routine paperwork is counted but not shown, so the feed stays short.
 """
 import csv
+import math
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -72,14 +73,19 @@ def results_item(f: dict, name: str, quarters: dict):
             "pdf_url": f.get("pdf_url")}
 
 
+def clean_rows(rows) -> list:
+    """Drop rows with a missing close or volume. Yahoo sometimes returns NaN for the latest day, and NaN is not valid JSON."""
+    return [tuple(r) for r in rows if all(isinstance(x, (int, float)) and math.isfinite(x) for x in (r[1], r[2]))]
+
+
 MARKET_ROWS = 45  # 20 days for the average + the longest window (14 days is about 10 trading days) + slack
 
 
 def market_block(prices: dict, names: dict, employers: dict) -> dict:
     """Recent end-of-day rows per ticker, so the app can check the investor's own thresholds."""
     return {t: {"company": names.get(t, t), "employer_key": employers.get(t),
-                "rows": [[d, c, v] for d, c, v in rows[-MARKET_ROWS:]]}
-            for t, rows in prices.items() if rows}
+                "rows": [[d, c, v] for d, c, v in clean_rows(rows)[-MARKET_ROWS:]]}
+            for t, rows in prices.items() if clean_rows(rows)}
 
 
 def build_feed(filings: list, prices: dict, quarters: dict, names: dict, employers: dict, now: datetime,

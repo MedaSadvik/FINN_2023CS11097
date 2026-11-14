@@ -105,3 +105,21 @@ def test_first_ever_run_with_nse_down_gives_an_empty_but_valid_feed():
 def test_no_prices_at_all_is_a_failure_not_a_success():
     out, rep = run(old={}, prices=boom)
     assert "prices" in rep.failed and out["market"] == {}
+
+
+def test_nan_prices_never_reach_the_feed():
+    """A NaN close made feed_live.json invalid JSON and broke the website build."""
+    import json, math
+    nan = float("nan")
+    bad = rows()[:-1] + [("2026-11-14", nan, 500)]
+    out, rep = run(prices=lambda t: bad)
+    assert all(math.isfinite(x) for m in out["market"].values() for r in m["rows"] for x in r[1:])
+    assert out["market"]["KAYNES"]["rows"][-1][0] == "2026-11-13" or out["market"]["KAYNES"]["rows"][-1][0].startswith("2026-10")
+    json.dumps(out, allow_nan=False)  # strict: raises on NaN
+
+
+def test_a_company_with_only_nan_rows_keeps_its_old_rows():
+    nan = float("nan")
+    out, rep = run(prices=lambda t: [("2026-11-14", nan, nan)] if t == "DIXON" else rows())
+    assert "prices" in rep.failed
+    assert out["market"]["DIXON"]["rows"][-1][0] == "2026-11-13"
