@@ -76,7 +76,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
         <h1 className="px-4 pt-2 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
         <div className="px-4">
           <CallSheet label="Who in your network knows this company" title={`Who can explain ${c.name}`}>
-            <LeadList leads={leads} empty="No one in your contacts has worked there." />
+            <LeadList leads={leads} empty="No one in your contacts has worked there." about={c.ticker} />
           </CallSheet>
         </div>
 

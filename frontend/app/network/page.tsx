@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Shell } from "@/components/Shell";
 import { NetworkInsights } from "@/components/NetworkInsights";
+import { PersonLink } from "@/components/PersonLink";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { monthYear } from "@/lib/format";
 import { acceptRequest, clearSample, declineRequest, loadSample, removeConnection, requestConnection } from "@/app/actions";
@@ -31,7 +32,7 @@ function SampleList({ title, people }: { title: string; people: Person[] }) {
       <ul className="mt-2 divide-y divide-line border-y border-line">
         {people.map((p) => (
           <li key={p.id} className="px-4 py-2">
-            <p className="font-semibold">{p.full_name}</p>
+            <p><PersonLink id={p.id} name={p.full_name} /></p>
             <p className="text-sm text-ink-2">{p.headline}{p.last_spoke ? ` · last spoke ${monthYear(p.last_spoke)}` : ""}</p>
           </li>
         ))}
@@ -115,10 +116,11 @@ async function Body() {
         {connected.map((c) => {
           const p = who(c);
           const theirJobs = ((jobs.data ?? []) as Job[]).filter((j) => j.profile_id === p?.id);
+          const person = view.net.people.find((x) => x.profileId === p?.id);
           return (
             <li key={c.id} className="px-4 py-3">
               <div className="flex items-start justify-between gap-3">
-                <p><span className="block font-semibold">{p?.display_name}</span>
+                <p><span className="block font-semibold">{person ? <PersonLink id={person.id} name={p?.display_name ?? ""} /> : p?.display_name}</span>
                   <span className="block text-sm text-ink-2">@{p?.username}{p?.headline ? ` · ${p.headline}` : ""}</span></p>
                 <Tiny action={removeConnection} id={c.id} label="Remove" />
               </div>

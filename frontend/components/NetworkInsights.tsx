@@ -3,6 +3,7 @@ import { getFeed } from "@/lib/data";
 import { getNetwork } from "@/lib/account";
 import { expertiseMap, filingRefs, reconnectIdeas, type Reconnect, type Theme } from "@/lib/network-insights";
 import type { Evidence } from "@/lib/types";
+import { PersonLink } from "./PersonLink";
 
 const tag = (s: Evidence["source"]) => (s === "your notes" ? "text-sm text-ink-3 italic" : "text-sm text-ink-3");
 const plural = (n: number, one: string, many = one + "s") => `${n} ${n === 1 ? one : many}`;
@@ -11,7 +12,7 @@ function Idea({ idea }: { idea: Reconnect }) {
   const p = idea.person;
   return (
     <li className="px-4 py-4">
-      <p className="font-semibold">{p.full_name}</p>
+      <p><PersonLink id={p.id} name={p.full_name} about={idea.filing.ticker} /></p>
       <p className="text-sm text-ink-2">{p.headline}</p>
       <ul className="mt-2 space-y-1.5">
         {idea.reasons.map((r, i) => (
@@ -43,7 +44,7 @@ function ThemeRow({ t }: { t: Theme }) {
               {t.expertCount > t.experts.length && <li className="text-sm text-ink-3">Top {t.experts.length} of {t.expertCount}, by years in the sector.</li>}
               {t.experts.map((e) => (
                 <li key={e.person.id} className="text-[0.95rem] leading-snug">
-                  <span className="font-semibold">{e.person.full_name}</span>, {e.years} years{e.current ? ", still in it" : ""}.
+                  <PersonLink id={e.person.id} name={e.person.full_name} />, {e.years} years{e.current ? ", still in it" : ""}.
                   <span className="block text-sm text-ink-2">{e.where.join(", ")}</span>
                 </li>
               ))}

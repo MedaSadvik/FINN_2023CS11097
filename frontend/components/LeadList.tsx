@@ -1,12 +1,13 @@
 import type { Lead } from "@/lib/types";
+import { PersonLink } from "./PersonLink";
 
-export function LeadList({ leads, empty }: { leads: Lead[]; empty: string }) {
+export function LeadList({ leads, empty, about }: { leads: Lead[]; empty: string; about?: string | null }) {
   if (!leads.length) return <p className="text-ink-2">{empty}</p>;
   return (
     <ul className="divide-y divide-line">
       {leads.map((l) => (
         <li key={l.person.id} className="py-4 first:pt-0">
-          <p className="font-semibold">{l.person.full_name}</p>
+          <p><PersonLink id={l.person.id} name={l.person.full_name} about={about} /></p>
           <p className="text-sm text-ink-2">{l.person.headline}</p>
           <ul className="mt-2 space-y-1.5">
             {l.reasons.map((r, i) => (

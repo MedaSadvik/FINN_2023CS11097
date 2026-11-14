@@ -100,6 +100,8 @@ Two things the Network notices without being asked, both plain rules over the co
 - **Worth a call.** A contact who worked at a company that just filed, and whom you have not spoken to in six months or more. It shows the career line, the filing, the silence, and one question to ask, chosen by filing type. Still-there contacts rank above former ones. A pointer on Today shows how many there are for the window picked.
 - **Who knows what.** Go-to people per sector, counted from years at companies FINN tracks. A sector where you hold companies and know no one is flagged as a gap.
 
+**A profile for every name.** Tap any contact's name, on a Call Sheet, in Worth a call, in Who knows what or on the Network tab, and their profile opens: career, education, when you last spoke, and the tracked companies they have worked at. Right under their name is **Draft an email**. It opens an editable first draft made by plain template rules from facts we hold (a role they had, how long since you spoke), and never claims a tie the data does not show. It opens in the investor's own mail app or copies. FINN holds no email addresses and sends nothing, and the text never goes to a model.
+
 If a contact typed their employer by hand, it is matched to a tracked company by name. The model never sees the network.
 
 ## Known limits (said plainly)
