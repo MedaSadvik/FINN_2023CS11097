@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { balanceSheet, cagr, cashQuality, trajectory, type Financials } from "./financials";
+import { balanceSheet, cagr, cashQuality, isBank, trajectory, type Financials } from "./financials";
 
 // Shaped like KAYNES (the last three years are real; earlier years are rounded stand-ins for the test).
 const kaynes: Financials = {
@@ -90,4 +90,20 @@ test("trajectory: profit growing much slower than revenue is flagged", () => {
   assert.equal(t.margin, "compressing");
   assert.ok(t.flags.some((f) => f.tone === "warn" && /slower than revenue/.test(f.text)));
   assert.match(t.headline, /operating margin fell from 15% to 9%/);
+});
+
+test("a bank gets growth only: no margin, debt or cash-conversion readings that would mislead", () => {
+  const bank: Financials = { basis: "consolidated", years: ["FY23", "FY24", "FY25", "FY26"], rows: {
+    FY23: { revenue: 1000, pat: 100, opm_pct: 18, deposits: 5000, borrowings: 500, equity_capital: 10, reserves: 600, total_liabilities: 6000, cfo: 90, ebitda: 180, interest: 400 },
+    FY24: { revenue: 1300, pat: 130, opm_pct: 10, deposits: 6500, borrowings: 600, equity_capital: 10, reserves: 700, total_liabilities: 7500, cfo: 100 },
+    FY25: { revenue: 1700, pat: 160, opm_pct: -2, deposits: 8000, borrowings: 700, equity_capital: 10, reserves: 800, total_liabilities: 9000, cfo: 120 },
+    FY26: { revenue: 2200, pat: 200, opm_pct: -12, deposits: 10000, borrowings: 800, equity_capital: 10, reserves: 900, total_liabilities: 11500, cfo: 150 } } };
+  assert.equal(isBank(bank), true);
+  const t = trajectory(bank)!;
+  assert.equal(t.margin, null);
+  assert.deepEqual(t.opm, [null, null, null, null]);
+  assert.match(t.headline, /^Revenue grew 30% a year over 3 years, to ₹2,200 cr; profit after tax grew 26% a year\.$/);
+  assert.equal(balanceSheet(bank), null);
+  assert.equal(cashQuality(bank), null);
+  assert.equal(isBank(kaynes), false);
 });

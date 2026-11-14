@@ -1,5 +1,5 @@
 import { BarChart, Legend } from "@/components/Charts";
-import { balanceSheet, cashQuality, crore, trajectory, type Financials, type Flag } from "@/lib/financials";
+import { balanceSheet, cashQuality, crore, isBank, trajectory, type Financials, type Flag } from "@/lib/financials";
 
 const MARK: Record<Flag["tone"], string> = { warn: "Watch.", ok: "Good.", note: "Note." };
 
@@ -40,10 +40,11 @@ export function FinancialSections({ f }: { f: Financials }) {
         <Section id="trajectory" title="Trajectory" headline={t.headline}>
           <Legend items={[{ name: "Revenue, ₹ crore", swatch: "bg-ink" }]} />
           <BarChart labels={t.years} series={[{ name: "Revenue", values: t.revenue, tone: "ink" }]}
-            under={t.opm.map((v) => (v === null ? null : `${Math.round(v)}%`))}
+            under={t.opm.some((v) => v !== null) ? t.opm.map((v) => (v === null ? null : `${Math.round(v)}%`)) : undefined}
             summary={`Revenue by year: ${t.years.map((y, i) => `${y} ${t.revenue[i] ?? "n/a"}`).join(", ")}. Operating margin under each year.`} />
-          <p className="text-sm text-ink-3">Operating margin is shown under each year.</p>
+          {t.opm.some((v) => v !== null) && <p className="text-sm text-ink-3">Operating margin is shown under each year.</p>}
           <Flags flags={t.flags} />
+          {isBank(f) && <p className="mt-3 text-[0.95rem] text-ink-2">Debt, operating margin, working capital and cash conversion are left out. They describe a business that sells goods, not a bank that lends deposits.</p>}
         </Section>
       )}
       {b && (

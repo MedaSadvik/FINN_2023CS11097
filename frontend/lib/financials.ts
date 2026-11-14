@@ -4,7 +4,7 @@
  * Every function returns null when the table does not have what it needs, and the page then leaves that section out.
  */
 export type FinRow = Partial<Record<
-  "revenue" | "ebitda" | "opm_pct" | "interest" | "pbt" | "pat" | "equity_capital" | "reserves" | "borrowings" | "other_liabilities" |
+  "revenue" | "deposits" | "ebitda" | "opm_pct" | "interest" | "pbt" | "pat" | "equity_capital" | "reserves" | "borrowings" | "other_liabilities" |
   "total_liabilities" | "cfo" | "cfi" | "fcf" | "debtor_days" | "inventory_days" | "payable_days" | "ccc_days" | "roce_pct", number | null>>;
 export type Financials = { basis: string; years: string[]; rows: Record<string, FinRow>; fetched?: string };
 
@@ -21,6 +21,9 @@ export function cagr(from: number | null | undefined, to: number | null | undefi
   if (!n(from) || !n(to) || from <= 0 || to <= 0 || years <= 0) return null;
   return (Math.pow(to / from, 1 / years) - 1) * 100;
 }
+
+/** A bank lends what it takes in as deposits, so debt, operating margin, working capital and operating cash flow do not describe it. */
+export const isBank = (f: Financials) => n(at(f, 0)?.deposits) && (at(f, 0)!.deposits as number) > 0;
 
 // ---------------------------------------------------------------- trajectory
 
@@ -39,16 +42,18 @@ export function trajectory(f: Financials): Trajectory | null {
   const patCagr = cagr(then.pat, now.pat, span);
   const opmNow = n(now.opm_pct) ? now.opm_pct : null, opmThen = n(then.opm_pct) ? then.opm_pct : null;
   const diff = opmNow !== null && opmThen !== null ? opmNow - opmThen : null;
-  const margin = diff === null ? null : diff >= 1 ? "expanding" : diff <= -1 ? "compressing" : "steady";
+  const bank = isBank(f);
+  const margin = bank || diff === null ? null : diff >= 1 ? "expanding" : diff <= -1 ? "compressing" : "steady";
 
   const parts: string[] = [];
   if (revenueCagr !== null) parts.push(`Revenue grew ${pct(revenueCagr, 0)} a year over ${span} years, to ${crore(now.revenue)}`);
   else parts.push(`Revenue was ${crore(now.revenue)} in ${yr(f, 0)}, against ${crore(then.revenue)} in ${yr(f, span)}`);
+  if (bank && patCagr !== null) parts.push(`profit after tax grew ${pct(patCagr)} a year`);
   if (margin && opmNow !== null && opmThen !== null) {
     parts.push(margin === "steady" ? `operating margin held near ${pct(opmNow)}` : `operating margin ${margin === "expanding" ? "rose" : "fell"} from ${pct(opmThen)} to ${pct(opmNow)}`);
   }
   const flags: Flag[] = [];
-  if (n(now.pat) && n(then.pat)) {
+  if (n(now.pat) && n(then.pat) && !bank) {
     if (patCagr !== null && revenueCagr !== null && patCagr < revenueCagr - 5) flags.push({ tone: "warn", text: `Profit grew ${pct(patCagr)} a year, slower than revenue.` });
     else if (patCagr !== null && revenueCagr !== null && patCagr > revenueCagr + 5) flags.push({ tone: "ok", text: `Profit grew ${pct(patCagr)} a year, faster than revenue.` });
     else if (now.pat <= 0) flags.push({ tone: "warn", text: `The company made a loss in ${yr(f, 0)}.` });
@@ -56,7 +61,7 @@ export function trajectory(f: Financials): Trajectory | null {
   if (n(now.roce_pct) && n(then.roce_pct) && now.roce_pct - then.roce_pct <= -3) flags.push({ tone: "warn", text: `Return on capital fell from ${pct(then.roce_pct)} to ${pct(now.roce_pct)}.` });
 
   return {
-    years: f.years, revenue: f.years.map((y) => f.rows[y]?.revenue ?? null), opm: f.years.map((y) => f.rows[y]?.opm_pct ?? null),
+    years: f.years, revenue: f.years.map((y) => f.rows[y]?.revenue ?? null), opm: f.years.map((y) => (bank ? null : f.rows[y]?.opm_pct ?? null)),
     revenueCagr, patCagr, opmNow, opmThen, span, margin, headline: parts.join("; ") + ".", flags,
   };
 }
@@ -70,6 +75,7 @@ export type BalanceSheet = {
 };
 
 export function balanceSheet(f: Financials): BalanceSheet | null {
+  if (isBank(f)) return null;
   const now = at(f, 0);
   if (!now || !n(now.borrowings) || !n(now.equity_capital) || !n(now.reserves)) return null;
   const netWorth = now.equity_capital + now.reserves;
@@ -104,6 +110,7 @@ export type CashQuality = {
 };
 
 export function cashQuality(f: Financials): CashQuality | null {
+  if (isBank(f)) return null;
   const span = Math.min(3, f.years.length);
   const recent = f.years.slice(-span);
   const rows = recent.map((y) => f.rows[y]);
