@@ -69,4 +69,6 @@ Built: Push (digest and alerts), Pull (promised vs delivered, any ticker), Netwo
 Also on each research page: key numbers, business snapshot, bull and bear (each line with a quote), trajectory, balance sheet, cash quality, and a "what they said against the numbers" check.
 Not built: reading annual reports as text, a free-form ask bar, phone push notifications. Some promises still read "can't check yet".
 
-To add the newer research steps to companies already built: `python scripts/enrich_portfolio.py KAYNES` (uses cached transcripts; a few model requests per company).
+Companies built on demand before a new research section existed can be refreshed from the Actions tab: run **enrich-live**. It rebuilds only the ones that lack the sections, one at a time.
+
+To add the newer research steps to companies already built on a laptop: `python scripts/enrich_portfolio.py KAYNES` (uses cached transcripts; a few model requests per company).
