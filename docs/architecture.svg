@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 670" width="920" height="670" font-family="Helvetica, Arial, sans-serif" font-size="13">
+<title>FINN architecture</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#444"/></marker></defs>
+<rect width="920" height="670" fill="#fff"/>
+<g font-weight="700" font-size="14" fill="#111"><text x="20" y="26">Sources</text><text x="20" y="144" fill="#fff"> </text></g>
+<rect x="20" y="40" width="280" height="80" rx="6" fill="#f4f4f4" stroke="#999"/>
+<text x="32" y="62" font-weight="700" fill="#111">NSE</text>
+<text x="32" y="82" fill="#111">Filings, end-of-day prices</text>
+<text x="32" y="100" fill="#111">and volume</text>
+<rect x="320" y="40" width="270" height="80" rx="6" fill="#f4f4f4" stroke="#999"/>
+<text x="332" y="62" font-weight="700" fill="#111">screener.in</text>
+<text x="332" y="82" fill="#111">Transcript links, quarterly and annual</text>
+<text x="332" y="100" fill="#111">tables from the company's filings</text>
+<rect x="630" y="40" width="280" height="80" rx="6" fill="#f4f4f4" stroke="#999"/>
+<text x="642" y="62" font-weight="700" fill="#111">On-demand build</text>
+<text x="642" y="82" fill="#111">A signed-in user types any NSE</text>
+<text x="642" y="100" fill="#111">symbol. Capped per user and per day.</text>
+<rect x="20" y="150" width="280" height="120" rx="6" fill="#fff" stroke="#111"/>
+<text x="32" y="172" font-weight="700" fill="#111">Refresh, twice a weekday (Action)</text>
+<text x="32" y="192" fill="#111">Classify filings by rule, run the</text>
+<text x="32" y="210" fill="#111">alert maths, read results. One model</text>
+<text x="32" y="228" fill="#111">call per new management-change</text>
+<text x="32" y="246" fill="#111">filing.</text>
+<rect x="320" y="150" width="270" height="190" rx="6" fill="#fff" stroke="#111"/>
+<text x="332" y="172" font-weight="700" fill="#111">Research build (Action, Python)</text>
+<text x="332" y="192" fill="#111">1. Model extracts promises + quotes</text>
+<text x="332" y="210" fill="#111">2. Code checks each quote is on the page</text>
+<text x="332" y="228" fill="#111">3. Verdict is arithmetic on reported</text>
+<text x="332" y="246" fill="#111">    quarters; later calls settle the rest</text>
+<text x="332" y="264" fill="#111">4. Snapshot, bull and bear, every line</text>
+<text x="332" y="282" fill="#111">    quoted and verified</text>
+<text x="332" y="300" fill="#111">Monthly, no model: multi-year numbers</text>
+<text x="332" y="318" fill="#111">    from the annual tables</text>
+<rect x="630" y="150" width="280" height="100" rx="6" fill="#eef4ff" stroke="#2a5bd7"/>
+<text x="642" y="172" font-weight="700" fill="#111">One door to the model</text>
+<text x="642" y="192" fill="#111">Gemini Flash, free tier. Cached by hash,</text>
+<text x="642" y="210" fill="#111">falls back when busy or out of quota.</text>
+<text x="642" y="238" font-size="12" fill="#2a5bd7">Sees filings and transcripts only. Never contacts.</text>
+<rect x="20" y="390" width="570" height="90" rx="6" fill="#f4f4f4" stroke="#999"/>
+<text x="32" y="412" font-weight="700" fill="#111">Data files in the repo</text>
+<text x="32" y="432" fill="#111">feed, research and financials as JSON files. The Action commits them and the push</text>
+<text x="32" y="450" fill="#111">redeploys the site. Public data only. Each source fails alone and keeps its last good data.</text>
+<rect x="618" y="274" width="298" height="248" rx="8" fill="none" stroke="#b3261e" stroke-dasharray="6 4" stroke-width="1.5"/>
+<text x="630" y="294" font-weight="700" fill="#b3261e">Private zone</text>
+<rect x="630" y="306" width="274" height="112" rx="6" fill="#fff" stroke="#111"/>
+<text x="642" y="328" font-weight="700" fill="#111">Supabase Postgres</text>
+<text x="642" y="348" fill="#111">Accounts, the contacts a user types in,</text>
+<text x="642" y="366" fill="#111">notes, connections. Row level security</text>
+<text x="642" y="384" fill="#111">on every table. Connections only via</text>
+<text x="642" y="402" fill="#111">functions.</text>
+<rect x="630" y="432" width="274" height="76" rx="6" fill="#fff" stroke="#111"/>
+<text x="642" y="454" font-weight="700" fill="#111">Network rules</text>
+<text x="642" y="474" fill="#111">Call Sheet, worth a call, who knows</text>
+<text x="642" y="492" fill="#111">what. Plain rules over rows. No model.</text>
+<rect x="20" y="560" width="890" height="96" rx="8" fill="#111"/>
+<g fill="#fff"><text x="36" y="584" font-weight="700" font-size="14">Website on Vercel (Next.js, phone first). No model calls.</text>
+<text x="36" y="608" font-weight="700">Push</text><text x="36" y="626">Today: ranked digest, window</text><text x="36" y="644">picker, alerts you can tune</text>
+<text x="330" y="608" font-weight="700">Pull</text><text x="330" y="626">Promised vs delivered, key numbers,</text><text x="330" y="644">bull and bear, words vs numbers</text>
+<text x="660" y="608" font-weight="700">Network</text><text x="660" y="626">A Call Sheet on every card</text><text x="660" y="644">and every research page</text>
+</g>
+<g stroke="#444" stroke-width="1.5" fill="none" marker-end="url(#a)">
+<path d="M160 120V150"/><path d="M455 120V150"/>
+<path d="M770 120V135H540V150"/>
+<path d="M590 200H630" marker-start="url(#a)"/>
+<path d="M160 270V390"/><path d="M455 340V390"/>
+<path d="M767 418V432"/>
+<path d="M305 480V560"/><path d="M767 508V560"/>
+</g>
+</svg>
