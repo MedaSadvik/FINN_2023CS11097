@@ -38,15 +38,21 @@ def to_pledge(row: dict) -> dict:
         "page": c["page"], "quote": quote, "mark": mark_span(quote, c.get("low"), c.get("high")),
         "outcome": row["outcome"], "result": row.get("delivered_text"),
     }
+    if row.get("evidence"):  # a later call said how it went; the page shows that quote
+        out["evidence"] = row["evidence"]
     if row["outcome"] == "unclear":
         out["reason"] = row.get("reason") or UNCHECKED_REASON
     return out
 
 
-def build_company(ticker: str, name: str, employer_key, rows: list, quarters: dict, provider: str) -> dict:
+def build_company(ticker: str, name: str, employer_key, rows: list, quarters: dict, provider: str,
+                  snapshot: dict = None) -> dict:
     pledges = sorted((to_pledge(r) for r in rows), key=lambda p: ORDER.index(p["outcome"]))
     qs = [{"quarter": q, **{k: v[k] for k in ("revenue", "ebitda", "pbt", "pat")}}
           for q, v in quarters.items() if v.get("revenue") is not None]
     qs.sort(key=lambda q: (int(q["quarter"][-2:]), q["quarter"][1]))
-    return {"ticker": ticker, "name": name, "employer_key": employer_key, "provider": provider,
-            "quarters": qs[-8:], "promises": pledges}
+    out = {"ticker": ticker, "name": name, "employer_key": employer_key, "provider": provider,
+           "quarters": qs[-8:], "promises": pledges}
+    if snapshot and (snapshot["business"]["segments"] or snapshot["bull"] or snapshot["bear"]):
+        out["snapshot"] = {k: snapshot[k] for k in ("business", "bull", "bear", "period")}
+    return out

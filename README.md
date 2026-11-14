@@ -66,4 +66,7 @@ The demo network is invented. Real company names appear only as employers. Accou
 
 ## Status
 Built: Push (digest and alerts), Pull (promised vs delivered, any ticker), Network (accounts, connections, Call Sheet, worth-a-call, who-knows-what), on-demand builds with daily caps.
-Not built: verdicts for segment-level claims (most promises read "can't check yet"), a free-form ask bar, phone push notifications.
+Also on each research page: key numbers, business snapshot, bull and bear (each line with a quote), trajectory, balance sheet, cash quality, and a "what they said against the numbers" check.
+Not built: reading annual reports as text, a free-form ask bar, phone push notifications. Some promises still read "can't check yet".
+
+To add the newer research steps to companies already built: `python scripts/enrich_portfolio.py KAYNES` (uses cached transcripts; a few model requests per company).

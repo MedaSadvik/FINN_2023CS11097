@@ -29,6 +29,12 @@ export function PromiseRow({ p, sample }: { p: P; sample?: boolean }) {
         {[`${p.made_in} call`, p.call_month, `page ${p.page}`].filter(Boolean).join(", ")}
       </p>
       {(p.result || p.reason) && <p className="mt-3 text-[0.95rem]">{p.result ?? p.reason}</p>}
+      {p.evidence && (
+        <>
+          <blockquote className="quote mt-3">&ldquo;{p.evidence.quote}&rdquo;</blockquote>
+          <p className="mt-1.5 text-sm text-ink-3">What they said later: {p.evidence.period} call, page {p.evidence.page}</p>
+        </>
+      )}
     </li>
   );
 }

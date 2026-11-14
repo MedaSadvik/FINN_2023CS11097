@@ -12,7 +12,7 @@ import json
 import sys
 import time
 
-from pipeline import fetch_docs, fetch_pdf, fetch_quarters, guidance, llm, verdicts
+from pipeline import delivered, fetch_docs, fetch_pdf, fetch_quarters, guidance, insight, llm, verdicts
 
 
 def build(ticker: str, n_calls: int = 4, exit_on_quota: bool = True) -> list:
@@ -55,6 +55,14 @@ def build(ticker: str, n_calls: int = 4, exit_on_quota: bool = True) -> list:
     print(f"== {ticker}: promised vs delivered")
     rows = verdicts.evaluate_ticker(ticker)
     verdicts.main(ticker)
+    for name, step in (("later-call check", delivered.main), ("business snapshot", insight.main)):
+        print(f"== {ticker}: {name}")
+        try:  # extras: the research is still worth keeping if one of them cannot run
+            step(ticker)
+        except llm.QuotaExhausted as e:
+            print(f"   left for later (quota): {e}")
+        except Exception as e:
+            print(f"   skipped: {type(e).__name__}: {str(e)[:100]}")
     return rows
 
 

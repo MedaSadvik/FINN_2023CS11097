@@ -6,6 +6,8 @@ import { CallSheet } from "@/components/CallSheet";
 import { LeadList } from "@/components/LeadList";
 import { getCompany, getFinancials, knownTickers } from "@/lib/data";
 import { FinancialSections, financialParts } from "@/components/FinancialSections";
+import { AtAGlance, BullBear, BusinessSnapshot, NarrativeVsNumbers } from "@/components/PullInsights";
+import { atAGlance, narrativeVsNumbers } from "@/lib/narrative";
 import { callSheet, tidyName } from "@/lib/network-core";
 import { nameFor } from "@/lib/portfolio";
 import { getAccount, getNetwork } from "@/lib/account";
@@ -44,8 +46,16 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   const leads = callSheet(net, key, 3);
   const fin = getFinancials(c);
   const parts = financialParts(fin);
+  const snap = c.snapshot ?? null;
+  const glance = atAGlance(fin);
+  const narrative = narrativeVsNumbers(c.promises, fin);
+  const draft = !c.sample && !!c.provider && c.provider !== "gemini";
   const jumps = [
-    { id: "promises", label: "Promises", show: true }, { id: "quarters", label: "Quarters", show: true },
+    { id: "business", label: "Business", show: !!snap?.business.segments.length },
+    { id: "promises", label: "Promises", show: true },
+    { id: "narrative", label: "Words vs numbers", show: !!narrative },
+    { id: "bullbear", label: "Bull and bear", show: !!(snap?.bull.length || snap?.bear.length) },
+    { id: "quarters", label: "Quarters", show: true },
     { id: "trajectory", label: "Trajectory", show: !!parts.trajectory }, { id: "balance", label: "Balance sheet", show: !!parts.balance },
     { id: "cash", label: "Cash", show: !!parts.cash },
   ].filter((j) => j.show);
@@ -57,7 +67,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
   const banner = c.sample
     ? "Preview. Quarterly figures are real. Promise wording is placeholder."
     : c.provider && c.provider !== "gemini"
-      ? "Draft. Promises were extracted by a test model, not the shipped Gemini run."
+      ? "Draft. Promises and summaries were written by a test model, not the shipped Gemini run."
       : null;
   return (
       <main>
@@ -78,6 +88,9 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
           </nav>
         )}
 
+        {glance && <AtAGlance {...glance} />}
+        {snap && <BusinessSnapshot s={snap} draft={draft} />}
+
         <h2 id="promises" className="scroll-mt-4 px-4 pt-8 text-lg font-bold">Promised vs delivered</h2>
         <p className="px-4 pt-1 text-ink-2">Only what management said on earnings calls, checked against reported numbers.</p>
         <p className="px-4 pt-1 font-semibold">{summary}</p>
@@ -94,6 +107,9 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
             </ul>
           </details>
         )}
+
+        {narrative && <NarrativeVsNumbers n={narrative} />}
+        {snap && <BullBear s={snap} draft={draft} />}
 
         <h2 id="quarters" className="scroll-mt-4 px-4 pt-8 text-lg font-bold">Reported quarters</h2>
         <p className="px-4 pt-1 text-ink-2">₹ crore</p>

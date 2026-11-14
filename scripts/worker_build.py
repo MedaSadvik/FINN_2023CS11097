@@ -79,7 +79,8 @@ def run(ticker: str, request_id: int, api, steps=None) -> str:
         build(ticker)
         verdicts, quarters = read_outputs(ticker)
         company = export.build_company(ticker, docs.get("name") or ticker, employer_key_for(ticker),
-                                       verdicts, quarters, provider())
+                                       verdicts, quarters, provider(),
+                                       steps.get("read_snapshot", lambda t: _read_snapshot(t, llm))(ticker))
         try:  # multi-year numbers are an extra: the research is still worth publishing without them
             fin = steps.get("financials", fetch_financials.fetch_financials)(ticker)
             if fin:
@@ -107,6 +108,11 @@ def _read_outputs(ticker, llm):
     verdicts = json.loads((cache / llm.derived("verdicts") / f"{ticker}.json").read_text())
     quarters = json.loads((cache / "quarters" / f"{ticker}.json").read_text())
     return verdicts, quarters
+
+
+def _read_snapshot(ticker, llm):
+    path = ROOT / "data" / "cache" / llm.derived("insight") / f"{ticker}.json"
+    return json.loads(path.read_text()) if path.exists() else None
 
 
 if __name__ == "__main__":

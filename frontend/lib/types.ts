@@ -31,6 +31,14 @@ export type Pledge = {
   outcome: Outcome;
   result: string | null;
   reason?: string;
+  evidence?: { period: string; page: number; quote: string }; // what a later call said about the result
+};
+
+export type Snapshot = {
+  period: string;
+  business: { summary: string; segments: { name: string; page: number; quote: string }[] };
+  bull: { point: string; page: number; quote: string }[];
+  bear: { point: string; page: number; quote: string }[];
 };
 
 export type HistoryEntry = {

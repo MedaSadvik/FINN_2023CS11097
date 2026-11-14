@@ -58,3 +58,21 @@ def test_website_portfolio_matches_pipeline_config():
     from pipeline.config import PORTFOLIO
     ts = (Path(__file__).resolve().parent.parent / "frontend" / "lib" / "portfolio.ts").read_text()
     assert re.findall(r'ticker: "([A-Z0-9]+)", name: "([^"]+)"', ts) == [(t, n) for t, n, _ in PORTFOLIO]
+
+
+def test_later_call_evidence_is_carried_to_the_page():
+    r = row("delivered", text="310 cr vs 300 cr guided")
+    r["evidence"] = {"period": "Q4FY26", "page": 2, "quote": "OSAT delivered 310 crore"}
+    assert export.to_pledge(r)["evidence"]["page"] == 2
+    assert "evidence" not in export.to_pledge(row("missed"))
+
+
+def test_snapshot_is_attached_only_when_it_has_something_to_show():
+    q = {"Q1FY27": {"revenue": 1, "ebitda": 1, "pbt": 1, "pat": 1}}
+    snap = {"business": {"summary": "s", "segments": [{"name": "A", "page": 1, "quote": "q"}]}, "bull": [], "bear": [],
+            "period": "Q1FY27", "provider": "gemini", "source_sha256": "x"}
+    c = export.build_company("K", "K", None, [row("missed")], q, "gemini", snap)
+    assert c["snapshot"]["period"] == "Q1FY27" and "source_sha256" not in c["snapshot"]
+    empty = {**snap, "business": {"summary": "", "segments": []}}
+    assert "snapshot" not in export.build_company("K", "K", None, [row("missed")], q, "gemini", empty)
+    assert "snapshot" not in export.build_company("K", "K", None, [row("missed")], q, "gemini")
