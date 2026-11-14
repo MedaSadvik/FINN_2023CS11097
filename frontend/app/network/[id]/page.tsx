@@ -32,6 +32,7 @@ async function Body({ params, searchParams }: { params: PageProps<"/network/[id]
   const synthetic = mode === "demo" || !person.linked;
 
   return (
+    <Shell>
     <main className="pb-8">
       <Link href="/network" className="block px-4 pt-4 text-sm text-ink-2 hover:text-ink">Your network</Link>
       <h1 className="px-4 pt-2 text-[1.7rem] leading-tight font-bold tracking-tight">{person.full_name}</h1>
@@ -96,15 +97,15 @@ async function Body({ params, searchParams }: { params: PageProps<"/network/[id]
         {synthetic ? "Invented person, part of the sample network." : "From their own profile. You can see it because they accepted your request."}
       </p>
     </main>
+    </Shell>
   );
 }
 
 export default function Person({ params, searchParams }: PageProps<"/network/[id]">) {
+  // The tab bar reads the URL, so for a page whose id is not known at build time the whole page waits inside Suspense.
   return (
-    <Shell>
-      <Suspense fallback={<p className="px-4 pt-6 text-ink-2">Loading…</p>}>
-        <Body params={params} searchParams={searchParams} />
-      </Suspense>
-    </Shell>
+    <Suspense fallback={<p className="px-4 pt-6 text-ink-2">Loading…</p>}>
+      <Body params={params} searchParams={searchParams} />
+    </Suspense>
   );
 }
