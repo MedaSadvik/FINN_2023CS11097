@@ -8,11 +8,15 @@ FINN is a briefing for an investor, not a dashboard. It does three things and ti
 
 Live demo: https://finn-blush.vercel.app (works on a phone). Code: this repository.
 
+![FINN architecture](architecture.png)
+
+The diagram as an editable file: [architecture.svg](architecture.svg).
+
 ## What I chose to build thin, and what I left out
 
 I preferred a small thing that works over a broad thing that breaks.
 
-Built: the three layers above, real accounts and connections, on-demand research for any ticker, and a mock network that overlaps the portfolio. Left out on purpose: free-form ask bar, push notifications (the digest is a page), and verdicts for segment-level claims. The limits section says exactly what that costs.
+Built: the three layers above, real accounts and connections, on-demand research for any ticker, and a mock network that overlaps the portfolio. Left out on purpose: a free-form ask bar, push notifications (the digest is a page), and reading annual reports as text. The limits section says exactly what that costs.
 
 ## Data pipelines
 

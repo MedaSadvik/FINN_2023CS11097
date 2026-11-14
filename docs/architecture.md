@@ -1,4 +1,6 @@
-# FINN architecture v1
+# FINN architecture v1 (the original plan)
+
+This is the plan I wrote before building. What was built, and why it differs, is in [WRITEUP.md](WRITEUP.md), with the final diagram in [architecture.png](architecture.png).
 
 Principle: thin-but-working beats broad-but-broken.
 
