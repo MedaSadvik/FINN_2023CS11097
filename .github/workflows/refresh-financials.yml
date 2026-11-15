@@ -32,8 +32,9 @@ jobs:
           import json; json.load(open("frontend/data/financials.json"), parse_constant=lambda c: (_ for _ in ()).throw(ValueError(c)))
           PY
           if git diff --quiet -- frontend/data/financials.json; then echo "No change."; exit 0; fi
-          git config user.name "finn-refresh"
-          git config user.email "finn-refresh@users.noreply.github.com"
+          # Vercel blocks deploys of commits by authors it does not know, so the refresh commits as the repository owner (noreply address).
+          git config user.name "${{ github.repository_owner }}"
+          git config user.email "${{ github.repository_owner_id }}+${{ github.repository_owner }}@users.noreply.github.com"
           git add frontend/data/financials.json
           git commit -m "Refresh financials $(date -u +%Y-%m-%d)"
           git pull --rebase origin "${GITHUB_REF_NAME}"

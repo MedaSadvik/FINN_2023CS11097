@@ -15,8 +15,10 @@ export function CompanyPicker({ rows }: { rows: Row[] }) {
   const needle = q.trim().toLowerCase();
   const shown = rows.filter((r) => !needle || r.name.toLowerCase().includes(needle) || r.ticker.toLowerCase().includes(needle));
   const symbol = q.trim().toUpperCase().replace(/[^A-Z0-9&-]/g, "");
-  const have = new Set(rows.map((r) => r.ticker));
-  const more = needle ? searchSymbols(LIST, q, 8).filter((m) => !have.has(m.symbol)).slice(0, 5) : [];
+  const listed = new Set(shown.map((r) => r.ticker));
+  const built = new Map(rows.map((r) => [r.ticker, r]));
+  // Near misses ("asain paint"): anything not already listed above, including companies we have already built.
+  const more = needle ? searchSymbols(LIST, q, 8).filter((m) => !listed.has(m.symbol)).slice(0, 5) : [];
   const [note, setNote] = useState("");
 
   function open() {
@@ -84,7 +86,9 @@ export function CompanyPicker({ rows }: { rows: Row[] }) {
                     <span className="block font-semibold">{m.name}</span>
                     <span className="block text-sm text-ink-3">{m.symbol}</span>
                   </span>
-                  <span className="text-sm text-ink-3">Not built yet</span>
+                  <span className={built.get(m.symbol)?.promises ? "text-sm font-semibold text-ok" : "text-sm text-ink-3"}>
+                    {built.get(m.symbol)?.promises ? `${built.get(m.symbol)!.promises} promises read` : "Not built yet"}
+                  </span>
                 </Link>
               </li>
             ))}
