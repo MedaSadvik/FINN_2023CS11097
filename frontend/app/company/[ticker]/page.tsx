@@ -134,7 +134,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
         {unclear.length > 0 && (
           <details className="border-b border-line">
             <summary className="flex min-h-12 cursor-pointer items-center px-4 font-semibold">
-              {unclear.length} {unclear.length === 1 ? "promise" : "promises"} we can't check yet
+              {unclear.length} {unclear.length === 1 ? "promise" : "promises"} we can&apos;t check yet
             </summary>
             <ul className="divide-y divide-line border-t border-line">
               {unclear.map((p, i) => <PromiseRow key={`${p.made_in}-u${i}`} p={p} sample={c.sample} />)}
