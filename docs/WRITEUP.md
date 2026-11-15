@@ -74,7 +74,7 @@ The network is the sensitive part, so the rules are in the database, not the web
 
 - **Row level security on every table.** The owner reads their own address book. Career details of another user are readable only by them and by their *accepted* connections. A pending request shows a name and headline only.
 - **Connections can only be made through functions** (`request_connection`, `respond_connection`). A stranger can look up someone by *exact* username and gets a display name back, nothing else. There is no search and no browsing, so nobody can scan for people.
-- **Notes stay private.** What you wrote about a contact is never shared with that contact.
+- **Notes stay private.** What you wrote about a contact, including the month you last spoke, is never shared with that contact. Only the row's owner can change it.
 - **The model never sees the network.** The Call Sheet is rules over rows. No contact data is sent to any model.
 - **Demo accounts.** Three invented people (`demo_priya`, `demo_kabir`, `demo_meera`) accept connection requests instantly, so a reviewer can see the real connection flow alone. Nobody can sign in as them, and only the setup script can mark an account as a demo. The database tests check that a user cannot do it to themselves.
 - **Signed-out visitors see an invented network**, labelled synthetic. Real users see only their own contacts and their accepted connections.
@@ -102,7 +102,7 @@ Two things the Network notices without being asked, both plain rules over the co
 - **Worth a call.** A contact who worked at a company that just filed, and whom you have not spoken to in six months or more. It shows the career line, the filing, the silence, and one question to ask, chosen by filing type. Still-there contacts rank above former ones. A pointer on Today shows how many there are for the window picked.
 - **Who knows what.** Go-to people per sector, counted from years at companies FINN tracks. A sector where you hold companies and know no one is flagged as a gap.
 
-**A profile for every name.** Tap any contact's name, on a Call Sheet, in Worth a call, in Who knows what or on the Network tab, and their profile opens: career, education, when you last spoke, and the tracked companies they have worked at. Right under their name is **Draft an email**. It opens an editable first draft made by plain template rules from facts we hold (a role they had, how long since you spoke), and never claims a tie the data does not show. It opens in the investor's own mail app or copies. FINN holds no email addresses and sends nothing, and the text never goes to a model.
+**A profile for every name.** Tap any contact's name, on a Call Sheet, in Worth a call, in Who knows what or on the Network tab, and their profile opens: career, education, when you last spoke, and the tracked companies they have worked at. Under the name is a **Last spoke** month picker: you set or clear the month yourself, and it feeds Worth a call and the draft email. Contacts made by connecting with a real person start blank until you set it. Right under their name is **Draft an email**. It opens an editable first draft made by plain template rules from facts we hold (a role they had, how long since you spoke), and never claims a tie the data does not show. It opens in the investor's own mail app or copies. FINN holds no email addresses and sends nothing, and the text never goes to a model.
 
 If a contact typed their employer by hand, it is matched to a tracked company by name. The model never sees the network.
 

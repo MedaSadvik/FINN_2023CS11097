@@ -264,7 +264,7 @@ Tap a name. The profile shows their role, when you last spoke (if you have set i
 ![Contact profile](guide/img/person_top.png)
 
 ### 38. Record when you last spoke
-Under the name, the **Last spoke** box takes a month and year. Pick one and tap **Save**. The profile, "Worth a call" and the draft email all use it. Contacts you made by connecting with a real person start blank, so set it here. Clear the box and save to remove it. Only you can see this date.
+Under the name, the **Last spoke** box takes a month and year. Pick one and tap **Save**. The profile, "Worth a call" and the draft email all use it. Contacts you made by connecting with a real person start blank, so set it here. Sample contacts come with dates already filled in. Clear the box and save to remove it. Only you can see this date.
 
 ![Last spoke](guide/img/last_spoke.png)
 

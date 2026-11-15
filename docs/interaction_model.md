@@ -14,7 +14,7 @@ Plain facts, each tagged "public profile" or "your notes":
 - Domain history: "Semiconductors 2014-2021 (7 yrs). Ops head at Kaynes 2017-19."
 - Relation to this company: worked there / competitor / supplier / customer.
 - Current reach: "Overlapped with 6 people now working in semiconductors."
-- Last spoke: "14 months ago."
+- Last spoke: "14 months ago." The investor sets this on the contact's profile (a month picker); it is blank for new connections until set.
 - Why now: one line tied to the filing.
 - Ask her: two questions.
 
