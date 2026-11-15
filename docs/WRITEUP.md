@@ -79,7 +79,7 @@ The network is the sensitive part, so the rules are in the database, not the web
 - **Demo accounts.** Three invented people (`demo_priya`, `demo_kabir`, `demo_meera`) accept connection requests instantly, so a reviewer can see the real connection flow alone. Nobody can sign in as them, and only the setup script can mark an account as a demo. The database tests check that a user cannot do it to themselves.
 - **Signed-out visitors see an invented network**, labelled synthetic. Real users see only their own contacts and their accepted connections.
 - **Secrets.** The Gemini key and the Supabase secret key live only in GitHub Actions secrets. The website holds the public anon key and one token that can start exactly one workflow. Per-user and global daily caps stop anyone burning the quota.
-- **Tested on real Postgres.** 29 tests try to break these rules: a stranger reading careers, writing tables directly, and calling functions without signing in.
+- **Tested on real Postgres.** 32 tests try to break these rules: a stranger reading careers, writing tables directly, and calling functions without signing in.
 
 For a real deployment I would add: consent per data source, encryption at rest, retention limits, delete-on-request, and an audit log. The prototype only uses data users typed in themselves, or invented people.
 
