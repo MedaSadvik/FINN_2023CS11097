@@ -47,6 +47,8 @@ Built: the three layers above, real accounts and connections, on-demand research
 - **Cash quality:** profit against operating cash flow, year by year. If profit is not turning into cash, it says so in a plain sentence.
 Each section is left out when its table is incomplete, and a growth rate is never computed from a zero or negative base. A monthly Action refreshes the portfolio's numbers; an on-demand build reads them for the new company in the same run.
 
+**Finding the right company.** Search matches what you type against NSE's own list of about 2,000 listed companies: a symbol, part of a name or a near miss ("asain paint" finds Asian Paints). A symbol that is not on the list gets "not found" with the closest names, and never starts a build, so it cannot waste a daily cap. Plain matching, no model; the list is refreshed monthly.
+
 **Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change.
 
 ## LLM routing and efficiency

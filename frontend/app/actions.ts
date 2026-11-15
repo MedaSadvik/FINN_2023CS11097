@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { accountsEnabled } from "@/lib/supabase/env";
 import { demoNetwork } from "@/lib/network";
 import { dispatchBuild } from "@/lib/github";
+import symbolData from "@/data/symbols.json";
+import { isComplete, isKnown, type SymbolList } from "@/lib/symbols";
 import { CATEGORIES, MOVE_CHOICES, PREFS_COOKIE, VOLUME_CHOICES, encodePrefs, type Prefs } from "@/lib/feed-view";
 
 export type ActionState = { ok: boolean; message: string } | null;
@@ -187,6 +189,8 @@ export async function requestCompany(_: ActionState, f: FormData): Promise<Actio
   const s = await me();
   if (!s) return fail("Sign in to add a company.");
   const ticker = text(f, "ticker").toUpperCase();
+  const listed = symbolData as unknown as SymbolList;
+  if (isComplete(listed) && !isKnown(listed, ticker)) return fail("That symbol is not on NSE's list. Check the spelling.");
   const { data, error } = await s.supabase.rpc("request_build", { p_ticker: ticker });
   if (error || !data) return fail("Something went wrong. Try again in a minute.");
   const r = data as { state: string; message: string; request_id?: number };
