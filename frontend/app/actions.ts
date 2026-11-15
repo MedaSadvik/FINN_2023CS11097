@@ -8,6 +8,7 @@ import { demoNetwork } from "@/lib/network";
 import { dispatchBuild } from "@/lib/github";
 import symbolData from "@/data/symbols.json";
 import { isComplete, isKnown, type SymbolList } from "@/lib/symbols";
+import { parseMonth } from "@/lib/last-spoke";
 import { CATEGORIES, MOVE_CHOICES, PREFS_COOKIE, VOLUME_CHOICES, encodePrefs, type Prefs } from "@/lib/feed-view";
 
 export type ActionState = { ok: boolean; message: string } | null;
@@ -89,6 +90,22 @@ export async function updateProfile(_: ActionState, f: FormData): Promise<Action
   if (error) return fail(explain(error));
   revalidatePath("/", "layout");
   return ok("Saved.");
+}
+
+/** Record (or clear) the month the signed-in investor last spoke to one of their own contacts. */
+export async function setLastSpoke(_: ActionState, f: FormData): Promise<ActionState> {
+  const s = await me();
+  if (!s) return fail("Sign in first.");
+  const id = text(f, "person_id");
+  if (!/^\d{1,9}$/.test(id)) return fail("That contact was not found.");
+  const parsed = parseMonth(text(f, "month"), new Date());
+  if (!parsed.ok) return fail(parsed.message);
+  // Row level security limits this to the investor's own rows; a row that is not theirs updates nothing.
+  const { data, error } = await s.supabase.from("people").update({ last_spoke: parsed.date }).eq("id", Number(id)).select("id");
+  if (error) return fail(explain(error));
+  if (!data?.length) return fail("That contact was not found.");
+  revalidatePath("/network", "layout");
+  return ok(parsed.date ? "Saved." : "Cleared.");
 }
 
 export async function addRole(_: ActionState, f: FormData): Promise<ActionState> {

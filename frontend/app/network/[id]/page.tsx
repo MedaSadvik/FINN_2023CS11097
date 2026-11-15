@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { Shell } from "@/components/Shell";
 import { DraftEmail } from "@/components/DraftEmail";
+import { LastSpoke } from "@/components/LastSpoke";
 import { draftEmail } from "@/lib/draft-email";
 import { getAccount, getNetwork } from "@/lib/account";
 import { callSheet, employerKeyFor, employerName } from "@/lib/network-core";
@@ -41,9 +42,12 @@ async function Body({ params, searchParams }: { params: PageProps<"/network/[id]
         <DraftEmail name={person.full_name} subject={draft.subject} body={draft.body} />
       </div>
 
-      <p className="px-4 pt-4 text-[0.95rem]">
-        {person.last_spoke ? <>You last spoke in {monthYear(person.last_spoke)}. <span className="text-sm text-ink-3 italic">(your notes)</span></> : "No note on when you last spoke."}
-      </p>
+      <section className="px-4 pt-4">
+        <p className="text-[0.95rem]">
+          {person.last_spoke ? `You last spoke in ${monthYear(person.last_spoke)}.` : mode === "mine" ? "You haven't said when you last spoke." : "No date for when you last spoke."}
+        </p>
+        {mode === "mine" && <LastSpoke personId={person.id} current={person.last_spoke} max={new Date().toISOString().slice(0, 7)} />}
+      </section>
 
       {reasons.length > 0 && key && (
         <section className="px-4 pt-6">

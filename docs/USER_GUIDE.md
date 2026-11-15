@@ -259,16 +259,21 @@ Further down, contacts are grouped by sector (IT services, semiconductors, energ
 ![Who knows what](guide/img/who_knows_what.png)
 
 ### 37. Open a contact's profile
-Tap a name. The profile shows their role, when you last spoke, why they matter for each company you follow, their career and education.
+Tap a name. The profile shows their role, when you last spoke (if you have set it), why they matter for each company you follow, their career and education.
 
 ![Contact profile](guide/img/person_top.png)
 
-### 38. Draft an email
+### 38. Record when you last spoke
+Under the name, the **Last spoke** box takes a month and year. Pick one and tap **Save**. The profile, "Worth a call" and the draft email all use it. Contacts you made by connecting with a real person start blank, so set it here. Clear the box and save to remove it. Only you can see this date.
+
+![Last spoke](guide/img/last_spoke.png)
+
+### 39. Draft an email
 Tap **Draft an email**. FINN writes a short, polite note that mentions how long it has been, the company in the news and their old role. You can edit the subject and message.
 
 ![Draft open](guide/img/draft_open.png)
 
-### 39. Send it from your mail app
+### 40. Send it from your mail app
 Tap **Open in mail app** to start the email in your own mail app, or **Copy** to paste it somewhere else. FINN does not hold their email address and sends nothing itself.
 
 ![Draft buttons](guide/img/draft_buttons.png)
@@ -279,17 +284,17 @@ Tap **Open in mail app** to start the email in your own mail app, or **Copy** to
 
 Signed-in users can ask FINN to read a company it has not read yet. This takes a few minutes and runs in the background.
 
-### 40. Ask for a company
+### 41. Ask for a company
 In Research, type the name or symbol of a listed company (for example `MARUTI`) and open it. If FINN has not read it yet, it says so and offers **Build research for MARUTI**. Tap it to start.
 
 ![Ask to build](guide/img/build_ask.png)
 
-### 41. Wait while it builds
+### 42. Wait while it builds
 The page says what is happening ("Building research for TATASTEEL. Reading the earnings calls. This usually takes 3 to 6 minutes") and refreshes itself when ready. You can leave and come back.
 
 ![Building](guide/img/build_working.png)
 
-### 42. Typed it wrong, or not listed?
+### 43. Typed it wrong, or not listed?
 If the symbol is not on NSE's list, FINN says so and suggests the closest listed companies ("Did you mean Titan Company Limited"). Tap one to continue, or **Search again**.
 
 ![No match](guide/img/company_notfound.png)
@@ -305,7 +310,7 @@ If the symbol is not on NSE's list, FINN says so and suggests the closest listed
 - **Privacy.** Your jobs and schools are visible only to people you have accepted. The rules are enforced in the database, not just in the app, and are tested. The AI model never sees your network: Call Sheets, "Worth a call", "Who knows what" and the draft email are plain rules, not model output.
 - **Nothing is sent for you.** FINN never emails anyone. It drafts; you press send.
 
-### 43. Sign out
+### 44. Sign out
 Tap your avatar at the top right to open your profile, scroll to the bottom and tap **Sign out**. You go back to the signed-out view with the invented network.
 
 ![Sign out](guide/img/sign_out.png)

@@ -21,7 +21,7 @@ Signed out, you see an invented network. Research marked **Draft** was extracted
 ## Using FINN
 Step-by-step guide with a screenshot for every step: signing in, building your profile, adding and accepting connections, Call Sheets, the draft email, and building a new company.
 - Read it here: [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
-- PDF copy (43 steps): [docs/FINN_User_Guide.pdf](docs/FINN_User_Guide.pdf)
+- PDF copy (44 steps): [docs/FINN_User_Guide.pdf](docs/FINN_User_Guide.pdf)
 - Regenerate the screenshots and PDF: `tools/guide/` (a local mock of Supabase, a Playwright script, and `build_pdf.py`). The signed-in screenshots use invented people.
 
 ## Stack

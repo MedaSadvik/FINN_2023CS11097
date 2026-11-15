@@ -209,6 +209,12 @@ class H(BaseHTTPRequestHandler):
                 return self.send(201)
             if method == "PATCH":
                 S["profiles"][me].update(self.body()); return self.send(204)
+        if table == "people" and method == "PATCH":
+            d = self.body(); hit = []
+            for r in S["people"]:
+                if r["owner_id"] == me and all(matches(r, k, v) for k, v in filters.items()):
+                    r.update(d); hit.append({"id": r["id"]})
+            return self.send(200, hit)
         if table in ("profile_roles", "profile_education"):
             rows = S["roles"] if table == "profile_roles" else S["edu"]
             if method == "POST":
