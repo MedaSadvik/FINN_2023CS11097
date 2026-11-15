@@ -294,7 +294,12 @@ The page says what is happening ("Building research for TATASTEEL. Reading the e
 
 ![Building](guide/img/build_working.png)
 
-### 43. Typed it wrong, or not listed?
+### 43. Update a company when a new call is out
+Research built on request is checked every evening. If the company has held a newer earnings call, its page says so ("A newer earnings call (Q2FY27) is out. This research uses calls up to Q1FY27.") and shows **Update TITAN with the new call**. It reads the calls with a model, takes a few minutes and counts toward the daily limit, like a first build. The old research stays on the page until the new one is ready. If there is no newer call, no button appears.
+
+![Update offer](guide/img/update_offer.png)
+
+### 44. Typed it wrong, or not listed?
 If the symbol is not on NSE's list, FINN says so and suggests the closest listed companies ("Did you mean Titan Company Limited"). Tap one to continue, or **Search again**.
 
 ![No match](guide/img/company_notfound.png)
@@ -305,12 +310,12 @@ If the symbol is not on NSE's list, FINN says so and suggests the closest listed
 
 - **Draft label.** Research marked **Draft** was extracted by a test model and has not been checked as closely. Treat it as a preview.
 - **"Can't check yet".** FINN shows this when a promise cannot be tested against the numbers it has. It never fills the gap with a guess.
-- **Daily limit.** The free AI quota behind new builds is shared. If it runs out, the build waits and FINN says so. A limited number of builds per person per day also applies.
+- **Daily limit.** The free AI quota behind new builds and updates is shared. If it runs out, the build waits and FINN says so. A limited number of builds per person per day also applies.
 - **Primary sources only.** Research uses earnings call transcripts, exchange filings and the annual tables. It does not use news.
 - **Privacy.** Your jobs and schools are visible only to people you have accepted. The rules are enforced in the database, not just in the app, and are tested. The AI model never sees your network: Call Sheets, "Worth a call", "Who knows what" and the draft email are plain rules, not model output.
 - **Nothing is sent for you.** FINN never emails anyone. It drafts; you press send.
 
-### 44. Sign out
+### 45. Sign out
 Tap your avatar at the top right to open your profile, scroll to the bottom and tap **Sign out**. You go back to the signed-out view with the invented network.
 
 ![Sign out](guide/img/sign_out.png)

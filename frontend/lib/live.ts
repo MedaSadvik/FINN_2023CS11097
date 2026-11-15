@@ -27,3 +27,12 @@ export async function getBuildStatus(ticker: string): Promise<BuildStatus> {
   const { data, error } = await supabase.rpc("build_status", { p_ticker: ticker });
   return error || !data ? { state: "none" } : (data as BuildStatus);
 }
+
+/** For a company built on request: is a newer earnings call out than the research was built from? Null when not. */
+export async function getStaleInfo(ticker: string): Promise<{ newer: string; built: string | null } | null> {
+  if (!accountsEnabled) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("companies_live").select("newer_call, built_call").eq("ticker", ticker.toUpperCase()).maybeSingle();
+  if (error || !data?.newer_call) return null;   // an error also covers a database that has not been updated yet
+  return { newer: data.newer_call as string, built: (data.built_call as string | null) ?? null };
+}

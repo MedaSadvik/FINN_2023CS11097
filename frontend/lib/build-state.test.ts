@@ -29,3 +29,31 @@ test("never asked before: plain button, or sign-in when signed out", () => {
   assert.deepEqual(panelFor({ state: "none" }, on), { kind: "ask", note: undefined });
   assert.equal(panelFor({ state: "none" }, { ...on, signedIn: false }).kind, "signin");
 });
+
+import { updatePanelFor } from "./build-state";
+
+const stale = { enabled: true, signedIn: true, newer: "Q2FY27", built: "Q1FY27" };
+
+test("a company behind the newest call offers an update, with the same warnings as a first build", () => {
+  const p = updatePanelFor({ state: "done", updated_at: "2026-11-01T00:00:00Z" }, stale);
+  assert.equal(p?.kind, "ask");
+  assert.equal(p?.kind === "ask" && p.update, true);
+  assert.match(p?.kind === "ask" ? p.note ?? "" : "", /newer earnings call \(Q2FY27\).*up to Q1FY27/);
+});
+
+test("signed-out visitors are asked to sign in; nothing is offered when builds are off", () => {
+  assert.equal(updatePanelFor({ state: "none" }, { ...stale, signedIn: false })?.kind, "signin");
+  assert.equal(updatePanelFor({ state: "none" }, { ...stale, enabled: false }), null);
+});
+
+test("an update that is running shows progress, and a stuck one offers the button again", () => {
+  const now = Date.parse("2026-11-16T10:00:00Z");
+  assert.equal(updatePanelFor({ state: "building", updated_at: "2026-11-16T09:55:00Z" }, { ...stale, now })?.kind, "working");
+  assert.equal(updatePanelFor({ state: "building", updated_at: "2026-11-16T08:00:00Z" }, { ...stale, now })?.kind, "ask");
+});
+
+test("a failed or limited update says why and lets them try again", () => {
+  const p = updatePanelFor({ state: "limit", message: "API limit reached for today. Try again later.", updated_at: "2026-11-16T09:00:00Z" }, stale);
+  assert.equal(p?.kind, "ask");
+  assert.match(p?.kind === "ask" ? p.note ?? "" : "", /API limit reached/);
+});

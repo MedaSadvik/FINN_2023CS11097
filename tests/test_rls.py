@@ -56,6 +56,7 @@ def fresh():
     psql((ROOT / "db" / "migrations" / "004_on_demand_build.sql").read_text())
     psql((ROOT / "db" / "migrations" / "005_free_text_employers.sql").read_text())
     psql((ROOT / "db" / "migrations" / "006_demo_accounts.sql").read_text())
+    psql((ROOT / "db" / "migrations" / "007_stale_rebuild.sql").read_text())
     psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
@@ -288,6 +289,25 @@ def test_built_company_is_public_and_stops_new_requests():
     psql("insert into companies_live(ticker,name,provider,data) values ('TCS','TCS','gemini','{\"promises\":[]}')")  # the job
     assert psql("select name from companies_live where ticker = 'TCS'", None, role="anon") == "TCS"
     assert ask(ALICE, "TCS")["state"] == "exists"
+
+
+def test_a_built_company_can_be_built_again_only_when_a_newer_call_is_out():
+    psql("insert into companies_live(ticker,name,provider,data,built_call) values ('TCS','TCS','gemini','{\"promises\":[]}','Q1FY27')")
+    assert ask(ALICE, "TCS")["state"] == "exists"                                        # up to date: refused
+    psql("update companies_live set newer_call = 'Q2FY27' where ticker = 'TCS'")        # the daily check found a newer call
+    assert ask(ALICE, "TCS")["state"] == "queued"                                        # now allowed
+    assert ask(BOB, "TCS")["state"] == "in_progress"                                     # and not twice at once
+    assert fails("update companies_live set newer_call = 'Q9FY99'", ALICE)               # users cannot flip it themselves
+    psql("update companies_live set newer_call = null where ticker = 'TCS'")             # the build job clears it on publish
+    assert ask(CARA, "TCS")["state"] == "exists"
+
+
+def test_rebuilds_use_the_same_daily_caps():
+    psql("update build_limits set per_user_per_day = 1")
+    for t in ("TCS", "INFY"):
+        psql(f"insert into companies_live(ticker,name,provider,data,newer_call) values ('{t}','{t}','gemini','{{}}','Q2FY27')")
+    assert ask(ALICE, "TCS")["state"] == "queued"
+    assert ask(ALICE, "INFY")["state"] == "user_limit"
 
 
 # ---------------------------------------------------------------- free-text employers in the Call Sheet view

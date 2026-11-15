@@ -13,9 +13,9 @@ import { isComplete, isKnown, searchSymbols, type SymbolList } from "@/lib/symbo
 import { callSheet, tidyName } from "@/lib/network-core";
 import { nameFor } from "@/lib/portfolio";
 import { getAccount, getNetwork } from "@/lib/account";
-import { getBuildStatus, getLiveCompany } from "@/lib/live";
+import { getBuildStatus, getLiveCompany, getStaleInfo } from "@/lib/live";
 import { buildsEnabled } from "@/lib/github";
-import { panelFor, TICKER_RE } from "@/lib/build-state";
+import { panelFor, TICKER_RE, updatePanelFor } from "@/lib/build-state";
 import { BuildPanel } from "@/components/BuildPanel";
 
 export function generateStaticParams() {
@@ -73,8 +73,12 @@ async function NotBuilt({ ticker }: { ticker: string }) {
 
 async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">["params"] }) {
   const { ticker } = await params;
-  const c = getCompany(ticker) ?? (await getLiveCompany(ticker));
+  const planned = getCompany(ticker);
+  const c = planned ?? (await getLiveCompany(ticker));
   if (!c) return <NotBuilt ticker={decodeURIComponent(ticker).toUpperCase()} />;
+  // Companies built on request can be updated when a newer earnings call is out. The portfolio ones are updated by the owner.
+  const stale = planned ? null : await getStaleInfo(c.ticker);
+  const update = stale ? updatePanelFor(await getBuildStatus(c.ticker), { enabled: buildsEnabled, signedIn: (await getAccount()) !== null, ...stale }) : null;
   const key = c.employer_key ?? `name:${tidyName(c.name)}`;
   const { net } = await getNetwork(undefined, { key, name: c.name });
   const leads = callSheet(net, key, 3);
@@ -108,6 +112,7 @@ async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">[
         {banner && <p className="bg-wash px-4 py-2 text-sm text-ink-2">{banner}</p>}
         <Link href="/company" className="block px-4 pt-4 text-sm text-ink-2 hover:text-ink">All companies</Link>
         <h1 className="px-4 pt-2 text-[1.7rem] leading-tight font-bold tracking-tight">{c.name}</h1>
+        {update && stale && <div className="px-4"><BuildPanel ticker={c.ticker} panel={update} /></div>}
         <div className="px-4">
           <CallSheet label="Who in your network knows this company" title={`Who can explain ${c.name}`}>
             <LeadList leads={leads} empty="No one in your contacts has worked there." about={c.ticker} />

@@ -39,6 +39,24 @@ def test_success_publishes_and_marks_done():
     assert api.published[0]["name"] == "Acme Ltd" and api.published[0]["provider"] == "gemini"
 
 
+def test_published_row_records_the_newest_call_and_clears_newer_call():
+    api = FakeApi()
+    docs = {"transcripts": [{"period": "Q4FY26", "url": "x"}, {"period": "Q1FY27", "url": "y"}], "name": "Acme Ltd"}
+    assert w.run("ACME", 5, api, steps(fetch_docs=lambda t: docs)) == "done"
+    assert api.published[0]["built_call"] == "Q1FY27"
+
+
+def test_publish_row_clears_newer_call(monkeypatch):
+    sent = {}
+
+    class R:
+        def raise_for_status(self): pass
+
+    monkeypatch.setattr(w.requests, "post", lambda url, headers=None, json=None, timeout=None: sent.update(json) or R())
+    w.Api("https://x.supabase.co", "sb_secret_1").publish({"ticker": "ACME", "name": "Acme", "provider": "gemini", "built_call": "Q1FY27"})
+    assert sent["built_call"] == "Q1FY27" and sent["newer_call"] is None and sent["checked_at"]
+
+
 def test_multi_year_numbers_are_attached_when_found():
     api = FakeApi()
     fin = {"basis": "consolidated", "years": ["FY26"], "rows": {"FY26": {"revenue": 100.0}}}

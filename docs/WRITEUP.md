@@ -49,7 +49,7 @@ Each section is left out when its table is incomplete, and a growth rate is neve
 
 **Finding the right company.** Search matches what you type against NSE's own list of about 2,000 listed companies: a symbol, part of a name or a near miss ("asain paint" finds Asian Paints). A symbol that is not on the list gets "not found" with the closest names, and never starts a build, so it cannot waste a daily cap. Plain matching, no model; the list is refreshed monthly.
 
-**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change.
+**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change. Built companies do not go stale silently: a nightly job compares screener.in's list of earnings calls with the newest call each piece of research was built from (a plain label comparison, no model) and, only when a newer call exists, the company's page offers an Update button with the same warnings and daily caps as a first build.
 
 ## LLM routing and efficiency
 

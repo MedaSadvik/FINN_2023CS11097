@@ -208,6 +208,14 @@ def main():
         if sheet.count():
             top(a, sheet, 200); sheet.click(); a.wait_for_timeout(800); save(a, "company_call_sheet")
         else: MISSING.append("company_call_sheet")
+        print("Update a company")
+        goto(a, "/company/TITAN")
+        btn = a.get_by_role("button", name="Update TITAN with the new call")
+        if btn.count():
+            top(a, btn, 220); save(a, "update_offer", btn)
+            # the test copy reuses another company's text below the button, so keep only the part that is about the update
+            im = Image.open(OUT / "update_offer.png"); im.crop((0, 0, im.width, 800)).save(OUT / "update_offer.png", optimize=True)
+        else: MISSING.append("update_offer")
         print("Build a company")
         goto(a, "/company/MARUTI"); save(a, "build_ask")
         goto(a, "/company/TATASTEEL"); save(a, "build_working")

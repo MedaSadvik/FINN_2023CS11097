@@ -11,7 +11,7 @@ export function BuildPanel({ ticker, panel }: { ticker: string; panel: Panel }) 
       return (
         <div className="mt-4 rounded-lg bg-wash px-3 py-3">
           <AutoRefresh />
-          <p role="status" className="font-semibold">Building research for {ticker}</p>
+          <p role="status" className="font-semibold">{panel.update ? `Updating research for ${ticker}` : `Building research for ${ticker}`}</p>
           <p className="mt-1 text-ink-2">{panel.text}</p>
         </div>
       );
@@ -22,7 +22,7 @@ export function BuildPanel({ ticker, panel }: { ticker: string; panel: Panel }) 
         <div className="mt-4">
           {panel.note && <p className="mb-2 text-ink-2">{panel.note}</p>}
           <Link href="/signin" className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 font-semibold text-paper">
-            Sign in to build {ticker}
+            {panel.update ? `Sign in to update ${ticker}` : `Sign in to build ${ticker}`}
           </Link>
           <p className="mt-2 text-sm text-ink-3">Building reads the latest four earnings calls with a model. It takes a few minutes.</p>
         </div>
@@ -31,7 +31,7 @@ export function BuildPanel({ ticker, panel }: { ticker: string; panel: Panel }) 
       return (
         <div className="mt-4">
           {panel.note && <p className="mb-1 text-ink-2">{panel.note}</p>}
-          <ActionForm action={requestCompany} submit={`Build research for ${ticker}`}>
+          <ActionForm action={requestCompany} submit={panel.update ? `Update ${ticker} with the new call` : `Build research for ${ticker}`}>
             <input type="hidden" name="ticker" value={ticker} />
           </ActionForm>
           <p className="mt-2 text-sm text-ink-3">Reads the latest four earnings calls with a model. About 3 to 6 minutes. The number of builds per day is limited.</p>
