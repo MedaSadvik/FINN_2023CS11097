@@ -18,6 +18,12 @@ Live: https://finn-blush.vercel.app (open it on a phone).
 
 Signed out, you see an invented network. Research marked **Draft** was extracted by a test model; the rest by Gemini. Details: [docs/WRITEUP.md](docs/WRITEUP.md).
 
+## Using FINN
+Step-by-step guide with a screenshot for every step: signing in, building your profile, adding and accepting connections, Call Sheets, the draft email, and building a new company.
+- Read it here: [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
+- PDF copy (41 steps, 23 pages): [docs/FINN_User_Guide.pdf](docs/FINN_User_Guide.pdf)
+- Regenerate the screenshots and PDF: `tools/guide/` (a local mock of Supabase, a Playwright script, and `build_pdf.py`). The signed-in screenshots use invented people.
+
 ## Stack
 Next.js 16 + Tailwind (Vercel) · Python pipeline · Supabase Postgres, Auth and row level security · Gemini Flash · GitHub Actions for on-demand builds.
 
@@ -57,7 +63,8 @@ scripts/                         build_portfolio, export_frontend, export_feed, 
 frontend/                        Next.js app (Today, Research, Network, profile)
 .github/workflows/               build-company.yml: the on-demand research job
 tests/                           Python tests, including privacy rules on real Postgres
-docs/                            WRITEUP.md, architecture.md, interaction_model.md
+docs/                            WRITEUP.md, USER_GUIDE.md, FINN_User_Guide.pdf, architecture.md, interaction_model.md
+tools/guide/                     builds the user guide screenshots and PDF
 data/network/                    the invented network (120 people, 36 employers)
 ```
 
