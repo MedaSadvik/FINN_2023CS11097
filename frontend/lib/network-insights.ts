@@ -93,7 +93,7 @@ export function reconnectIdeas(net: Network, filings: FilingRef[], now: Date, op
       const reasons: Evidence[] = [
         { text: `${r.title} at ${emp.name}, ${r.start_year}–${r.end_year ?? "now"}.`, source: p.linked ? "their profile" : "public profile" },
         { text: `${emp.name} ${filing.what} on ${shortDate(filing.filed)}.`, source: "NSE filing" },
-        { text: silent === null ? "No conversation logged in your notes." : `You last spoke in ${monthYear(p.last_spoke!)}, ${silent} months ago.`, source: "your notes" },
+        { text: silent === null ? "No conversation logged yet." : `You last spoke in ${monthYear(p.last_spoke!)}, ${silent} months ago.`, source: "your notes" },
       ];
       const idea: Reconnect = { person: p, filing, tie, silentMonths: silent, reasons, ask: filing.ask };
       if (!best || (tie === "now" && best.tie !== "now") || (tie === best.tie && filing.priority > best.filing.priority)) best = idea;

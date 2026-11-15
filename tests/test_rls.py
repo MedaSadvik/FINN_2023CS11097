@@ -121,6 +121,17 @@ def test_call_sheet_view_reads_live_career_and_follows_edits():
     assert psql("select count(*) from network_roles", CARA) == "0"
 
 
+def test_last_spoke_is_set_and_cleared_only_by_its_owner():
+    connect(ALICE, "bob", BOB)
+    assert psql("update people set last_spoke = '2026-05-01' returning id", ALICE) != ""
+    assert psql("select last_spoke from people", ALICE) == "2026-05-01"
+    # Bob's own address book row for Alice is his; he cannot reach into Alice's row for Bob
+    assert psql("update people set last_spoke = '2020-01-01' where full_name = 'Bob' returning id", BOB) == ""
+    assert psql("select last_spoke from people where full_name = 'Bob'", ALICE) == "2026-05-01"
+    assert psql("update people set last_spoke = null returning id", ALICE) != ""
+    assert psql("select coalesce(last_spoke::text, 'none') from people", ALICE) == "none"
+
+
 def test_private_notes_stay_private():
     connect(ALICE, "bob", BOB)
     psql("update people set notes = 'met at conference', last_spoke = '2026-05-01'", ALICE)
