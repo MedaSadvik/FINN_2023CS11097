@@ -66,7 +66,7 @@ The rule: use a model only where a rule cannot do the job, and never let it be t
 
 - **One door** (`pipeline/llm.py`): every call goes through one wrapper. It caches each answer on disk by a hash of model, prompt and version, so a rerun costs nothing. It retries busy servers, and falls back through a list of models when one is overloaded or its daily quota is used up.
 - **Quota awareness.** The free tier is small, so a build stops with a plain "API limit reached" message instead of failing. In the on-demand job, the cache is saved between runs, so a stopped build resumes without paying again.
-- **A test model for drafts.** To fill the portfolio without spending Gemini quota, I built the draft research for most portfolio stocks with a separate test model (Hyde's GLM). That output is labelled **Draft** on the page. No deployed code ever calls that model. The website has no model calls at all, the on-demand job refuses any provider except Gemini, and the test key exists only on my machine. Kaynes, TITAN and ASIANPAINT were built with Gemini.
+- **A test model for drafts.** To fill the portfolio without spending Gemini quota, I built the draft research for most portfolio stocks with a separate test model (Hyde's GLM). That output is labelled **Draft** on the page. No deployed code ever calls that model. The website has no model calls at all, the on-demand job refuses any provider except Gemini, and the test key exists only on my machine. Kaynes, TITAN, ASIANPAINT, OLAELEC and SBIN were built with Gemini.
 
 ## Privacy and security
 

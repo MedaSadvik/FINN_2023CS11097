@@ -15,6 +15,7 @@ My submission for the FINN build challenge is below.
 Live prototype (phone friendly): https://finn-blush.vercel.app
 Code: https://github.com/MedaSadvik/FINN_2023CS11097
 AI build history: [PASTE LINK]
+User guide with screenshots: https://github.com/MedaSadvik/FINN_2023CS11097/blob/main/docs/FINN_User_Guide.pdf
 Architecture diagram: attached (also in the repo at docs/architecture.png)
 
 FINN is a briefing for an investor, not a dashboard. Push is a ranked digest of what changed in the portfolio, plus alerts the investor can tune. Pull is research on any NSE company, grounded only in earnings-call transcripts and the company's own filings. The Network is the investor's contacts, woven into both: every feed card and every research page ends in a Call Sheet that says who could explain this company and why, in plain facts.
@@ -52,7 +53,7 @@ WHAT I WOULD DO NEXT
 
 LIMITS, SAID PLAINLY
 
-Research for most portfolio stocks is a draft written by a test model and labelled Draft on the page; Kaynes, TITAN and ASIANPAINT were built with Gemini. The free Gemini quota allows only a few companies a day, so on-demand builds are capped. screener.in is a single point of dependency. Matching a contact's typed employer to a company is by name and can miss.
+Research for most portfolio stocks is a draft written by a test model and labelled Draft on the page; Kaynes, TITAN, ASIANPAINT, OLAELEC and SBIN were built with Gemini. The free Gemini quota allows only a few companies a day, so on-demand builds are capped. screener.in is a single point of dependency. Matching a contact's typed employer to a company is by name and can miss.
 
 Thank you for the opportunity.
 
