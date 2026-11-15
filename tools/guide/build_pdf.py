@@ -73,17 +73,19 @@ def build_html(doc: dict) -> str:
     * { box-sizing: border-box }
     body { margin: 0; font: 11pt/1.45 "Helvetica Neue", Arial, sans-serif; color: #17202e }
     .page { width: 210mm; height: 297mm; padding: 14mm 16mm 18mm; page-break-after: always; overflow: hidden }
-    h1 { font-size: 54pt; margin: 30mm 0 0; letter-spacing: -1px }
+    h1 { font-size: 44pt; margin: 0; letter-spacing: -1px }
     h2 { font-size: 18pt; margin: 0 0 4mm; padding-bottom: 2mm; border-bottom: 2px solid #17202e }
     h2.cont { font-size: 13pt; color: #5b6676; border-bottom-width: 1px }
     .cover h2 { margin-top: 9mm }
     .sub { font-size: 16pt; margin: 2mm 0 }
     .url { color: #5b6676 }
-    .note { background: #eef1f5; padding: 3mm 5mm; border-radius: 3mm; margin: 8mm 0 }
+    .note { background: #eef1f5; padding: 3mm 5mm; border-radius: 3mm; margin: 6mm 0 }
     .note p { margin: 0; font-size: 10pt }
     table { border-collapse: collapse; width: 100% }
     th, td { border-bottom: 1px solid #d5dae1; text-align: left; padding: 2mm 3mm; font-size: 10pt }
+    .toc { columns: 2; margin: 0; padding-left: 6mm }
     .toc li { margin: 1mm 0 }
+    .cover { padding-top: 10mm }
     .intro ul { margin: 0 0 4mm 5mm; padding: 0; font-size: 10pt }
     .step { display: flex; gap: 7mm; margin-bottom: 7mm; break-inside: avoid; align-items: flex-start }
     .shots { display: flex; gap: 3mm; flex: none }
