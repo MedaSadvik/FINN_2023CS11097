@@ -26,7 +26,7 @@ async function Body({ notice }: { notice?: string }) {
   if (!p) {
     return (
       <div className="px-4">
-        <p className="text-ink-2">Choose a username so people can find you. This can't be changed later.</p>
+        <p className="text-ink-2">Choose a username so people can find you. This can&apos;t be changed later.</p>
         {notice && <p className="mt-2 text-miss">{notice}</p>}
         <ActionForm action={createProfile} submit="Create profile">
           <Field label="Your name" name="display_name" required maxLength={60} />
