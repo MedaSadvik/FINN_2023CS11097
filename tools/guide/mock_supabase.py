@@ -10,6 +10,7 @@ import base64
 import json
 import re
 import sys
+from pathlib import Path
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -29,7 +30,7 @@ ROOT_DEMO = [
      [("Dixon Technologies", "dixon", "Associate", 2015, 2018), ("Axis Mutual Fund", None, "Portfolio Manager", 2018, None)], [("IIM Ahmedabad", 2013, 2015)]),
 ]
 
-S = {"users": {}, "profiles": {}, "roles": [], "edu": [], "conns": [], "people": [], "proles": [], "pedu": [], "seq": 0}
+S = {"users": {}, "profiles": {}, "roles": [], "edu": [], "conns": [], "people": [], "proles": [], "pedu": [], "live": [], "seq": 0}
 
 
 def nid():
@@ -37,7 +38,17 @@ def nid():
     return S["seq"]
 
 
+def seed_live():
+    """One company built on request, behind the newest earnings call, so the Update offer can be shown."""
+    import json as _json
+    base = _json.loads((Path(__file__).resolve().parent.parent.parent / "frontend" / "data" / "companies.json").read_text())["KAYNES"]
+    data = {**base, "ticker": "TITAN", "name": "Titan Company", "built_call": "Q1FY27"}
+    S["live"].append({"ticker": "TITAN", "name": "Titan Company", "provider": "gemini", "data": data,
+                      "built_at": "2026-11-10T10:00:00Z", "built_call": "Q1FY27", "newer_call": "Q2FY27", "checked_at": "2026-11-15T14:00:00Z"})
+
+
 def seed():
+    seed_live()
     for username, name, headline, roles, edu in ROOT_DEMO:
         uid = str(uuid.uuid4())
         S["users"][uid] = {"id": uid, "email": f"{username}@example.invalid", "password": None}
@@ -78,6 +89,8 @@ def link_people(a, b):
 
 
 def visible(table, me):
+    if table == "companies_live":
+        return S["live"]
     if table == "profiles":
         mine = {me} | {c["requester_id"] for c in S["conns"] if c["addressee_id"] == me} | {c["addressee_id"] for c in S["conns"] if c["requester_id"] == me}
         return [p for p in S["profiles"].values() if p["id"] in mine]

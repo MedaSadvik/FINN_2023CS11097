@@ -1,0 +1,31 @@
+name: check-stale
+# Daily check: has a company built on request got a newer earnings call than the research was built from?
+# Reads screener.in's list of calls and updates one column in Supabase. It never uses the model or its quota.
+# The website then offers "Update" for those companies only.
+on:
+  schedule:
+    - cron: "0 14 * * *"   # 19:30 IST, after the day's calls are posted
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-stale
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Check
+        run: python scripts/check_stale.py | tee "$GITHUB_STEP_SUMMARY"

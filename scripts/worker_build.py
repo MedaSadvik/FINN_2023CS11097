@@ -44,7 +44,9 @@ class Api:
         r.raise_for_status()
 
     def publish(self, company: dict):
-        row = {"ticker": company["ticker"], "name": company["name"], "provider": company["provider"], "data": company}
+        # newer_call is cleared: this build has just read the newest calls
+        row = {"ticker": company["ticker"], "name": company["name"], "provider": company["provider"], "data": company,
+               "built_call": company.get("built_call"), "newer_call": None, "checked_at": datetime.now(timezone.utc).isoformat()}
         r = requests.post(f"{self.url}/rest/v1/companies_live?on_conflict=ticker",
                           headers={**self.headers, "Prefer": "resolution=merge-duplicates"}, json=row, timeout=60)
         r.raise_for_status()
@@ -57,7 +59,7 @@ def employer_key_for(ticker: str):
 
 def run(ticker: str, request_id: int, api, steps=None) -> str:
     """Returns the final status. `steps` lets tests replace the network and the model."""
-    from pipeline import build_company, export, fetch_docs, fetch_financials, llm
+    from pipeline import build_company, export, fetch_docs, fetch_financials, llm, staleness
     steps = steps or {}
     find_docs = steps.get("fetch_docs", fetch_docs.fetch_docs)
     build = steps.get("build", lambda t: build_company.build(t, 4, exit_on_quota=False))
@@ -81,6 +83,7 @@ def run(ticker: str, request_id: int, api, steps=None) -> str:
         company = export.build_company(ticker, docs.get("name") or ticker, employer_key_for(ticker),
                                        verdicts, quarters, provider(),
                                        steps.get("read_snapshot", lambda t: _read_snapshot(t, llm))(ticker))
+        company["built_call"] = staleness.newest_call(docs["transcripts"])
         try:  # multi-year numbers are an extra: the research is still worth publishing without them
             fin = steps.get("financials", fetch_financials.fetch_financials)(ticker)
             if fin:
