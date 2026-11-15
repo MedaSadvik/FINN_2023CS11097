@@ -8,6 +8,8 @@ import { getCompany, getFinancials, knownTickers } from "@/lib/data";
 import { FinancialSections, financialParts } from "@/components/FinancialSections";
 import { AtAGlance, BullBear, BusinessSnapshot, NarrativeVsNumbers } from "@/components/PullInsights";
 import { atAGlance, narrativeVsNumbers } from "@/lib/narrative";
+import symbolData from "@/data/symbols.json";
+import { isComplete, isKnown, searchSymbols, type SymbolList } from "@/lib/symbols";
 import { callSheet, tidyName } from "@/lib/network-core";
 import { nameFor } from "@/lib/portfolio";
 import { getAccount, getNetwork } from "@/lib/account";
@@ -20,13 +22,45 @@ export function generateStaticParams() {
   return knownTickers().map((ticker) => ({ ticker }));
 }
 
+const LIST = symbolData as unknown as SymbolList;
+
+/** The typed symbol is not on NSE's list: say so and offer the closest companies. */
+function NotListed({ ticker }: { ticker: string }) {
+  const near = searchSymbols(LIST, ticker, 5);
+  return (
+    <main className="px-4 pt-6">
+      <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">No NSE company &ldquo;{ticker}&rdquo;</h1>
+      <p className="mt-3">We could not find that symbol on NSE&rsquo;s list of listed companies.</p>
+      {near.length > 0 && (
+        <>
+          <h2 className="mt-5 text-sm text-ink-2">Did you mean</h2>
+          <ul className="mt-1 divide-y divide-line border-y border-line">
+            {near.map((m) => (
+              <li key={m.symbol}>
+                <Link href={`/company/${m.symbol}`} className="flex min-h-14 flex-col justify-center py-2 hover:bg-wash">
+                  <span className="font-semibold">{m.name}</span>
+                  <span className="text-sm text-ink-3">{m.symbol}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <Link href="/company" className="mt-6 inline-flex min-h-11 items-center rounded-full border border-ink px-4 font-semibold hover:bg-ink hover:text-paper">
+        Search again
+      </Link>
+    </main>
+  );
+}
+
 async function NotBuilt({ ticker }: { ticker: string }) {
   const valid = TICKER_RE.test(ticker);
+  if (isComplete(LIST) && !(valid && isKnown(LIST, ticker))) return <NotListed ticker={ticker} />;
   const [status, account] = valid ? await Promise.all([getBuildStatus(ticker), getAccount()]) : [{ state: "none" as const }, null];
   const panel = valid ? panelFor(status, { enabled: buildsEnabled, signedIn: account !== null }) : null;
   return (
     <main className="px-4 pt-6">
-      <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">{nameFor(ticker) ?? ticker}</h1>
+      <h1 className="text-[1.7rem] leading-tight font-bold tracking-tight">{nameFor(ticker) ?? LIST.rows.find((r) => r[0] === ticker)?.[1] ?? ticker}</h1>
       <p className="mt-3">We have not read {valid ? `${ticker}\u2019s` : "this company\u2019s"} earnings calls yet.</p>
       {panel ? <BuildPanel ticker={ticker} panel={panel} />
         : <p className="mt-2 text-ink-2">Use the NSE symbol, such as INFY or ZOMATO.</p>}
