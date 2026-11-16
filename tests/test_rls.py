@@ -57,6 +57,7 @@ def fresh():
     psql((ROOT / "db" / "migrations" / "005_free_text_employers.sql").read_text())
     psql((ROOT / "db" / "migrations" / "006_demo_accounts.sql").read_text())
     psql((ROOT / "db" / "migrations" / "007_stale_rebuild.sql").read_text())
+    psql((ROOT / "db" / "migrations" / "008_promise_count.sql").read_text())
     psql((ROOT / "db" / "seed_reference.sql").read_text())
     for i, u in enumerate((ALICE, BOB, CARA)):
         psql(f"insert into auth.users values ('{u}')")
@@ -300,6 +301,11 @@ def test_a_built_company_can_be_built_again_only_when_a_newer_call_is_out():
     assert fails("update companies_live set newer_call = 'Q9FY99'", ALICE)               # users cannot flip it themselves
     psql("update companies_live set newer_call = null where ticker = 'TCS'")             # the build job clears it on publish
     assert ask(CARA, "TCS")["state"] == "exists"
+
+
+def test_promises_are_counted_in_the_database():
+    psql("insert into companies_live(ticker,name,provider,data) values ('TCS','TCS','gemini','{\"promises\":[{},{},{}]}'), ('INFY','INFY','gemini','{}')")
+    assert psql("select ticker, promise_count from companies_live order by ticker", ALICE) == "INFY|0\nTCS|3"
 
 
 def test_rebuilds_use_the_same_daily_caps():

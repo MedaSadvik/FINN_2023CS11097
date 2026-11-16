@@ -41,7 +41,7 @@ python scripts/refresh_feed.py             # the Today feed: filings, prices, re
 ```bash
 cd frontend && npm install && npm run dev  # needs Node 22
 ```
-Without Supabase keys the site runs signed-out, on the invented network. To switch on accounts, create a Supabase project, run these in its SQL editor in order: `db/schema.sql`, `db/seed_reference.sql`, `db/migrations/002` to `007`. Turn off "Confirm email" under Authentication, then copy `frontend/.env.local.example` to `.env.local` and fill it in.
+Without Supabase keys the site runs signed-out, on the invented network. To switch on accounts, create a Supabase project, run these in its SQL editor in order: `db/schema.sql`, `db/seed_reference.sql`, `db/migrations/002` to `008`. Turn off "Confirm email" under Authentication, then copy `frontend/.env.local.example` to `.env.local` and fill it in.
 
 Demo accounts: run `006`, set `DEMO_EMAIL_TEMPLATE` in `.env` (an address you control, with `{name}`, like `you+{name}@gmail.com`), then `python scripts/create_demo_accounts.py`.
 
@@ -78,7 +78,7 @@ Not built: reading annual reports as text, a free-form ask bar, phone push notif
 
 The company search matches names and typos against NSE's own list (`frontend/data/symbols.json`, refreshed monthly by the **refresh-symbols** workflow; run it once by hand after merging). Until the full list is loaded, the site only suggests and never says "not found".
 
-Companies built on demand stay current by themselves in one respect: the **check-stale** workflow runs every evening, reads screener.in's list of earnings calls (no model, no quota) and flags a built company when a newer call exists than the research was built from. That company's page then offers **Update with the new call** to any signed-in user, under the same daily caps as a first build. Run migration `007` first. Portfolio companies are updated by the owner with `scripts/enrich_portfolio.py`.
+Companies built on demand stay current by themselves in one respect: the **check-stale** workflow runs every evening, reads screener.in's list of earnings calls (no model, no quota) and flags a built company when a newer call exists than the research was built from. That company's page then offers **Update with the new call** to any signed-in user, under the same daily caps as a first build. Run migration `007` first. The portfolio companies are treated the same way: run the **seed-portfolio** workflow once (after migrations 007 and 008) to copy them from `frontend/data/companies.json` into the database. The site prefers the database row, so an update lands there. After you refresh the file by hand with `scripts/enrich_portfolio.py`, run **seed-portfolio** again with "overwrite" ticked to push your version live.
 
 Companies built on demand before a new research section existed can be refreshed from the Actions tab: run **enrich-live**. It rebuilds only the ones that lack the sections, one at a time.
 

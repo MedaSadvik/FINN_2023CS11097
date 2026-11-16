@@ -73,11 +73,12 @@ async function NotBuilt({ ticker }: { ticker: string }) {
 
 async function CompanyBody({ params }: { params: PageProps<"/company/[ticker]">["params"] }) {
   const { ticker } = await params;
-  const planned = getCompany(ticker);
-  const c = planned ?? (await getLiveCompany(ticker));
+  // The database row wins: it is where updates land. The portfolio file is the fallback (and what the row was seeded from).
+  const live = await getLiveCompany(ticker);
+  const c = live ?? getCompany(ticker);
   if (!c) return <NotBuilt ticker={decodeURIComponent(ticker).toUpperCase()} />;
-  // Companies built on request can be updated when a newer earnings call is out. The portfolio ones are updated by the owner.
-  const stale = planned ? null : await getStaleInfo(c.ticker);
+  // When a newer earnings call is out, any signed-in user can update the company (same caps as a first build).
+  const stale = live ? await getStaleInfo(c.ticker) : null;
   const update = stale ? updatePanelFor(await getBuildStatus(c.ticker), { enabled: buildsEnabled, signedIn: (await getAccount()) !== null, ...stale }) : null;
   const key = c.employer_key ?? `name:${tidyName(c.name)}`;
   const { net } = await getNetwork(undefined, { key, name: c.name });

@@ -8,9 +8,11 @@ import { PORTFOLIO } from "@/lib/portfolio";
 const base = PORTFOLIO.map((p) => ({ ...p, promises: getCompany(p.ticker)?.promises.length ?? null }));
 
 async function Picker() {
+  const live = await liveCompanies();
+  const updated = new Map(live.map((r) => [r.ticker, r.promises]));   // a portfolio company updated in the database
   const mine = new Set(base.map((r) => r.ticker));
-  const extra = (await liveCompanies()).filter((r) => !mine.has(r.ticker) && !getCompany(r.ticker));
-  return <CompanyPicker rows={[...base, ...extra]} />;
+  const extra = live.filter((r) => !mine.has(r.ticker) && !getCompany(r.ticker));
+  return <CompanyPicker rows={[...base.map((r) => ({ ...r, promises: updated.get(r.ticker) ?? r.promises })), ...extra]} />;
 }
 
 export default function Research() {

@@ -49,7 +49,7 @@ Each section is left out when its table is incomplete, and a growth rate is neve
 
 **Finding the right company.** Search matches what you type against NSE's own list of about 2,000 listed companies: a symbol, part of a name or a near miss ("asain paint" finds Asian Paints). A symbol that is not on the list gets "not found" with the closest names, and never starts a build, so it cannot waste a daily cap. Plain matching, no model; the list is refreshed monthly.
 
-**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change. Built companies do not go stale silently: a nightly job compares screener.in's list of earnings calls with the newest call each piece of research was built from (a plain label comparison, no model) and, only when a newer call exists, the company's page offers an Update button with the same warnings and daily caps as a first build.
+**Works on any ticker.** `python -m pipeline.build_company TICKER` does everything from nothing. On the site, a signed-in user can type any NSE symbol and tap Build. TITAN and ASIANPAINT were built that way, with no code change. Built companies do not go stale silently: a nightly job compares screener.in's list of earnings calls with the newest call each piece of research was built from (a plain label comparison, no model) and, only when a newer call exists, the company's page offers an Update button with the same warnings and daily caps as a first build. The 17 portfolio companies sit in the same table (seeded from the repo file), so they are treated no differently from companies built on request.
 
 ## LLM routing and efficiency
 
@@ -79,7 +79,7 @@ The network is the sensitive part, so the rules are in the database, not the web
 - **Demo accounts.** Three invented people (`demo_priya`, `demo_kabir`, `demo_meera`) accept connection requests instantly, so a reviewer can see the real connection flow alone. Nobody can sign in as them, and only the setup script can mark an account as a demo. The database tests check that a user cannot do it to themselves.
 - **Signed-out visitors see an invented network**, labelled synthetic. Real users see only their own contacts and their accepted connections.
 - **Secrets.** The Gemini key and the Supabase secret key live only in GitHub Actions secrets. The website holds the public anon key and one token that can start exactly one workflow. Per-user and global daily caps stop anyone burning the quota.
-- **Tested on real Postgres.** 32 tests try to break these rules: a stranger reading careers, writing tables directly, and calling functions without signing in.
+- **Tested on real Postgres.** 33 tests try to break these rules: a stranger reading careers, writing tables directly, and calling functions without signing in.
 
 For a real deployment I would add: consent per data source, encryption at rest, retention limits, delete-on-request, and an audit log. The prototype only uses data users typed in themselves, or invented people.
 
