@@ -1,0 +1,30 @@
+name: seed-portfolio
+# Puts the portfolio companies (frontend/data/companies.json) into the database, so they are checked for newer
+# earnings calls and can be updated like any company built on request. Run it once after merging, and again with
+# "overwrite" ticked whenever you refresh companies.json by hand and want that version live. No model is used.
+on:
+  workflow_dispatch:
+    inputs:
+      overwrite:
+        description: "Overwrite rows that already exist with the file's version"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Seed
+        run: python scripts/seed_portfolio.py ${{ inputs.overwrite && '--force' || '' }} | tee "$GITHUB_STEP_SUMMARY"

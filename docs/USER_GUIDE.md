@@ -295,7 +295,7 @@ The page says what is happening ("Building research for TATASTEEL. Reading the e
 ![Building](guide/img/build_working.png)
 
 ### 43. Update a company when a new call is out
-Research built on request is checked every evening. If the company has held a newer earnings call, its page says so ("A newer earnings call (Q2FY27) is out. This research uses calls up to Q1FY27.") and shows **Update TITAN with the new call**. It reads the calls with a model, takes a few minutes and counts toward the daily limit, like a first build. The old research stays on the page until the new one is ready. If there is no newer call, no button appears.
+Every company's research is checked every evening, portfolio companies included. If the company has held a newer earnings call, its page says so ("A newer earnings call (Q2FY27) is out. This research uses calls up to Q1FY27.") and shows **Update TITAN with the new call**. It reads the calls with a model, takes a few minutes and counts toward the daily limit, like a first build. The old research stays on the page until the new one is ready. If there is no newer call, no button appears.
 
 ![Update offer](guide/img/update_offer.png)
 

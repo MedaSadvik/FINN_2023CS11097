@@ -17,7 +17,10 @@ export type LiveRow = { ticker: string; name: string; promises: number };
 export async function liveCompanies(): Promise<LiveRow[]> {
   if (!accountsEnabled) return [];
   const supabase = await createClient();
-  const { data } = await supabase.from("companies_live").select("ticker, name, data").order("built_at", { ascending: false }).limit(50);
+  const counted = await supabase.from("companies_live").select("ticker, name, promise_count").order("built_at", { ascending: false }).limit(200);
+  if (!counted.error) return (counted.data ?? []).map((r) => ({ ticker: r.ticker as string, name: r.name as string, promises: (r.promise_count as number) ?? 0 }));
+  // the database has not been updated with the count column yet: count here instead
+  const { data } = await supabase.from("companies_live").select("ticker, name, data").order("built_at", { ascending: false }).limit(200);
   return (data ?? []).map((r) => ({ ticker: r.ticker as string, name: r.name as string, promises: ((r.data as CompanyData).promises ?? []).length }));
 }
 
